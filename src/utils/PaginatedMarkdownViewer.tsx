@@ -1,6 +1,7 @@
 import React, { JSX, useState } from 'react';
 import { marked } from 'marked';
-import { CardProps } from '../themeConfigs';
+import { FinalConfig, CardProps } from '../config/themeConfig';
+import { LayoutMode } from '../stores/settingsStore';
 import {
   isTextNodeLike,
   isList,
@@ -15,14 +16,14 @@ import {
   handleGenericNode
 } from './paginatorUtils';
 
-
-
-
 interface PaginatedMarkdownViewerProps {
   html: string;
   pageHeight?: number;
   pageWidth?: number;
   CardComponent: React.FC<CardProps>;
+  showPageNumbers?: boolean;
+  layoutMode?: LayoutMode;
+  config: FinalConfig;
 }
 
 const PaginatedMarkdownViewer: React.FC<PaginatedMarkdownViewerProps> = ({
@@ -30,6 +31,9 @@ const PaginatedMarkdownViewer: React.FC<PaginatedMarkdownViewerProps> = ({
   pageHeight = 500,
   pageWidth = 300,
   CardComponent,
+  showPageNumbers = false,
+  layoutMode = "自动拆分",
+  config,
 }) => {
   const [pages, setPages] = useState<JSX.Element[]>([]);
 
@@ -54,7 +58,7 @@ const PaginatedMarkdownViewer: React.FC<PaginatedMarkdownViewerProps> = ({
         currentPage.removeChild(clone);
 
         if (isTextNodeLike(node)) {
-          const { newPage, nodeToAdd } = handleTextNode(node, currentPage, wrapper, pageElements, CardComponent, pageHeight, pageWidth);
+          const { newPage, nodeToAdd } = handleTextNode(node, currentPage, wrapper, pageElements, CardComponent, pageHeight, pageWidth, config);
           currentPage = newPage;
           currentPage.appendChild(nodeToAdd);
           i++;
@@ -62,7 +66,7 @@ const PaginatedMarkdownViewer: React.FC<PaginatedMarkdownViewerProps> = ({
         }
 
         if (isList(node)) {
-          const { newPage, nodeToAdd } = handleListNode(node, currentPage, wrapper, pageElements, CardComponent, pageHeight, pageWidth);
+          const { newPage, nodeToAdd } = handleListNode(node, currentPage, wrapper, pageElements, CardComponent, pageHeight, pageWidth, config);
           currentPage = newPage;
           currentPage.appendChild(nodeToAdd);
           i++;
@@ -70,25 +74,22 @@ const PaginatedMarkdownViewer: React.FC<PaginatedMarkdownViewerProps> = ({
         }
 
         if (isTable(node)) {
-          const { newPage, nodeToAdd } = handleTableNode(node, currentPage, wrapper, pageElements, CardComponent, pageHeight, pageWidth);
+          const { newPage, nodeToAdd } = handleTableNode(node, currentPage, wrapper, pageElements, CardComponent, pageHeight, pageWidth, config);
           currentPage = newPage;
           currentPage.appendChild(nodeToAdd);
           i++;
           continue;
         }
-
-
-
 
         if (isImage(node)) {
-          const { newPage, nodeToAdd } = handleImageNode(node, currentPage, wrapper, pageElements, CardComponent, pageHeight, pageWidth);
+          const { newPage, nodeToAdd } = handleImageNode(node, currentPage, wrapper, pageElements, CardComponent, pageHeight, pageWidth, config);
           currentPage = newPage;
           currentPage.appendChild(nodeToAdd);
           i++;
           continue;
         }
 
-        const { newPage, nodeToAdd } = handleGenericNode(node, currentPage, wrapper, pageElements, CardComponent, pageHeight, pageWidth);
+        const { newPage, nodeToAdd } = handleGenericNode(node, currentPage, wrapper, pageElements, CardComponent, pageHeight, pageWidth, config);
         currentPage = newPage;
         currentPage.appendChild(nodeToAdd);
       }
@@ -96,7 +97,7 @@ const PaginatedMarkdownViewer: React.FC<PaginatedMarkdownViewerProps> = ({
     }
 
     if (currentPage.childNodes.length > 0) {
-      addPageElement(currentPage, pageElements, CardComponent, pageHeight, pageWidth);
+      addPageElement(currentPage, pageElements, CardComponent, pageHeight, pageWidth, config);
     }
 
     document.body.removeChild(wrapper);

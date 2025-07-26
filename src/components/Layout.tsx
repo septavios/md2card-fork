@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import Header from "./Header";
+import SettingsPanel from "./SettingsPanel";
 
 interface LayoutProps {
   children: ReactNode;
@@ -9,18 +10,21 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children, onExport }) => {
   return (
     <div 
-      className="h-screen w-screen flex flex-col"
+      className="min-h-screen"
       style={{ backgroundColor: 'var(--bg-primary)' }}
     >
       <Header onExport={onExport} />
-      <div
-        className="flex-1 flex gap-4"
-        style={{
-          height: "calc(100% - 50px)",
-          backgroundColor: 'var(--bg-secondary)'
-        }}
+      <div 
+        className="flex"
+        style={{ backgroundColor: 'var(--bg-secondary)' }}
       >
-        {children}
+        <div 
+          className="flex-1"
+          style={{ marginRight: '320px' }} // Account for fixed settings panel width (320px = w-80)
+        >
+          {children}
+        </div>
+        <SettingsPanel />
       </div>
     </div>
   );

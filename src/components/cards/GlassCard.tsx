@@ -97,7 +97,36 @@ const CardContianer = styled.div`
   // border-radius: 10px;
   padding: 20px;
   overflow: hidden;
-  background-color: #000;
+  background: var(--card-background, #000);
+  background-size: var(--card-background-size, auto);
+  background-position: var(--card-background-position, initial);
+  background-repeat: var(--card-background-repeat, initial);
+  opacity: var(--card-opacity, 1);
+  
+  /* 应用字体设置 */
+  font-family: var(--card-font-family, 'Arial, sans-serif') !important;
+  font-size: var(--card-font-size, '16px') !important;
+  line-height: var(--card-line-height, 1.6) !important;
+
+  /* 确保所有子元素继承字体设置 */
+  * {
+    font-family: inherit !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
+  }
+
+  /* 标题元素保持相对大小 */
+  h1, .md-h1 { font-size: 2em !important; }
+  h2, .md-h2 { font-size: 1.5em !important; }
+  h3, .md-h3 { font-size: 1.25em !important; }
+  h4, .md-h4 { font-size: 1.1em !important; }
+  h5, .md-h5 { font-size: 1em !important; }
+  h6, .md-h6 { font-size: 0.9em !important; }
+
+  /* 代码元素使用等宽字体 */
+  .md-code, .md-codespan, pre, code {
+    font-family: 'Courier New', monospace !important;
+  }
 
   // box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   box-sizing: border-box;
@@ -253,14 +282,14 @@ const CardContianer = styled.div`
   }
 `;
 
-const Card: React.FC = ({
+const Card: React.FC<CardProps> = ({
   page,
   width: settingWidth,
   height: settingHeight,
   containerRef,
-}: CardProps) => {
+}) => {
   const width = settingWidth;
-  const height = ~settingHeight ? "auto" : settingHeight;
+  const height = !settingHeight ? "auto" : settingHeight;
 
   return (
     <CardContianer

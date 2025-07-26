@@ -1,20 +1,35 @@
+import { useRef, useEffect } from "react";
 import MarkdownEditor from "./components/MarkdownEditor";
 import CardPreview from "./components/CardPreview";
 import SettingsPanel from "./components/SettingsPanel";
 import Layout from "./components/Layout";
 import Split from "react-split";
+import useThemeStore from "./stores/themeStore";
 import "./App.css";
 
 function App() {
+  const previewRef = useRef<HTMLDivElement>(null);
+  const initializeTheme = useThemeStore((state) => state.initializeTheme);
+
+  useEffect(() => {
+    // Initialize theme on app mount
+    initializeTheme();
+  }, [initializeTheme]);
+
   const handleExport = async () => {
-    const preview = document.getElementById("preview");
-    if (preview) {
-      const htmlToImage = await import("html-to-image");
-      const dataUrl = await htmlToImage.toPng(preview);
-      const link = document.createElement("a");
-      link.download = "md2card.png";
-      link.href = dataUrl;
-      link.click();
+    try {
+      if (previewRef.current) {
+        const htmlToImage = await import("html-to-image");
+        const dataUrl = await htmlToImage.toPng(previewRef.current);
+        const link = document.createElement("a");
+        link.download = "md2card.png";
+        link.href = dataUrl;
+        link.click();
+      } else {
+        console.error("Preview element not found");
+      }
+    } catch (error) {
+      console.error("Export failed:", error);
     }
   };
 
@@ -30,7 +45,7 @@ function App() {
           <MarkdownEditor />
         </div>
         <div>
-          <CardPreview />
+          <CardPreview ref={previewRef} />
         </div>
       </Split>
       <SettingsPanel />

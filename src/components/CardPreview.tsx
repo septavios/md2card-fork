@@ -3,15 +3,14 @@ import useSettingsStore from "../stores/settingsStore";
 import useEditorStore from "../stores/editorStore";
 
 import "../styles/themes.css";
-import { useEffect, useState } from "react";
+import { useEffect, useState, forwardRef } from "react";
 import { cardComponents } from "../themeConfigs";
 import PaginatedMarkdownViewer from "../utils/PaginatedMarkdownViewer";
 import LongMarkdownViewer from "../utils/LongMarkdownViewer";
 
+interface CardPreviewProps {}
 
-
-
-const CardPreview: React.FC = () => {
+const CardPreview = forwardRef<HTMLDivElement, CardPreviewProps>((props, ref) => {
   const { content: markdown } = useEditorStore();
   const {
     selectedTheme,
@@ -28,31 +27,36 @@ const CardPreview: React.FC = () => {
     return await marked.parse(markdown, { renderer });
   }
 
-
-
   useEffect(() => {
     markdownToHtml(markdown).then(parsed => setHtml(parsed));
   }, [markdown, renderer, selectedTheme]);
 
   return (
-    <div className="bg-gray-100 rounded-lg shadow-sm p-8 overflow-auto  h-full" >
-      {
-        viewMode === "长卡片" ? (
-          <LongMarkdownViewer
-            html={html}
-            CardComponent={Card}
-            pageWidth={width}
-          />
-        ) : (
-          <PaginatedMarkdownViewer
-            CardComponent={Card}
-            pageWidth={width}
-            pageHeight={height}
-            html={html} />
-        )
-      }
+    <div 
+      className="rounded-lg shadow-sm p-8 overflow-auto h-full"
+      style={{ backgroundColor: 'var(--bg-tertiary)' }}
+    >
+      <div ref={ref} className="export-content">
+        {
+          viewMode === "长卡片" ? (
+            <LongMarkdownViewer
+              html={html}
+              CardComponent={Card}
+              pageWidth={width}
+            />
+          ) : (
+            <PaginatedMarkdownViewer
+              CardComponent={Card}
+              pageWidth={width}
+              pageHeight={height}
+              html={html} />
+          )
+        }
+      </div>
     </div>
   );
-};
+});
+
+CardPreview.displayName = 'CardPreview';
 
 export default CardPreview;

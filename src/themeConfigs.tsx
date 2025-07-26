@@ -18,7 +18,6 @@ export interface CardConfig {
 export const cardFiles = import.meta.glob("./components/cards/*Card.tsx", {
   eager: true,
 });
-console.log(cardFiles);
 
 // 动态导入所有的卡片组件
 export const cardComponents = Object.values(cardFiles).reduce(

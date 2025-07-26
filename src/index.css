@@ -2,19 +2,63 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Dark theme as default */
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
+  
+  /* Dark theme colors */
+  --bg-primary: #0f0f0f;
+  --bg-secondary: #1a1a1a;
+  --bg-tertiary: #2a2a2a;
+  --text-primary: #ffffff;
+  --text-secondary: #e5e5e5;
+  --text-muted: #a3a3a3;
+  --accent-primary: #8b5cf6;
+  --accent-secondary: #a78bfa;
+  --accent-hover: #7c3aed;
+  --border-color: #404040;
+  --border-light: #525252;
+  --shadow-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Light theme */
+:root.light {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f9fafb;
+  --bg-tertiary: #f3f4f6;
+  --text-primary: #111827;
+  --text-secondary: #374151;
+  --text-muted: #6b7280;
+  --accent-primary: #8b5cf6;
+  --accent-secondary: #a78bfa;
+  --accent-hover: #7c3aed;
+  --border-color: #e5e7eb;
+  --border-light: #d1d5db;
+  --shadow-color: rgba(0, 0, 0, 0.1);
 }
 
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+  color: var(--text-primary);
+}
+
+/* Prevent FOUC by hiding content until theme is applied */
+.theme-loading {
+  visibility: hidden;
+}
+
+.theme-loaded {
+  visibility: visible;
 }

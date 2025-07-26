@@ -277,14 +277,14 @@ img {
 
 `;
 
-const Card: React.FC = ({
+const Card: React.FC<CardProps> = ({
   page,
   width: settingWidth,
   height: settingHeight,
   containerRef,
-}: CardProps) => {
+}) => {
   const width = settingWidth;
-  const height = ~settingHeight ? "auto" : settingHeight;
+  const height = !settingHeight ? "auto" : settingHeight;
 
   return (
 

@@ -1,31 +1,34 @@
 // 从相对路径导入ButtonGroup组件
 import ButtonGroup from "./ButtonGroup";
+import useThemeStore from "../stores/themeStore";
 
 interface HeaderProps {
-  isDarkMode: boolean;
-  showClock: boolean;
-  onDarkModeChange: (isDark: boolean) => void;
-  onShowClockChange: (show: boolean) => void;
   onExport: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({
-  isDarkMode,
-  showClock,
-  onDarkModeChange,
-  onShowClockChange,
-  onExport,
-}) => {
+const Header: React.FC<HeaderProps> = ({ onExport }) => {
+  const { isDarkMode, showClock, setDarkMode, setShowClock } = useThemeStore();
+
   return (
-    <header className="h-[50px] flex flex-row justify-between items-center px-6 py-4 bg-white  border-b border-gray-200  shadow-sm">
-      <span className="text-2xl font-bold text-gray-800  tracking-tight">
+    <header 
+      className="h-[50px] flex flex-row justify-between items-center px-6 py-4 border-b shadow-sm"
+      style={{
+        backgroundColor: 'var(--bg-secondary)',
+        borderColor: 'var(--border-color)',
+        boxShadow: '0 1px 3px var(--shadow-color)'
+      }}
+    >
+      <span 
+        className="text-2xl font-bold tracking-tight"
+        style={{ color: 'var(--text-primary)' }}
+      >
         MD2Card
       </span>
       <ButtonGroup
         isDarkMode={isDarkMode}
         showClock={showClock}
-        onDarkModeChange={onDarkModeChange}
-        onShowClockChange={onShowClockChange}
+        onDarkModeChange={setDarkMode}
+        onShowClockChange={setShowClock}
         onExport={onExport}
       />
     </header>

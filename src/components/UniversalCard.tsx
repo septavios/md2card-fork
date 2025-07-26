@@ -19,6 +19,11 @@ const DynamicCardContainer = styled.div<{ $config: FinalConfig }>`
   opacity: var(--card-opacity, 1);
   box-shadow: var(--card-shadow);
   
+  /* 确保内容不会被截断 */
+  overflow: visible;
+  word-wrap: break-word;
+  word-break: break-word;
+  
   /* 可读性增强 - 背景模糊 */
   ${props => props.$config.background.blurAmount ? `
     &::before {
@@ -71,6 +76,9 @@ const DynamicCardContainer = styled.div<{ $config: FinalConfig }>`
   .card-content {
     position: relative;
     z-index: 1;
+    overflow: visible;
+    word-wrap: break-word;
+    word-break: break-word;
     
     ${props => {
       const { textOverlay } = props.$config.background;
@@ -236,8 +244,9 @@ const UniversalCard: React.FC<UniversalCardProps> = ({
   
   // 合并样式
   const containerStyle = {
-    width: width ? `${width}px` : '100%',
-    height: height ? `${height}px` : 'auto',
+    width: width && width > 0 ? `${width}px` : '100%',
+    height: height && height > 0 ? `${height}px` : 'auto',
+    minHeight: height && height > 0 ? `${height}px` : 'auto',
     ...cssVariables,
   };
 

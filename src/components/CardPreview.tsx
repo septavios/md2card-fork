@@ -80,13 +80,23 @@ const CardPreview = forwardRef<HTMLDivElement, CardPreviewProps>((props, ref) =>
   const containerStyle: React.CSSProperties = {
     transform: `scale(${scale / 100})`,
     transformOrigin: 'top left',
-    overflow: hideOverflow ? 'hidden' : 'visible',
+    // 在长卡片模式下，始终显示所有内容，不受hideOverflow影响
+    overflow: (viewMode === "长卡片") ? 'visible' : (hideOverflow ? 'hidden' : 'visible'),
+    // 调整容器大小以容纳缩放后的内容
+    width: `${100 / (scale / 100)}%`,
+    height: viewMode === "长卡片" ? 'auto' : `${100 / (scale / 100)}%`,
   };
 
   return (
     <div 
-      className="rounded-lg shadow-sm p-8 overflow-auto h-full"
-      style={{ backgroundColor: 'var(--bg-tertiary)' }}
+      className="rounded-lg shadow-sm p-8 h-full"
+      style={{ 
+        backgroundColor: 'var(--bg-tertiary)',
+        overflow: 'auto',
+        // 确保容器能够滚动查看缩放后的内容
+        minWidth: '100%',
+        minHeight: '100%'
+      }}
     >
       <div ref={ref} className="export-content" style={containerStyle}>
         {

@@ -22,8 +22,8 @@ const LongMarkdownViewer: React.FC<LongMarkdownViewerProps> = ({
   return (
     <CardComponent 
       page={html} 
-      width={pageWidth ?? -1} 
-      height={-1}
+      width={pageWidth ?? 440} 
+      height={-1}  // 长卡片模式下使用-1，让卡片自动调整高度
       config={config}
     />
   );

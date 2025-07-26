@@ -671,10 +671,30 @@ interface SectionProps {
   title: string;
   children: React.ReactNode;
   collapsible?: boolean;
+  isExpanded?: boolean;
+  onToggle?: (expanded: boolean) => void;
 }
 
-const Section: React.FC<SectionProps> = ({ title, children, collapsible = false }) => {
-  const [isExpanded, setIsExpanded] = useState(true);
+const Section: React.FC<SectionProps> = ({ 
+  title, 
+  children, 
+  collapsible = false, 
+  isExpanded: externalIsExpanded,
+  onToggle 
+}) => {
+  const [internalIsExpanded, setInternalIsExpanded] = useState(true);
+  
+  // 使用外部状态（如果提供）或内部状态
+  const isExpanded = externalIsExpanded !== undefined ? externalIsExpanded : internalIsExpanded;
+  
+  const handleToggle = () => {
+    const newExpanded = !isExpanded;
+    if (onToggle) {
+      onToggle(newExpanded);
+    } else {
+      setInternalIsExpanded(newExpanded);
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -687,7 +707,7 @@ const Section: React.FC<SectionProps> = ({ title, children, collapsible = false 
         </h3>
         {collapsible && (
           <button
-            onClick={() => setIsExpanded(!isExpanded)}
+            onClick={handleToggle}
             className="text-xs px-2 py-1 rounded transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500"
             style={{ 
               color: 'var(--text-secondary)',
@@ -745,12 +765,19 @@ const SettingsPanel: React.FC = () => {
   } = useSettingsStore();
 
   const [expandedBackgroundSection, setExpandedBackgroundSection] = useState<BackgroundType | null>(background.type);
+  
+  // 管理可折叠section的展开状态
+  const [isBackgroundSectionExpanded, setIsBackgroundSectionExpanded] = useState(false);
 
   // 处理主题选择的智能配置优先级系统
   const handleThemeChange = (newTheme: string) => {
     if (newTheme !== selectedTheme) {
       // 切换到不同主题时，重置用户自定义设置并应用新主题
       resetToThemeDefaults();
+      
+      // 收起所有展开的菜单
+      setIsBackgroundSectionExpanded(false);
+      setExpandedBackgroundSection(null);
     }
     setSelectedTheme(newTheme);
   };
@@ -1053,7 +1080,12 @@ const SettingsPanel: React.FC = () => {
         </Section>
 
         {/* Background Settings */}
-        <Section title="自定义背景" collapsible>
+        <Section 
+          title="自定义背景" 
+          collapsible 
+          isExpanded={isBackgroundSectionExpanded}
+          onToggle={setIsBackgroundSectionExpanded}
+        >
           <div className="space-y-4">
             {/* Background Type Selector */}
             <div 

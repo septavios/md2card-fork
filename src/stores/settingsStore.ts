@@ -14,6 +14,10 @@ interface BackgroundSettings {
   texturePattern: string;
   imageUrl: string;
   opacity: number; // 0-100
+  // Readability enhancement options
+  textOverlay?: 'none' | 'semi-transparent' | 'blur' | 'gradient';
+  contrastBoost?: number; // 0-100
+  blurAmount?: number; // 0-10 px
 }
 
 interface SettingsState {
@@ -93,6 +97,9 @@ const useSettingsStore = create<SettingsState>()(
         texturePattern: "none",
         imageUrl: "",
         opacity: 100,
+        textOverlay: "none",
+        contrastBoost: 0,
+        blurAmount: 0,
       },
       
       // 用户自定义设置跟踪

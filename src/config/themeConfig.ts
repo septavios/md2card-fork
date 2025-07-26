@@ -32,6 +32,10 @@ export interface BackgroundConfig {
   texturePattern?: string;
   imageUrl?: string;
   opacity: number;
+  // Readability enhancement options
+  textOverlay?: 'none' | 'semi-transparent' | 'blur' | 'gradient';
+  contrastBoost?: number; // 0-100
+  blurAmount?: number; // 0-10 px
 }
 
 export interface ShadowConfig {

@@ -19,6 +19,27 @@ const DynamicCardContainer = styled.div<{ $config: FinalConfig }>`
   opacity: var(--card-opacity, 1);
   box-shadow: var(--card-shadow);
   
+  /* 可读性增强 - 背景模糊 */
+  ${props => props.$config.background.blurAmount ? `
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: inherit;
+      filter: blur(var(--card-blur-amount, 0px));
+      z-index: -1;
+      border-radius: inherit;
+    }
+  ` : ''}
+  
+  /* 可读性增强 - 对比度增强 */
+  ${props => props.$config.background.contrastBoost ? `
+    filter: contrast(${1 + (props.$config.background.contrastBoost || 0) / 100});
+  ` : ''}
+  
   /* 字体样式 */
   font-family: var(--card-font-family) !important;
   font-size: var(--card-font-size) !important;
@@ -44,6 +65,41 @@ const DynamicCardContainer = styled.div<{ $config: FinalConfig }>`
   /* 代码元素使用等宽字体 */
   .md-code, .md-codespan, pre, code {
     font-family: 'JetBrains Mono', 'Courier New', monospace !important;
+  }
+
+  /* 文本覆盖层样式 */
+  .card-content {
+    position: relative;
+    z-index: 1;
+    
+    ${props => {
+      const { textOverlay } = props.$config.background;
+      switch (textOverlay) {
+        case 'semi-transparent':
+          return `
+            background: rgba(255, 255, 255, 0.9) !important;
+            padding: 1em;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+          `;
+        case 'blur':
+          return `
+            background: rgba(255, 255, 255, 0.8) !important;
+            padding: 1em;
+            border-radius: 8px;
+            backdrop-filter: blur(15px);
+          `;
+        case 'gradient':
+          return `
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%) !important;
+            padding: 1em;
+            border-radius: 8px;
+            backdrop-filter: blur(5px);
+          `;
+        default:
+          return '';
+      }
+    }}
   }
 
   /* 基础元素样式 */

@@ -651,10 +651,138 @@ export const warmTheme: ThemeConfig = {
   },
 };
 
+// 自然纹理主题
+export const natureTheme: ThemeConfig = {
+  id: '自然',
+  name: '自然',
+  description: '清新自然的纹理背景主题',
+  font: {
+    family: 'Georgia, "Times New Roman", serif',
+    size: 16,
+    lineHeight: 1.6,
+    weight: 400,
+  },
+  colors: {
+    primary: '#2e7d32',
+    secondary: '#388e3c',
+    accent: '#66bb6a',
+    text: '#1b5e20',
+    background: '#e8f5e8',
+    border: 'rgba(46, 125, 50, 0.2)',
+  },
+  spacing: {
+    padding: 32,
+    margin: 16,
+    borderRadius: 20,
+  },
+  background: {
+    type: 'texture',
+    texturePattern: 'nature-field',
+    opacity: 85,
+    textOverlay: 'semi-transparent',
+    contrastBoost: 15,
+    blurAmount: 0,
+  },
+  shadow: {
+    enabled: true,
+    color: 'rgba(46, 125, 50, 0.25)',
+    blur: 20,
+    spread: 0,
+    offsetX: 0,
+    offsetY: 10,
+  },
+  layout: {
+    width: 440,
+    height: 586,
+    viewMode: '长卡片',
+    hideOverflow: false,
+    showPageNumbers: false,
+    layoutMode: '自动拆分',
+    scale: 100,
+  },
+  customStyles: {
+    container: {
+      position: 'relative',
+      overflow: 'hidden',
+    },
+    elements: {
+      '.card-content': {
+        position: 'relative',
+        borderRadius: '20px',
+        padding: '36px',
+        background: 'rgba(255, 255, 255, 0.92)',
+        border: '1px solid rgba(46, 125, 50, 0.15)',
+        backdropFilter: 'blur(12px)',
+        height: '100%',
+        zIndex: 2,
+        boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.8)',
+      },
+      '.md-blockquote': {
+        borderLeft: '4px solid var(--card-color-primary)',
+        padding: '1.2em 1.8em',
+        margin: '1.5em 0',
+        background: 'rgba(46, 125, 50, 0.08)',
+        borderRadius: '0 12px 12px 0',
+        color: '#2e7d32',
+        fontStyle: 'italic',
+        position: 'relative',
+        '&::before': {
+          content: '"🌿"',
+          position: 'absolute',
+          left: '-10px',
+          top: '12px',
+          fontSize: '18px',
+          background: 'white',
+          borderRadius: '50%',
+          width: '28px',
+          height: '28px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          boxShadow: '0 2px 8px rgba(46, 125, 50, 0.2)',
+        },
+      },
+      '.md-strong': {
+        color: 'var(--card-color-primary)',
+        fontWeight: 700,
+      },
+      '.md-em': {
+        color: 'var(--card-color-secondary)',
+        fontStyle: 'italic',
+        background: 'linear-gradient(120deg, transparent 0%, rgba(46, 125, 50, 0.1) 50%, transparent 100%)',
+        padding: '0 4px',
+        borderRadius: '4px',
+      },
+      'h1, h2, h3': {
+        color: 'var(--card-color-primary)',
+        fontWeight: 600,
+        marginBottom: '1em',
+        position: 'relative',
+        '&::after': {
+          content: '""',
+          position: 'absolute',
+          bottom: '-8px',
+          left: '0',
+          width: '50px',
+          height: '2px',
+          background: 'linear-gradient(90deg, var(--card-color-primary), var(--card-color-accent))',
+          borderRadius: '1px',
+        },
+      },
+      'p': {
+        color: 'var(--card-color-text)',
+        lineHeight: 1.7,
+        marginBottom: '1.2em',
+      },
+    },
+  },
+};
+
 // 主题注册表
 export const predefinedThemes = {
   [defaultTheme.id]: defaultTheme,
   [darkTheme.id]: darkTheme,
   [glassTheme.id]: glassTheme,
   [warmTheme.id]: warmTheme,
+  [natureTheme.id]: natureTheme,
 };

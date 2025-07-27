@@ -2,6 +2,7 @@ import { useRef, useEffect } from "react";
 import MarkdownEditor from "./components/MarkdownEditor";
 import CardPreview from "./components/CardPreview";
 import SettingsPanel from "./components/SettingsPanel";
+import SideButtonPanel from "./components/SideButtonPanel";
 import Layout from "./components/Layout";
 import Split from "react-split";
 import useThemeStore from "./stores/themeStore";
@@ -49,6 +50,7 @@ function App() {
         </div>
       </Split>
       <SettingsPanel />
+      <SideButtonPanel previewRef={previewRef} />
     </Layout>
   );
 }

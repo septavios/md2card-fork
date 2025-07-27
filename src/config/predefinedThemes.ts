@@ -1000,39 +1000,336 @@ export const appleNotesDarkTheme: ThemeConfig = {
   name: 'Apple Notes Dark',
   description: 'Apple Notes inspired dark mode: minimal, professional, and native macOS look.',
   font: {
-    family: '-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Arial, sans-serif',
+    family: '-apple-system, BlinkMacSystemFont, "San Francisco", "PingFang SC", sans-serif',
     size: 16,
-    lineHeight: 1.7,
+    lineHeight: 1.5,
     weight: 400,
   },
   colors: {
-    primary: '#FFD600', // Apple yellow accent
-    secondary: '#FFAB00',
-    accent: '#33323a',
-    text: '#f5f5f7',
-    background: '#1c1c1e',
-    border: 'rgba(255,255,255,0.08)',
+    primary: '#0a84ff',
+    secondary: '#8e8e93',
+    accent: '#636366',
+    text: '#ffffff',
+    background: '#000000',
+    border: '#2c2c2e',
   },
   spacing: {
-    padding: 28,
-    margin: 16,
-    borderRadius: 18,
+    padding: 20,
+    margin: 12,
+    borderRadius: 12,
   },
   background: {
     type: 'solid',
-    solidColor: '#1c1c1e',
+    solidColor: '#000000',
+    opacity: 100,
+  },
+  shadow: {
+    enabled: false,
+    color: 'rgba(0,0,0,0.3)',
+    blur: 0,
+    spread: 0,
+    offsetX: 0,
+    offsetY: 0,
+  },
+  layout: {
+    width: 375,
+    height: 812,
+    viewMode: '长卡片',
+    hideOverflow: false,
+    showPageNumbers: false,
+    layoutMode: '自动拆分',
+    scale: 100,
+  },
+  customStyles: {
+    container: {
+      position: 'relative',
+      background: '#000000',
+      borderRadius: '0px',
+      overflow: 'hidden',
+      margin: '0',
+      padding: '0',
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+    },
+    elements: {
+      // 顶部导航栏
+      '.card-header': {
+        background: '#1c1c1e',
+        height: '44px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '0 16px',
+        borderBottom: '0.5px solid #2c2c2e',
+        position: 'relative',
+        zIndex: 10,
+      },
+      
+      // 顶部栏按钮样式
+      '.header-back-button': {
+        color: '#ffcc02',
+        fontSize: '17px',
+        fontWeight: 400,
+        display: 'flex',
+        alignItems: 'center',
+      },
+      
+      '.header-action-buttons': {
+        color: '#ffcc02',
+        fontSize: '17px',
+        fontWeight: 400,
+        display: 'flex',
+        alignItems: 'center',
+        gap: '12px',
+      },
+      
+      '.card-content': {
+        background: '#1c1c1e',
+        borderRadius: '0px',
+        padding: '16px',
+        color: '#ffffff',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "San Francisco", "PingFang SC", sans-serif',
+        lineHeight: 1.4,
+        flex: 1,
+        fontSize: '16px',
+        border: 'none',
+        boxShadow: 'none',
+        overflow: 'auto',
+      },
+      
+      // 标题样式 - 匹配截图中的书摘标题
+      'h1': {
+        color: '#ffffff',
+        fontSize: '24px',
+        fontWeight: 700,
+        marginTop: '0',
+        marginBottom: '8px',
+        lineHeight: 1.2,
+        display: 'flex',
+        alignItems: 'center',
+        '&::before': {
+          content: '"📚"',
+          marginRight: '8px',
+          fontSize: '20px',
+        },
+      },
+      
+      'h2': {
+        color: '#ffffff',
+        fontSize: '18px',
+        fontWeight: 600,
+        marginTop: '24px',
+        marginBottom: '12px',
+        lineHeight: 1.3,
+        display: 'flex',
+        alignItems: 'center',
+        '&::before': {
+          content: '"✨"',
+          marginRight: '8px',
+          fontSize: '16px',
+        },
+      },
+      
+      'h3': {
+        color: '#ffffff',
+        fontSize: '16px',
+        fontWeight: 600,
+        marginTop: '20px',
+        marginBottom: '10px',
+        lineHeight: 1.3,
+        display: 'flex',
+        alignItems: 'center',
+        '&::before': {
+          content: '"🚀"',
+          marginRight: '8px',
+          fontSize: '14px',
+        },
+      },
+      
+      // 段落样式
+      'p': {
+        color: '#ffffff',
+        fontSize: '16px',
+        lineHeight: 1.4,
+        margin: '8px 0',
+        fontWeight: 400,
+      },
+      
+      // 引用样式 - 匹配截图中的引用
+      '.md-blockquote': {
+        borderLeft: 'none',
+        padding: '0',
+        margin: '8px 0',
+        background: 'transparent',
+        color: '#8e8e93',
+        fontStyle: 'normal',
+        fontSize: '16px',
+        lineHeight: 1.4,
+        position: 'relative',
+        paddingLeft: '16px',
+        '&::before': {
+          content: '"——"',
+          position: 'absolute',
+          left: '0',
+          color: '#8e8e93',
+          fontWeight: 400,
+        },
+      },
+      
+      // 列表样式 - 匹配截图中的复选框列表
+      'ul': {
+        listStyle: 'none',
+        padding: '0',
+        margin: '16px 0',
+      },
+      
+      'li': {
+        color: '#ffffff',
+        fontSize: '16px',
+        lineHeight: 1.5,
+        marginBottom: '8px',
+        paddingLeft: '0',
+        display: 'flex',
+        alignItems: 'center',
+        position: 'relative',
+      },
+      
+      // 复选框样式
+      'input[type="checkbox"]': {
+        appearance: 'none',
+        width: '18px',
+        height: '18px',
+        borderRadius: '3px',
+        border: '2px solid #0a84ff',
+        marginRight: '8px',
+        position: 'relative',
+        backgroundColor: 'transparent',
+        cursor: 'pointer',
+        '&:checked': {
+          backgroundColor: '#0a84ff',
+          '&::after': {
+            content: '"✓"',
+            position: 'absolute',
+            top: '-2px',
+            left: '2px',
+            color: '#ffffff',
+            fontSize: '12px',
+            fontWeight: 'bold',
+          },
+        },
+      },
+      
+      // 未完成的复选框
+      'li:has(input[type="checkbox"]:not(:checked))': {
+        '& input[type="checkbox"]': {
+          backgroundColor: 'transparent',
+          border: '2px solid #8e8e93',
+        },
+      },
+      
+      // 强调文本
+      '.md-strong, strong': {
+        color: '#ffffff',
+        fontWeight: 600,
+      },
+      
+      '.md-em, em': {
+        color: '#8e8e93',
+        fontStyle: 'normal',
+        fontSize: '16px',
+      },
+      
+      // 分割线
+      '.md-hr, hr': {
+        border: 'none',
+        borderTop: '1px solid #2c2c2e',
+        margin: '20px 0',
+        opacity: 0.6,
+      },
+      
+      // 代码样式
+      'code': {
+        background: '#2c2c2e',
+        color: '#ffffff',
+        fontFamily: 'SFMono-Regular, Consolas, monospace',
+        fontSize: '14px',
+        padding: '2px 6px',
+        borderRadius: '4px',
+      },
+      
+      'pre': {
+        background: '#2c2c2e',
+        color: '#ffffff',
+        fontFamily: 'SFMono-Regular, Consolas, monospace',
+        fontSize: '14px',
+        padding: '12px',
+        borderRadius: '8px',
+        overflowX: 'auto',
+        margin: '16px 0',
+      },
+      
+      // 链接样式
+      'a': {
+        color: '#0a84ff',
+        textDecoration: 'none',
+        '&:hover': {
+          textDecoration: 'underline',
+        },
+      },
+      
+      // 标签样式 - 匹配截图底部的标签
+      '.hashtag': {
+        color: '#0a84ff',
+        fontSize: '16px',
+        fontWeight: 400,
+        marginTop: '20px',
+        display: 'block',
+      },
+    },
+  },
+};
+
+// Nord Dark Theme - Professional, Calm, and Minimalist (Dark Mode)
+export const nordDarkTheme: ThemeConfig = {
+  id: 'NordDark',
+  name: 'Nord Dark',
+  description: 'Professional, calm, and minimalist dark theme inspired by the Nord color palette.',
+  font: {
+    family: 'Inter, sans-serif',
+    size: 16,
+    lineHeight: 1.6,
+    weight: 400,
+  },
+  colors: {
+    primary: '#88C0D0',
+    secondary: '#81A1C1',
+    accent: '#88C0D0',
+    text: '#D8DEE9',
+    background: '#2E3440',
+    border: '#434C5E',
+  },
+  spacing: {
+    padding: 20,
+    margin: 16,
+    borderRadius: 12,
+  },
+  background: {
+    type: 'solid',
+    solidColor: '#2E3440',
     opacity: 100,
   },
   shadow: {
     enabled: true,
-    color: 'rgba(0,0,0,0.5)',
-    blur: 32,
+    color: 'rgba(0,0,0,0.25)',
+    blur: 20,
     spread: 0,
     offsetX: 0,
-    offsetY: 12,
+    offsetY: 6,
   },
   layout: {
-    width: 440,
+    width: 720,
     height: 586,
     viewMode: '长卡片',
     hideOverflow: false,
@@ -1043,89 +1340,1233 @@ export const appleNotesDarkTheme: ThemeConfig = {
   customStyles: {
     container: {
       position: 'relative',
-      background: '#1c1c1e',
-      borderRadius: '18px',
-      boxShadow: '0 6px 32px 0 rgba(0,0,0,0.5)',
-      border: '1px solid rgba(255,255,255,0.08)',
+      background: '#2E3440',
+      borderRadius: '12px',
+      boxShadow: '0 6px 20px rgba(0, 0, 0, 0.25)',
+      border: '1px solid #434C5E',
       overflow: 'hidden',
+      transition: 'all 250ms ease-in-out',
+      animation: 'fadeInUp 0.6s ease-out',
     },
     elements: {
       '.card-content': {
-        background: '#232326',
-        borderRadius: '16px',
-        padding: '32px',
-        border: '1px solid #232326',
-        boxShadow: '0 1px 4px 0 rgba(0,0,0,0.10)',
+        background: '#2E3440',
+        borderRadius: '12px',
+        padding: '20px',
         minHeight: '200px',
+        color: '#D8DEE9',
       },
-      'h1': {
-        color: '#FFD600',
-        fontWeight: 700,
-        fontSize: '2.1em',
-        marginBottom: '0.7em',
-        marginTop: 0,
+      'h1, h2, h3': {
+        color: '#88C0D0',
+        fontWeight: 600,
+        marginBottom: '1em',
         letterSpacing: '-0.01em',
       },
-      'h2, h3': {
-        color: '#f5f5f7',
+      'p': {
+        color: '#D8DEE9',
+        lineHeight: 1.6,
+        marginBottom: '1.2em',
+      },
+      'a': {
+        color: '#88C0D0',
+        textDecoration: 'none',
+        borderBottom: '1px solid transparent',
+        transition: 'border-color 200ms ease',
+      },
+      'a:hover': {
+        borderBottomColor: '#88C0D0',
+      },
+      '.md-blockquote': {
+        borderLeft: '4px solid #88C0D0',
+        padding: '1em 1.5em',
+        margin: '1.5em 0',
+        background: 'rgba(136, 192, 208, 0.1)',
+        borderRadius: '0 8px 8px 0',
+        color: '#D8DEE9',
+        fontStyle: 'italic',
+      },
+      'code': {
+        background: '#3B4252',
+        color: '#88C0D0',
+        padding: '0.2em 0.4em',
+        borderRadius: '4px',
+        fontSize: '0.9em',
+      },
+    },
+  },
+};
+
+// Vintage Sepia Theme - Nostalgic, Bookish, Warm
+export const vintageSepiaTheme: ThemeConfig = {
+  id: 'VintageSepia',
+  name: 'Vintage Sepia',
+  description: 'Nostalgic, bookish, and warm theme with vintage paper aesthetics.',
+  font: {
+    family: 'Georgia, serif',
+    size: 16,
+    lineHeight: 1.7,
+    weight: 400,
+  },
+  colors: {
+    primary: '#B58900',
+    secondary: '#D6C6A5',
+    accent: '#B58900',
+    text: '#4B4237',
+    background: '#FAF3E0',
+    border: '#D6C6A5',
+  },
+  spacing: {
+    padding: 24,
+    margin: 16,
+    borderRadius: 10,
+  },
+  background: {
+    type: 'solid',
+    solidColor: '#FAF3E0',
+    opacity: 100,
+  },
+  shadow: {
+    enabled: false,
+    color: 'rgba(0,0,0,0)',
+    blur: 0,
+    spread: 0,
+    offsetX: 0,
+    offsetY: 0,
+  },
+  layout: {
+    width: 680,
+    height: 586,
+    viewMode: '长卡片',
+    hideOverflow: false,
+    showPageNumbers: false,
+    layoutMode: '自动拆分',
+    scale: 100,
+  },
+  customStyles: {
+    container: {
+      position: 'relative',
+      background: '#FAF3E0',
+      borderRadius: '10px',
+      border: '1px dashed #D6C6A5',
+      overflow: 'hidden',
+      transition: 'transform 200ms ease-in-out',
+      animation: 'slideInLeft 0.6s ease-out',
+    },
+    elements: {
+      '.card-content': {
+        background: '#FAF3E0',
+        borderRadius: '10px',
+        padding: '24px',
+        minHeight: '200px',
+        color: '#4B4237',
+      },
+      'h1, h2, h3': {
+        color: '#B58900',
+        fontWeight: 700,
+        marginBottom: '1em',
+        fontFamily: 'Georgia, serif',
+      },
+      'p': {
+        color: '#4B4237',
+        lineHeight: 1.7,
+        marginBottom: '1.2em',
+        textAlign: 'justify',
+      },
+      'a': {
+        color: '#B58900',
+        textDecoration: 'underline',
+        textDecorationStyle: 'wavy',
+      },
+      '.md-blockquote': {
+        borderLeft: '4px solid #B58900',
+        padding: '1em 1.5em',
+        margin: '1.5em 0',
+        background: 'rgba(181, 137, 0, 0.1)',
+        borderRadius: '0 8px 8px 0',
+        color: '#4B4237',
+        fontStyle: 'italic',
+      },
+      'code': {
+        background: '#F0E6C7',
+        color: '#B58900',
+        padding: '0.2em 0.4em',
+        borderRadius: '4px',
+        fontSize: '0.9em',
+        fontFamily: 'Georgia, serif',
+      },
+    },
+  },
+};
+
+// Minimal Light Theme - Neutral, Clean, Swiss-Style
+export const minimalLightTheme: ThemeConfig = {
+  id: 'MinimalLight',
+  name: 'Minimal Light',
+  description: 'Neutral, clean, Swiss-style design with perfect typography.',
+  font: {
+    family: 'Helvetica Neue, sans-serif',
+    size: 16,
+    lineHeight: 1.6,
+    weight: 400,
+  },
+  colors: {
+    primary: '#0077CC',
+    secondary: '#E5E5E5',
+    accent: '#0077CC',
+    text: '#111111',
+    background: '#FFFFFF',
+    border: '#E5E5E5',
+  },
+  spacing: {
+    padding: 16,
+    margin: 12.8,
+    borderRadius: 8,
+  },
+  background: {
+    type: 'solid',
+    solidColor: '#FFFFFF',
+    opacity: 100,
+  },
+  shadow: {
+    enabled: true,
+    color: 'rgba(0,0,0,0.06)',
+    blur: 6,
+    spread: 0,
+    offsetX: 0,
+    offsetY: 2,
+  },
+  layout: {
+    width: 660,
+    height: 586,
+    viewMode: '长卡片',
+    hideOverflow: false,
+    showPageNumbers: false,
+    layoutMode: '自动拆分',
+    scale: 100,
+  },
+  customStyles: {
+    container: {
+      position: 'relative',
+      background: '#FFFFFF',
+      borderRadius: '8px',
+      boxShadow: '0 2px 6px rgba(0, 0, 0, 0.06)',
+      border: '1px solid #E5E5E5',
+      overflow: 'hidden',
+      transition: 'background-color 200ms ease',
+      animation: 'fadeIn 0.4s ease-out',
+    },
+    elements: {
+      '.card-content': {
+        background: '#FFFFFF',
+        borderRadius: '8px',
+        padding: '16px',
+        minHeight: '200px',
+        color: '#111111',
+      },
+      'h1, h2, h3': {
+        color: '#0077CC',
         fontWeight: 600,
-        background: 'linear-gradient(90deg, #FFD600 0%, #FFAB00 100%)',
+        marginBottom: '1em',
+        letterSpacing: '-0.02em',
+      },
+      'p': {
+        color: '#111111',
+        lineHeight: 1.6,
+        marginBottom: '1.2em',
+      },
+      'a': {
+        color: '#0077CC',
+        textDecoration: 'none',
+        borderBottom: '1px solid #0077CC',
+      },
+      '.md-blockquote': {
+        borderLeft: '4px solid #0077CC',
+        padding: '1em 1.5em',
+        margin: '1.5em 0',
+        background: 'rgba(0, 119, 204, 0.05)',
+        borderRadius: '0 4px 4px 0',
+        color: '#111111',
+        fontStyle: 'italic',
+      },
+      'code': {
+        background: '#F5F5F5',
+        color: '#0077CC',
+        padding: '0.2em 0.4em',
+        borderRadius: '4px',
+        fontSize: '0.9em',
+        fontFamily: 'Monaco, Consolas, monospace',
+      },
+    },
+  },
+};
+
+// Soft Rose Theme - Feminine, Editorial, Elegant
+export const softRoseTheme: ThemeConfig = {
+  id: 'SoftRose',
+  name: 'Soft Rose',
+  description: 'Feminine, editorial, and elegant theme with soft rose aesthetics.',
+  font: {
+    family: 'Playfair Display, serif',
+    size: 16,
+    lineHeight: 1.7,
+    weight: 400,
+  },
+  colors: {
+    primary: '#D6336C',
+    secondary: '#FFD6DD',
+    accent: '#D6336C',
+    text: '#4A1C2F',
+    background: '#FFF1F5',
+    border: '#FFD6DD',
+  },
+  spacing: {
+    padding: 28,
+    margin: 20,
+    borderRadius: 16,
+  },
+  background: {
+    type: 'solid',
+    solidColor: '#FFF1F5',
+    opacity: 100,
+  },
+  shadow: {
+    enabled: true,
+    color: 'rgba(255, 182, 193, 0.2)',
+    blur: 12,
+    spread: 0,
+    offsetX: 0,
+    offsetY: 3,
+  },
+  layout: {
+    width: 700,
+    height: 586,
+    viewMode: '长卡片',
+    hideOverflow: false,
+    showPageNumbers: false,
+    layoutMode: '自动拆分',
+    scale: 100,
+  },
+  customStyles: {
+    container: {
+      position: 'relative',
+      background: '#FFF1F5',
+      borderRadius: '16px',
+      boxShadow: '0 3px 12px rgba(255, 182, 193, 0.2)',
+      border: '1px solid #FFD6DD',
+      overflow: 'hidden',
+      transition: 'all 300ms ease-in-out',
+      animation: 'zoomIn 0.6s ease-out',
+    },
+    elements: {
+      '.card-content': {
+        background: '#FFF1F5',
+        borderRadius: '16px',
+        padding: '28px',
+        minHeight: '200px',
+        color: '#4A1C2F',
+      },
+      'h1, h2, h3': {
+        color: '#D6336C',
+        fontWeight: 700,
+        marginBottom: '1em',
+        fontFamily: 'Playfair Display, serif',
+        letterSpacing: '-0.01em',
+      },
+      'p': {
+        color: '#4A1C2F',
+        lineHeight: 1.7,
+        marginBottom: '1.2em',
+      },
+      'a': {
+        color: '#D6336C',
+        textDecoration: 'none',
+        borderBottom: '2px solid rgba(214, 51, 108, 0.3)',
+        transition: 'border-color 200ms ease',
+      },
+      'a:hover': {
+        borderBottomColor: '#D6336C',
+      },
+      '.md-blockquote': {
+        borderLeft: '4px solid #D6336C',
+        padding: '1em 1.5em',
+        margin: '1.5em 0',
+        background: 'rgba(214, 51, 108, 0.08)',
+        borderRadius: '0 12px 12px 0',
+        color: '#4A1C2F',
+        fontStyle: 'italic',
+      },
+      'code': {
+        background: '#FFE8ED',
+        color: '#D6336C',
+        padding: '0.2em 0.4em',
+        borderRadius: '6px',
+        fontSize: '0.9em',
+      },
+    },
+  },
+};
+
+// Cyber Blue Theme - Techy, Futuristic, High Contrast (Dark Mode)
+export const cyberBlueTheme: ThemeConfig = {
+  id: 'CyberBlue',
+  name: 'Cyber Blue',
+  description: 'Techy, futuristic, high contrast dark theme with neon accents.',
+  font: {
+    family: 'Fira Code, monospace',
+    size: 16,
+    lineHeight: 1.6,
+    weight: 400,
+  },
+  colors: {
+    primary: '#00FFE7',
+    secondary: '#1F2233',
+    accent: '#00FFE7',
+    text: '#E4EAF1',
+    background: '#0F111A',
+    border: '#1F2233',
+  },
+  spacing: {
+    padding: 19.2,
+    margin: 16,
+    borderRadius: 12,
+  },
+  background: {
+    type: 'solid',
+    solidColor: '#0F111A',
+    opacity: 100,
+  },
+  shadow: {
+    enabled: true,
+    color: 'rgba(0, 255, 255, 0.2)',
+    blur: 14,
+    spread: 0,
+    offsetX: 0,
+    offsetY: 4,
+  },
+  layout: {
+    width: 720,
+    height: 586,
+    viewMode: '长卡片',
+    hideOverflow: false,
+    showPageNumbers: false,
+    layoutMode: '自动拆分',
+    scale: 100,
+  },
+  customStyles: {
+    container: {
+      position: 'relative',
+      background: '#0F111A',
+      borderRadius: '12px',
+      boxShadow: '0 4px 14px rgba(0, 255, 255, 0.2)',
+      border: '1px solid #1F2233',
+      overflow: 'hidden',
+      transition: 'all 250ms ease',
+      animation: 'slideInBottom 0.6s ease-out',
+    },
+    elements: {
+      '.card-content': {
+        background: '#0F111A',
+        borderRadius: '12px',
+        padding: '19.2px',
+        minHeight: '200px',
+        color: '#E4EAF1',
+      },
+      'h1, h2, h3': {
+        color: '#00FFE7',
+        fontWeight: 600,
+        marginBottom: '1em',
+        textShadow: '0 0 10px rgba(0, 255, 231, 0.3)',
+        fontFamily: 'Fira Code, monospace',
+      },
+      'p': {
+        color: '#E4EAF1',
+        lineHeight: 1.6,
+        marginBottom: '1.2em',
+      },
+      'a': {
+        color: '#00FFE7',
+        textDecoration: 'none',
+        textShadow: '0 0 5px rgba(0, 255, 231, 0.5)',
+        transition: 'text-shadow 200ms ease',
+      },
+      'a:hover': {
+        textShadow: '0 0 10px rgba(0, 255, 231, 0.8)',
+      },
+      '.md-blockquote': {
+        borderLeft: '4px solid #00FFE7',
+        padding: '1em 1.5em',
+        margin: '1.5em 0',
+        background: 'rgba(0, 255, 231, 0.1)',
+        borderRadius: '0 8px 8px 0',
+        color: '#E4EAF1',
+        fontStyle: 'italic',
+        boxShadow: '0 0 10px rgba(0, 255, 231, 0.1)',
+      },
+      'code': {
+        background: '#1F2233',
+        color: '#00FFE7',
+        padding: '0.2em 0.4em',
+        borderRadius: '4px',
+        fontSize: '0.9em',
+        fontFamily: 'Fira Code, monospace',
+        border: '1px solid rgba(0, 255, 231, 0.2)',
+      },
+    },
+  },
+};
+
+// Earthy Olive Theme - Natural, Calm, Organic
+export const earthyOliveTheme: ThemeConfig = {
+  id: 'EarthyOlive',
+  name: 'Earthy Olive',
+  description: 'Natural, calm, and organic theme with earthy olive tones.',
+  font: {
+    family: 'Merriweather, serif',
+    size: 16,
+    lineHeight: 1.7,
+    weight: 400,
+  },
+  colors: {
+    primary: '#6C8B3C',
+    secondary: '#DCE0D4',
+    accent: '#6C8B3C',
+    text: '#2D2A26',
+    background: '#F3F5ED',
+    border: '#DCE0D4',
+  },
+  spacing: {
+    padding: 22.4,
+    margin: 16,
+    borderRadius: 14,
+  },
+  background: {
+    type: 'solid',
+    solidColor: '#F3F5ED',
+    opacity: 100,
+  },
+  shadow: {
+    enabled: true,
+    color: 'rgba(0, 0, 0, 0.1)',
+    blur: 10,
+    spread: 0,
+    offsetX: 0,
+    offsetY: 3,
+  },
+  layout: {
+    width: 700,
+    height: 586,
+    viewMode: '长卡片',
+    hideOverflow: false,
+    showPageNumbers: false,
+    layoutMode: '自动拆分',
+    scale: 100,
+  },
+  customStyles: {
+    container: {
+      position: 'relative',
+      background: '#F3F5ED',
+      borderRadius: '14px',
+      boxShadow: '0 3px 10px rgba(0, 0, 0, 0.1)',
+      border: '1px solid #DCE0D4',
+      overflow: 'hidden',
+      transition: 'box-shadow 200ms ease-in-out',
+      animation: 'fadeInStagger 0.8s ease-out',
+    },
+    elements: {
+      '.card-content': {
+        background: '#F3F5ED',
+        borderRadius: '14px',
+        padding: '22.4px',
+        minHeight: '200px',
+        color: '#2D2A26',
+      },
+      'h1, h2, h3': {
+        color: '#6C8B3C',
+        fontWeight: 700,
+        marginBottom: '1em',
+        fontFamily: 'Merriweather, serif',
+      },
+      'p': {
+        color: '#2D2A26',
+        lineHeight: 1.7,
+        marginBottom: '1.2em',
+      },
+      'a': {
+        color: '#6C8B3C',
+        textDecoration: 'none',
+        borderBottom: '2px solid rgba(108, 139, 60, 0.3)',
+        transition: 'border-color 200ms ease',
+      },
+      'a:hover': {
+        borderBottomColor: '#6C8B3C',
+      },
+      '.md-blockquote': {
+        borderLeft: '4px solid #6C8B3C',
+        padding: '1em 1.5em',
+        margin: '1.5em 0',
+        background: 'rgba(108, 139, 60, 0.08)',
+        borderRadius: '0 10px 10px 0',
+        color: '#2D2A26',
+        fontStyle: 'italic',
+      },
+      'code': {
+        background: '#E8EBE0',
+        color: '#6C8B3C',
+        padding: '0.2em 0.4em',
+        borderRadius: '6px',
+        fontSize: '0.9em',
+      },
+    },
+  },
+};
+
+// Neon Glass Theme - Playful, Modern, Transparent (Dark/Glass UI)
+export const neonGlassTheme: ThemeConfig = {
+  id: 'NeonGlass',
+  name: 'Neon Glass',
+  description: 'Playful, modern, transparent glass UI with neon accents.',
+  font: {
+    family: 'Roboto Mono, monospace',
+    size: 16,
+    lineHeight: 1.6,
+    weight: 400,
+  },
+  colors: {
+    primary: '#FF5CFF',
+    secondary: 'rgba(255,255,255,0.15)',
+    accent: '#FF5CFF',
+    text: '#FFFFFF',
+    background: 'rgba(255, 255, 255, 0.04)',
+    border: 'rgba(255,255,255,0.15)',
+  },
+  spacing: {
+    padding: 24,
+    margin: 19.2,
+    borderRadius: 18,
+  },
+  background: {
+    type: 'solid',
+    solidColor: 'rgba(0, 0, 0, 0.8)',
+    opacity: 100,
+  },
+  shadow: {
+    enabled: true,
+    color: 'rgba(0, 0, 0, 0.4)',
+    blur: 30,
+    spread: 0,
+    offsetX: 0,
+    offsetY: 10,
+  },
+  layout: {
+    width: 760,
+    height: 586,
+    viewMode: '长卡片',
+    hideOverflow: false,
+    showPageNumbers: false,
+    layoutMode: '自动拆分',
+    scale: 100,
+  },
+  customStyles: {
+    container: {
+      position: 'relative',
+      background: 'rgba(255, 255, 255, 0.04)',
+      borderRadius: '18px',
+      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4)',
+      border: '1px solid rgba(255,255,255,0.15)',
+      overflow: 'hidden',
+      transition: 'transform 300ms ease-in-out',
+      animation: 'blurFadeIn 0.8s ease-out',
+      backdropFilter: 'blur(20px)',
+      WebkitBackdropFilter: 'blur(20px)',
+    },
+    elements: {
+      '.card-content': {
+        background: 'transparent',
+        borderRadius: '18px',
+        padding: '24px',
+        minHeight: '200px',
+        color: '#FFFFFF',
+      },
+      'h1, h2, h3': {
+        color: '#FF5CFF',
+        fontWeight: 600,
+        marginBottom: '1em',
+        textShadow: '0 0 15px rgba(255, 92, 255, 0.5)',
+        fontFamily: 'Roboto Mono, monospace',
+      },
+      'p': {
+        color: '#FFFFFF',
+        lineHeight: 1.6,
+        marginBottom: '1.2em',
+      },
+      'a': {
+        color: '#FF5CFF',
+        textDecoration: 'none',
+        textShadow: '0 0 10px rgba(255, 92, 255, 0.6)',
+        transition: 'text-shadow 200ms ease',
+      },
+      'a:hover': {
+        textShadow: '0 0 20px rgba(255, 92, 255, 0.9)',
+      },
+      '.md-blockquote': {
+        borderLeft: '4px solid #FF5CFF',
+        padding: '1em 1.5em',
+        margin: '1.5em 0',
+        background: 'rgba(255, 92, 255, 0.1)',
+        borderRadius: '0 12px 12px 0',
+        color: '#FFFFFF',
+        fontStyle: 'italic',
+        boxShadow: '0 0 15px rgba(255, 92, 255, 0.2)',
+        backdropFilter: 'blur(10px)',
+      },
+      'code': {
+        background: 'rgba(255, 255, 255, 0.1)',
+        color: '#FF5CFF',
+        padding: '0.2em 0.4em',
+        borderRadius: '6px',
+        fontSize: '0.9em',
+        fontFamily: 'Roboto Mono, monospace',
+        border: '1px solid rgba(255, 92, 255, 0.3)',
+        backdropFilter: 'blur(5px)',
+      },
+    },
+  },
+};
+
+// 小红书风格主题 - 时尚、活泼、社交化
+export const xiaohongshuTheme: ThemeConfig = {
+  id: 'Xiaohongshu',
+  name: '小红书',
+  description: '时尚活泼的小红书风格，适合生活分享和种草内容',
+  font: {
+    family: 'PingFang SC, -apple-system, BlinkMacSystemFont, Helvetica Neue, sans-serif',
+    size: 16,
+    lineHeight: 1.6,
+    weight: 400,
+  },
+  colors: {
+    primary: '#FF2442',
+    secondary: '#FF6B8A',
+    accent: '#FFB3C1',
+    text: '#333333',
+    background: '#FFFFFF',
+    border: '#F5F5F5',
+  },
+  spacing: {
+    padding: 20,
+    margin: 16,
+    borderRadius: 16,
+  },
+  background: {
+    type: 'gradient',
+    gradientDirection: 135,
+    gradientStart: '#FFFFFF',
+    gradientEnd: '#FFF8F9',
+    opacity: 100,
+  },
+  shadow: {
+    enabled: true,
+    color: 'rgba(255, 36, 66, 0.15)',
+    blur: 20,
+    spread: 0,
+    offsetX: 0,
+    offsetY: 8,
+  },
+  layout: {
+    width: 375,
+    height: 667,
+    viewMode: '长卡片',
+    hideOverflow: false,
+    showPageNumbers: false,
+    layoutMode: '自动拆分',
+    scale: 100,
+  },
+  customStyles: {
+    container: {
+      position: 'relative',
+      background: 'linear-gradient(135deg, #FFFFFF 0%, #FFF8F9 100%)',
+      borderRadius: '16px',
+      boxShadow: '0 8px 32px rgba(255, 36, 66, 0.15), 0 2px 8px rgba(0, 0, 0, 0.08)',
+      border: '1px solid #F5F5F5',
+      overflow: 'hidden',
+      transition: 'all 300ms ease',
+      animation: 'xiaohongshuEntry 0.8s ease-out',
+    },
+    elements: {
+      // 卡片头部样式
+      '.card-header': {
+        background: 'linear-gradient(135deg, #FF2442 0%, #FF6B8A 100%)',
+        height: '60px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'relative',
+        '&::before': {
+          content: '"📝"',
+          fontSize: '24px',
+          marginRight: '8px',
+        },
+        '&::after': {
+          content: '""',
+          position: 'absolute',
+          bottom: '0',
+          left: '0',
+          right: '0',
+          height: '3px',
+          background: 'linear-gradient(90deg, #FFB3C1, #FF6B8A, #FF2442, #FF6B8A, #FFB3C1)',
+          backgroundSize: '200% 100%',
+          animation: 'shimmer 2s infinite',
+        },
+      },
+      
+      // 卡片内容区域
+      '.card-content': {
+        background: '#FFFFFF',
+        padding: '24px 20px',
+        minHeight: '400px',
+        position: 'relative',
+      },
+      
+      // 内容内部区域
+      '.card-content-inner': {
+        position: 'relative',
+        zIndex: 2,
+      },
+      
+      // 卡片底部样式
+      '.card-footer': {
+        background: 'linear-gradient(135deg, #FFF8F9 0%, #FFE8EC 100%)',
+        height: '50px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '0 20px',
+        borderTop: '1px solid #F5F5F5',
+        '&::before': {
+          content: '"❤️ 点赞"',
+          color: '#FF2442',
+          fontSize: '14px',
+          fontWeight: 500,
+        },
+        '&::after': {
+          content: '"💬 评论"',
+          color: '#666666',
+          fontSize: '14px',
+        },
+      },
+      
+      // 标题样式 - 小红书风格
+      'h1[data-text]': {
+        color: '#FF2442',
+        fontSize: '24px',
+        fontWeight: 700,
+        marginBottom: '16px',
+        position: 'relative',
+        textAlign: 'center',
+        '&::before': {
+          content: 'attr(data-text)',
+          position: 'absolute',
+          top: '0',
+          left: '0',
+          right: '0',
+          background: 'linear-gradient(135deg, #FF2442, #FF6B8A)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          backgroundClip: 'text',
+          filter: 'blur(1px)',
+          opacity: 0.3,
+          transform: 'translate(2px, 2px)',
+        },
+        '&::after': {
+          content: '"✨"',
+          position: 'absolute',
+          right: '-30px',
+          top: '-5px',
+          fontSize: '18px',
+          animation: 'sparkle 2s infinite',
+        },
+      },
+      
+      'h2[data-text]': {
+        color: '#FF6B8A',
+        fontSize: '20px',
+        fontWeight: 600,
+        marginBottom: '12px',
+        position: 'relative',
+        '&::before': {
+          content: '"🌟"',
+          marginRight: '8px',
+          fontSize: '16px',
+        },
+      },
+      
+      // 段落样式
+      'p': {
+        color: '#333333',
+        lineHeight: 1.8,
+        marginBottom: '16px',
+        fontSize: '16px',
+        textAlign: 'justify',
+        position: 'relative',
+      },
+      
+      // 列表样式 - 小红书风格
+      'ol': {
+        paddingLeft: '0',
+        listStyle: 'none',
+        counterReset: 'xiaohongshu-counter',
+      },
+      
+      'ol li[data-index]': {
+        position: 'relative',
+        paddingLeft: '40px',
+        marginBottom: '12px',
+        color: '#333333',
+        fontSize: '16px',
+        lineHeight: 1.6,
+        counterIncrement: 'xiaohongshu-counter',
+        '&::before': {
+          content: 'counter(xiaohongshu-counter)',
+          position: 'absolute',
+          left: '0',
+          top: '0',
+          width: '28px',
+          height: '28px',
+          background: 'linear-gradient(135deg, #FF2442, #FF6B8A)',
+          color: '#FFFFFF',
+          borderRadius: '50%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '14px',
+          fontWeight: 600,
+          boxShadow: '0 2px 8px rgba(255, 36, 66, 0.3)',
+        },
+        '&:hover::before': {
+          transform: 'scale(1.1)',
+          transition: 'transform 0.2s ease',
+        },
+      },
+      
+      // 引用样式
+      '.md-blockquote': {
+        borderLeft: '4px solid #FF2442',
+        padding: '16px 20px',
+        margin: '20px 0',
+        background: 'linear-gradient(135deg, rgba(255, 36, 66, 0.05), rgba(255, 107, 138, 0.03))',
+        borderRadius: '0 12px 12px 0',
+        color: '#333333',
+        fontStyle: 'italic',
+        position: 'relative',
+        '&::before': {
+          content: '"💭"',
+          position: 'absolute',
+          left: '8px',
+          top: '8px',
+          fontSize: '20px',
+        },
+      },
+      
+      // 加粗文本
+      '.md-strong, strong': {
+        color: '#FF2442',
+        fontWeight: 700,
+        background: 'linear-gradient(135deg, #FF2442, #FF6B8A)',
         WebkitBackgroundClip: 'text',
         WebkitTextFillColor: 'transparent',
         backgroundClip: 'text',
-        marginTop: '1.5em',
-        marginBottom: '0.7em',
+        position: 'relative',
+        '&::after': {
+          content: '"✨"',
+          fontSize: '12px',
+          marginLeft: '4px',
+          opacity: 0.7,
+        },
       },
-      'p': {
-        color: '#f5f5f7',
-        lineHeight: 1.7,
-        marginBottom: '1.2em',
-        marginTop: 0,
-      },
-      'ul, ol': {
-        margin: '1.2em 0',
-        paddingLeft: '1.5em',
-      },
-      'li': {
-        marginBottom: '0.5em',
-        color: '#f5f5f7',
-      },
-      'img': {
-        display: 'block',
-        maxWidth: '100%',
-        borderRadius: '12px',
-        margin: '1.2em 0',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.18)',
-      },
-      '.md-blockquote': {
-        borderLeft: '4px solid #FFD600',
-        padding: '1em 1.5em',
-        margin: '1.5em 0',
-        background: 'rgba(255, 214, 0, 0.08)',
-        borderRadius: '0 8px 8px 0',
-        color: '#e0e0e0',
+      
+      // 斜体文本
+      '.md-em, em': {
+        color: '#FF6B8A',
         fontStyle: 'italic',
-      },
-      '.md-strong': {
-        color: '#FFD600',
-        fontWeight: 700,
-      },
-      '.md-em': {
-        color: '#FFAB00',
-        fontStyle: 'italic',
-        background: 'rgba(255, 214, 0, 0.10)',
+        background: 'rgba(255, 107, 138, 0.1)',
+        padding: '2px 6px',
         borderRadius: '4px',
-        padding: '0 4px',
+        border: '1px solid rgba(255, 107, 138, 0.2)',
       },
-      '.md-codespan, code, pre': {
-        background: '#232326',
-        color: '#FFD600',
-        fontFamily: 'SFMono-Regular, Menlo, Monaco, Consolas, monospace',
-        fontSize: '0.98em',
-        borderRadius: '5px',
-        padding: '0.18em 0.5em',
-        margin: '0 0.2em',
-        boxShadow: '0 1px 2px rgba(0,0,0,0.10)',
+      
+      // 代码样式
+      'code': {
+        background: 'linear-gradient(135deg, #FFF8F9, #FFE8EC)',
+        color: '#FF2442',
+        padding: '4px 8px',
+        borderRadius: '6px',
+        border: '1px solid #FFB3C1',
+        fontFamily: 'SF Mono, Monaco, Consolas, monospace',
+        fontSize: '14px',
+        fontWeight: 500,
+      },
+      
+      // 链接样式
+      'a': {
+        color: '#FF2442',
+        textDecoration: 'none',
+        borderBottom: '2px solid transparent',
+        background: 'linear-gradient(135deg, #FF2442, #FF6B8A)',
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        backgroundClip: 'text',
+        transition: 'all 0.3s ease',
+        position: 'relative',
+        '&:hover': {
+          borderBottomColor: '#FF2442',
+          transform: 'translateY(-1px)',
+        },
+        '&::after': {
+          content: '"🔗"',
+          fontSize: '12px',
+          marginLeft: '4px',
+          opacity: 0.6,
+        },
+      },
+    },
+  },
+};
+
+// 小红书暗色主题 - 夜间模式
+export const xiaohongshuDarkTheme: ThemeConfig = {
+  id: 'XiaohongshuDark',
+  name: '小红书夜间',
+  description: '小红书夜间模式，护眼且时尚',
+  font: {
+    family: 'PingFang SC, -apple-system, BlinkMacSystemFont, Helvetica Neue, sans-serif',
+    size: 16,
+    lineHeight: 1.6,
+    weight: 400,
+  },
+  colors: {
+    primary: '#FF4D6D',
+    secondary: '#FF8FA3',
+    accent: '#FFC2D1',
+    text: '#E5E5E5',
+    background: '#1A1A1A',
+    border: '#333333',
+  },
+  spacing: {
+    padding: 20,
+    margin: 16,
+    borderRadius: 16,
+  },
+  background: {
+    type: 'gradient',
+    gradientDirection: 135,
+    gradientStart: '#1A1A1A',
+    gradientEnd: '#2A1A1F',
+    opacity: 100,
+  },
+  shadow: {
+    enabled: true,
+    color: 'rgba(255, 77, 109, 0.25)',
+    blur: 24,
+    spread: 0,
+    offsetX: 0,
+    offsetY: 8,
+  },
+  layout: {
+    width: 375,
+    height: 667,
+    viewMode: '长卡片',
+    hideOverflow: false,
+    showPageNumbers: false,
+    layoutMode: '自动拆分',
+    scale: 100,
+  },
+  customStyles: {
+    container: {
+      position: 'relative',
+      background: 'linear-gradient(135deg, #1A1A1A 0%, #2A1A1F 100%)',
+      borderRadius: '16px',
+      boxShadow: '0 8px 32px rgba(255, 77, 109, 0.25), 0 2px 8px rgba(0, 0, 0, 0.3)',
+      border: '1px solid #333333',
+      overflow: 'hidden',
+      transition: 'all 300ms ease',
+      animation: 'xiaohongshuEntry 0.8s ease-out',
+    },
+    elements: {
+      '.card-header': {
+        background: 'linear-gradient(135deg, #FF4D6D 0%, #FF8FA3 100%)',
+        height: '60px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'relative',
+        '&::before': {
+          content: '"🌙"',
+          fontSize: '24px',
+          marginRight: '8px',
+        },
+        '&::after': {
+          content: '""',
+          position: 'absolute',
+          bottom: '0',
+          left: '0',
+          right: '0',
+          height: '3px',
+          background: 'linear-gradient(90deg, #FFC2D1, #FF8FA3, #FF4D6D, #FF8FA3, #FFC2D1)',
+          backgroundSize: '200% 100%',
+          animation: 'shimmer 2s infinite',
+        },
+      },
+      
+      '.card-content': {
+        background: '#1A1A1A',
+        padding: '24px 20px',
+        minHeight: '400px',
+        position: 'relative',
+      },
+      
+      '.card-content-inner': {
+        position: 'relative',
+        zIndex: 2,
+      },
+      
+      '.card-footer': {
+        background: 'linear-gradient(135deg, #2A1A1F 0%, #3A1A2F 100%)',
+        height: '50px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '0 20px',
+        borderTop: '1px solid #333333',
+        '&::before': {
+          content: '"❤️ 点赞"',
+          color: '#FF4D6D',
+          fontSize: '14px',
+          fontWeight: 500,
+        },
+        '&::after': {
+          content: '"💬 评论"',
+          color: '#999999',
+          fontSize: '14px',
+        },
+      },
+      
+      'h1[data-text]': {
+        color: '#FF4D6D',
+        fontSize: '24px',
+        fontWeight: 700,
+        marginBottom: '16px',
+        position: 'relative',
+        textAlign: 'center',
+        textShadow: '0 0 20px rgba(255, 77, 109, 0.3)',
+        '&::after': {
+          content: '"✨"',
+          position: 'absolute',
+          right: '-30px',
+          top: '-5px',
+          fontSize: '18px',
+          animation: 'sparkle 2s infinite',
+        },
+      },
+      
+      'h2[data-text]': {
+        color: '#FF8FA3',
+        fontSize: '20px',
+        fontWeight: 600,
+        marginBottom: '12px',
+        position: 'relative',
+        '&::before': {
+          content: '"🌟"',
+          marginRight: '8px',
+          fontSize: '16px',
+        },
+      },
+      
+      'p': {
+        color: '#E5E5E5',
+        lineHeight: 1.8,
+        marginBottom: '16px',
+        fontSize: '16px',
+        textAlign: 'justify',
+      },
+      
+      'ol li[data-index]': {
+        position: 'relative',
+        paddingLeft: '40px',
+        marginBottom: '12px',
+        color: '#E5E5E5',
+        fontSize: '16px',
+        lineHeight: 1.6,
+        counterIncrement: 'xiaohongshu-counter',
+        '&::before': {
+          content: 'counter(xiaohongshu-counter)',
+          position: 'absolute',
+          left: '0',
+          top: '0',
+          width: '28px',
+          height: '28px',
+          background: 'linear-gradient(135deg, #FF4D6D, #FF8FA3)',
+          color: '#FFFFFF',
+          borderRadius: '50%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '14px',
+          fontWeight: 600,
+          boxShadow: '0 2px 8px rgba(255, 77, 109, 0.4), 0 0 20px rgba(255, 77, 109, 0.2)',
+        },
+      },
+      
+      '.md-blockquote': {
+        borderLeft: '4px solid #FF4D6D',
+        padding: '16px 20px',
+        margin: '20px 0',
+        background: 'linear-gradient(135deg, rgba(255, 77, 109, 0.1), rgba(255, 143, 163, 0.05))',
+        borderRadius: '0 12px 12px 0',
+        color: '#E5E5E5',
+        fontStyle: 'italic',
+        position: 'relative',
+        '&::before': {
+          content: '"💭"',
+          position: 'absolute',
+          left: '8px',
+          top: '8px',
+          fontSize: '20px',
+        },
+      },
+      
+      '.md-strong, strong': {
+        color: '#FF4D6D',
+        fontWeight: 700,
+        textShadow: '0 0 10px rgba(255, 77, 109, 0.3)',
+      },
+      
+      '.md-em, em': {
+        color: '#FF8FA3',
+        fontStyle: 'italic',
+        background: 'rgba(255, 143, 163, 0.15)',
+        padding: '2px 6px',
+        borderRadius: '4px',
+      },
+      
+      'code': {
+        background: 'rgba(255, 77, 109, 0.1)',
+        color: '#FF4D6D',
+        padding: '4px 8px',
+        borderRadius: '6px',
+        border: '1px solid rgba(255, 77, 109, 0.3)',
+        fontFamily: 'SF Mono, Monaco, Consolas, monospace',
+        fontSize: '14px',
+      },
+      
+      'a': {
+        color: '#FF4D6D',
+        textDecoration: 'none',
+        textShadow: '0 0 10px rgba(255, 77, 109, 0.3)',
+        transition: 'all 0.3s ease',
+        '&:hover': {
+          textShadow: '0 0 20px rgba(255, 77, 109, 0.6)',
+          transform: 'translateY(-1px)',
+        },
       },
     },
   },
@@ -1140,4 +2581,13 @@ export const predefinedThemes = {
   [natureTheme.id]: natureTheme,
   [appleNotesTheme.id]: appleNotesTheme,
   [appleNotesDarkTheme.id]: appleNotesDarkTheme,
+  [nordDarkTheme.id]: nordDarkTheme,
+  [vintageSepiaTheme.id]: vintageSepiaTheme,
+  [minimalLightTheme.id]: minimalLightTheme,
+  [softRoseTheme.id]: softRoseTheme,
+  [cyberBlueTheme.id]: cyberBlueTheme,
+  [earthyOliveTheme.id]: earthyOliveTheme,
+  [neonGlassTheme.id]: neonGlassTheme,
+  [xiaohongshuTheme.id]: xiaohongshuTheme,
+  [xiaohongshuDarkTheme.id]: xiaohongshuDarkTheme,
 };

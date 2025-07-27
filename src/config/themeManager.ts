@@ -2,6 +2,7 @@ import { Renderer } from "marked";
 import { ThemeConfig, ThemeRegistration, ThemeRegistry, UserConfig, FinalConfig } from './themeConfig';
 import { getFinalConfig } from './configMerger';
 import { predefinedThemes } from './predefinedThemes';
+import { customThemeManager } from './customThemeManager';
 
 class ThemeManager {
   private themes: ThemeRegistry = {};
@@ -60,18 +61,39 @@ class ThemeManager {
    * 获取所有主题列表
    */
   getAllThemes(): Array<{ id: string; name: string; description?: string }> {
-    return Object.values(this.themes).map(theme => ({
+    // 获取预定义主题
+    const predefinedThemesList = Object.values(this.themes).map(theme => ({
       id: theme.config.id,
       name: theme.config.name,
       description: theme.config.description,
     }));
+
+    // 获取自定义主题
+    const customThemes = customThemeManager.getAllCustomThemes().map(theme => ({
+      id: theme.id,
+      name: theme.name,
+      description: theme.description,
+    }));
+
+    // 合并并返回所有主题
+    return [...predefinedThemesList, ...customThemes];
   }
 
   /**
    * 获取最终配置（合并主题配置和用户配置）
    */
   getFinalConfig(themeId: string, userConfig: UserConfig, hasUserCustomizations?: any): FinalConfig | null {
-    const themeConfig = this.getThemeConfig(themeId);
+    // 首先尝试从预定义主题获取配置
+    let themeConfig = this.getThemeConfig(themeId);
+    
+    // 如果预定义主题中没有，尝试从自定义主题获取
+    if (!themeConfig) {
+      const customTheme = customThemeManager.getCustomTheme(themeId);
+      if (customTheme) {
+        themeConfig = customTheme; // CustomTheme extends ThemeConfig
+      }
+    }
+    
     if (!themeConfig) {
       return null;
     }

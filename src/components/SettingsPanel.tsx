@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import useSettingsStore, { LayoutMode, AspectRatio, BackgroundType } from "../stores/settingsStore";
 import { themeManager } from "../config/themeManager";
+import CustomThemePanel from "./CustomThemePanel";
 
 // Available fonts
 const FONT_OPTIONS = [
@@ -839,6 +840,7 @@ const SettingsPanel: React.FC = () => {
 
   // 管理可折叠section的展开状态
   const [isBackgroundSectionExpanded, setIsBackgroundSectionExpanded] = useState(false);
+  const [isCustomThemePanelOpen, setIsCustomThemePanelOpen] = useState(false);
 
   // 处理主题选择的智能配置优先级系统
   const handleThemeChange = (newTheme: string) => {
@@ -1199,6 +1201,25 @@ const SettingsPanel: React.FC = () => {
                 </svg>
               </div>
             </div>
+            
+            {/* Custom Theme Management Button */}
+            <button
+              onClick={() => setIsCustomThemePanelOpen(true)}
+              className="w-full py-2.5 px-3 text-sm font-medium rounded-xl border-2 border-dashed transition-all duration-200 hover:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-purple-500"
+              style={{
+                color: 'var(--accent-primary)',
+                borderColor: 'var(--accent-primary)',
+                backgroundColor: 'transparent'
+              }}
+            >
+              <div className="flex items-center justify-center gap-2">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+                管理自定义主题
+              </div>
+            </button>
+            
             <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
               选择主题将重置自定义设置
             </p>
@@ -1632,6 +1653,14 @@ const SettingsPanel: React.FC = () => {
           </div>
         </Section>
       </div>
+      
+      {/* Custom Theme Panel */}
+      {isCustomThemePanelOpen && (
+        <CustomThemePanel 
+          isOpen={isCustomThemePanelOpen}
+          onClose={() => setIsCustomThemePanelOpen(false)}
+        />
+      )}
     </div>
   );
 };

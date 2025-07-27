@@ -5,7 +5,7 @@ import useEditorStore from "../stores/editorStore";
 import "../styles/themes.css";
 import { useEffect, useState, forwardRef, useMemo } from "react";
 import { themeManager, UserConfig } from "../config/themeManager";
-import { migrateFromOldSettings } from "../config/configMerger";
+import { migrateFromOldSettings, configToCSSVariables } from "../config/configMerger";
 import PaginatedMarkdownViewer from "../utils/PaginatedMarkdownViewer";
 import LongMarkdownViewer from "../utils/LongMarkdownViewer";
 import UniversalCard from "./UniversalCard";
@@ -29,6 +29,7 @@ const CardPreview = forwardRef<HTMLDivElement, object>((props, ref) => {
 
   const [html, setHtml] = useState('');
   const [finalConfig, setFinalConfig] = useState<FinalConfig | null>(null);
+  const [cssVariables, setCssVariables] = useState<Record<string, any>>({});
 
   // 从旧设置迁移到新的用户配置，使用 useMemo 避免无限循环
   const userConfig: UserConfig = useMemo(() => {
@@ -69,6 +70,11 @@ const CardPreview = forwardRef<HTMLDivElement, object>((props, ref) => {
       console.log('Background config:', userConfig.background);
       console.log('Final config background:', config.background);
       setFinalConfig(config);
+      
+      // 生成CSS变量
+      const cssVars = configToCSSVariables(config, hasUserCustomizations);
+      console.log('Generated CSS variables:', cssVars);
+      setCssVariables(cssVars);
     }
   }, [selectedTheme, userConfig, hasUserCustomizations]);
 
@@ -86,11 +92,14 @@ const CardPreview = forwardRef<HTMLDivElement, object>((props, ref) => {
 
   return (
     <div
-      className="rounded-lg shadow-sm p-8 h-full bg-[var(--card-bg)] text-[var(--card-text)]"
+      className="rounded-lg shadow-sm p-8 h-full"
       style={{
         minWidth: '100%',
         minHeight: '100%',
-        fontFamily: 'var(--font-family)',
+        fontFamily: cssVariables['--card-font-family'] || 'var(--font-family)',
+        backgroundColor: cssVariables['--card-color-background'] || 'var(--bg-tertiary)',
+        color: cssVariables['--card-color-text'] || 'var(--text-primary)',
+        ...cssVariables, // Apply all CSS variables to this container
       }}
     >
       <div ref={ref} className="export-content" style={{ display: 'inline-block' }}>

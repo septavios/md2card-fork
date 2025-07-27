@@ -17,12 +17,12 @@ const UniversalCard: React.FC<CardProps> = ({
     width: width && width > 0 ? `${width}px` : '100%',
     height: height && height > 0 ? `${height}px` : 'auto',
     minHeight: height && height > 0 ? `${height}px` : 'auto',
-    borderRadius: 'var(--card-radius)',
-    background: 'var(--card-bg)',
-    color: 'var(--card-text)',
+    borderRadius: 'var(--card-border-radius)',
+    background: 'var(--card-color-background)',
+    color: 'var(--card-color-text)',
     boxShadow: 'var(--card-shadow)',
-    border: 'var(--card-border)',
-    fontFamily: 'var(--font-family)',
+    border: `1px solid var(--card-color-border)`,
+    fontFamily: 'var(--card-font-family)',
     overflow: hideOverflow ? 'hidden' : 'visible',
   };
 
@@ -34,21 +34,25 @@ const UniversalCard: React.FC<CardProps> = ({
     >
       <div
         ref={contentRef}
-        className="card-content p-8 bg-white dark:bg-[var(--card-bg)] rounded-xl shadow-sm"
+        className="card-content p-8 rounded-xl shadow-sm"
         style={{
-          background: 'var(--card-bg)',
-          borderRadius: 'var(--card-radius)',
-          color: 'var(--card-text)',
-          fontFamily: 'var(--font-family)',
+          background: 'var(--card-color-background)',
+          borderRadius: 'var(--card-border-radius)',
+          color: 'var(--card-color-text)',
+          fontFamily: 'var(--card-font-family)',
+          fontSize: 'var(--card-font-size)',
+          lineHeight: 'var(--card-line-height)',
         }}
         dangerouslySetInnerHTML={{ __html: page }}
       />
       {showPageNumbers && pageNumber && totalPages && (
         <div
-          className="absolute bottom-2 right-4 text-xs opacity-70 px-2 py-1 rounded bg-[var(--card-bg)] border border-[var(--card-accent)]"
+          className="absolute bottom-2 right-4 text-xs opacity-70 px-2 py-1 rounded border"
           style={{
-            color: 'var(--card-text)',
-            fontFamily: 'var(--font-family)',
+            color: 'var(--card-color-text)',
+            fontFamily: 'var(--card-font-family)',
+            backgroundColor: 'var(--card-color-background)',
+            borderColor: 'var(--card-color-accent)',
           }}
         >
           {pageNumber} / {totalPages}

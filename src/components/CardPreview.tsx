@@ -20,7 +20,6 @@ const CardPreview = forwardRef<HTMLDivElement, object>((props, ref) => {
     viewMode,
     showPageNumbers,
     layoutMode,
-    scale,
     selectedFont,
     fontSize,
     lineHeight,
@@ -85,24 +84,16 @@ const CardPreview = forwardRef<HTMLDivElement, object>((props, ref) => {
     );
   }
 
-  // Only scale the card content, not the container
-  const scaledContentStyle: React.CSSProperties = {
-    transform: `scale(${scale / 100})`,
-    transformOrigin: 'top left',
-    display: 'inline-block',
-  };
-
   return (
-    <div 
-      className="rounded-lg shadow-sm p-8 h-full"
-      style={{ 
-        backgroundColor: 'var(--bg-tertiary)',
-        overflow: 'auto',
+    <div
+      className="rounded-lg shadow-sm p-8 h-full bg-[var(--card-bg)] text-[var(--card-text)]"
+      style={{
         minWidth: '100%',
-        minHeight: '100%'
+        minHeight: '100%',
+        fontFamily: 'var(--font-family)',
       }}
     >
-      <div ref={ref} className="export-content" style={scaledContentStyle}>
+      <div ref={ref} className="export-content" style={{ display: 'inline-block' }}>
         {
           viewMode === "长卡片" ? (
             <LongMarkdownViewer

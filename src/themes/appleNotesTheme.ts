@@ -1,0 +1,16 @@
+export const appleNotesTheme = {
+  '--card-bg': '#FAFAF7',
+  '--card-text': '#222',
+  '--card-accent': '#FFD600',
+  '--code-bg': '#F5F5F5',
+  '--code-text': '#222',
+  '--blockquote-bg': 'rgba(255, 214, 0, 0.08)',
+  '--blockquote-border': '#FFD600',
+  '--blockquote-text': '#555',
+  '--heading-color': '#222',
+  '--img-radius': '12px',
+  '--card-radius': '18px',
+  '--card-shadow': '0 4px 24px 0 rgba(0,0,0,0.08)',
+  '--card-border': '1px solid rgba(0,0,0,0.08)',
+  '--font-family': 'SF Pro Text, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Arial, sans-serif',
+}; 

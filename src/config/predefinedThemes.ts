@@ -778,6 +778,241 @@ export const natureTheme: ThemeConfig = {
   },
 };
 
+// Apple Notes Theme
+export const appleNotesTheme: ThemeConfig = {
+  id: 'AppleNotes',
+  name: 'Apple Notes',
+  description: 'Inspired by Apple Notes: clean, modern, and elegant.',
+  font: {
+    family: 'SF Pro Text, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Arial, sans-serif',
+    size: 16,
+    lineHeight: 1.7,
+    weight: 400,
+  },
+  colors: {
+    primary: '#FFD600', // Apple yellow
+    secondary: '#FFAB00',
+    accent: '#FFF9C4',
+    text: '#222',
+    background: '#FAFAF7',
+    border: 'rgba(0,0,0,0.08)',
+  },
+  spacing: {
+    padding: 28,
+    margin: 16,
+    borderRadius: 18,
+  },
+  background: {
+    type: 'solid',
+    solidColor: '#FAFAF7',
+    opacity: 100,
+  },
+  shadow: {
+    enabled: true,
+    color: 'rgba(0,0,0,0.08)',
+    blur: 24,
+    spread: 0,
+    offsetX: 0,
+    offsetY: 8,
+  },
+  layout: {
+    width: 440,
+    height: 586,
+    viewMode: '长卡片',
+    hideOverflow: false,
+    showPageNumbers: false,
+    layoutMode: '自动拆分',
+    scale: 100,
+  },
+  customStyles: {
+    container: {
+      position: 'relative',
+      background: '#FAFAF7',
+      borderRadius: '18px',
+      boxShadow: '0 4px 24px 0 rgba(0,0,0,0.08)',
+      border: '1px solid rgba(0,0,0,0.08)',
+      overflow: 'hidden',
+    },
+    elements: {
+      '.card-content': {
+        background: '#FFF',
+        borderRadius: '16px',
+        padding: '32px',
+        border: '1px solid #F5F5F5',
+        boxShadow: '0 1px 4px 0 rgba(0,0,0,0.03)',
+        minHeight: '200px',
+      },
+      '.md-blockquote': {
+        borderLeft: '4px solid #FFD600',
+        padding: '1em 1.5em',
+        margin: '1.5em 0',
+        background: 'rgba(255, 214, 0, 0.08)',
+        borderRadius: '0 8px 8px 0',
+        color: '#555',
+        fontStyle: 'italic',
+      },
+      '.md-strong': {
+        color: '#FFD600',
+        fontWeight: 700,
+      },
+      '.md-em': {
+        color: '#FFAB00',
+        fontStyle: 'italic',
+        background: 'rgba(255, 214, 0, 0.10)',
+        borderRadius: '4px',
+        padding: '0 4px',
+      },
+      'h1, h2, h3': {
+        color: '#222',
+        fontWeight: 700,
+        marginBottom: '1em',
+      },
+      'p': {
+        color: '#222',
+        lineHeight: 1.7,
+        marginBottom: '1.2em',
+      },
+    },
+  },
+};
+
+// Apple Notes Dark Theme
+export const appleNotesDarkTheme: ThemeConfig = {
+  id: 'AppleNotesDark',
+  name: 'Apple Notes Dark',
+  description: 'Apple Notes inspired dark mode: minimal, professional, and native macOS look.',
+  font: {
+    family: '-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Arial, sans-serif',
+    size: 16,
+    lineHeight: 1.7,
+    weight: 400,
+  },
+  colors: {
+    primary: '#FFD600', // Apple yellow accent
+    secondary: '#FFAB00',
+    accent: '#33323a',
+    text: '#f5f5f7',
+    background: '#1c1c1e',
+    border: 'rgba(255,255,255,0.08)',
+  },
+  spacing: {
+    padding: 28,
+    margin: 16,
+    borderRadius: 18,
+  },
+  background: {
+    type: 'solid',
+    solidColor: '#1c1c1e',
+    opacity: 100,
+  },
+  shadow: {
+    enabled: true,
+    color: 'rgba(0,0,0,0.5)',
+    blur: 32,
+    spread: 0,
+    offsetX: 0,
+    offsetY: 12,
+  },
+  layout: {
+    width: 440,
+    height: 586,
+    viewMode: '长卡片',
+    hideOverflow: false,
+    showPageNumbers: false,
+    layoutMode: '自动拆分',
+    scale: 100,
+  },
+  customStyles: {
+    container: {
+      position: 'relative',
+      background: '#1c1c1e',
+      borderRadius: '18px',
+      boxShadow: '0 6px 32px 0 rgba(0,0,0,0.5)',
+      border: '1px solid rgba(255,255,255,0.08)',
+      overflow: 'hidden',
+    },
+    elements: {
+      '.card-content': {
+        background: '#232326',
+        borderRadius: '16px',
+        padding: '32px',
+        border: '1px solid #232326',
+        boxShadow: '0 1px 4px 0 rgba(0,0,0,0.10)',
+        minHeight: '200px',
+      },
+      'h1': {
+        color: '#FFD600',
+        fontWeight: 700,
+        fontSize: '2.1em',
+        marginBottom: '0.7em',
+        marginTop: 0,
+        letterSpacing: '-0.01em',
+      },
+      'h2, h3': {
+        color: '#f5f5f7',
+        fontWeight: 600,
+        background: 'linear-gradient(90deg, #FFD600 0%, #FFAB00 100%)',
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        backgroundClip: 'text',
+        marginTop: '1.5em',
+        marginBottom: '0.7em',
+      },
+      'p': {
+        color: '#f5f5f7',
+        lineHeight: 1.7,
+        marginBottom: '1.2em',
+        marginTop: 0,
+      },
+      'ul, ol': {
+        margin: '1.2em 0',
+        paddingLeft: '1.5em',
+      },
+      'li': {
+        marginBottom: '0.5em',
+        color: '#f5f5f7',
+      },
+      'img': {
+        display: 'block',
+        maxWidth: '100%',
+        borderRadius: '12px',
+        margin: '1.2em 0',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.18)',
+      },
+      '.md-blockquote': {
+        borderLeft: '4px solid #FFD600',
+        padding: '1em 1.5em',
+        margin: '1.5em 0',
+        background: 'rgba(255, 214, 0, 0.08)',
+        borderRadius: '0 8px 8px 0',
+        color: '#e0e0e0',
+        fontStyle: 'italic',
+      },
+      '.md-strong': {
+        color: '#FFD600',
+        fontWeight: 700,
+      },
+      '.md-em': {
+        color: '#FFAB00',
+        fontStyle: 'italic',
+        background: 'rgba(255, 214, 0, 0.10)',
+        borderRadius: '4px',
+        padding: '0 4px',
+      },
+      '.md-codespan, code, pre': {
+        background: '#232326',
+        color: '#FFD600',
+        fontFamily: 'SFMono-Regular, Menlo, Monaco, Consolas, monospace',
+        fontSize: '0.98em',
+        borderRadius: '5px',
+        padding: '0.18em 0.5em',
+        margin: '0 0.2em',
+        boxShadow: '0 1px 2px rgba(0,0,0,0.10)',
+      },
+    },
+  },
+};
+
 // 主题注册表
 export const predefinedThemes = {
   [defaultTheme.id]: defaultTheme,
@@ -785,4 +1020,6 @@ export const predefinedThemes = {
   [glassTheme.id]: glassTheme,
   [warmTheme.id]: warmTheme,
   [natureTheme.id]: natureTheme,
+  [appleNotesTheme.id]: appleNotesTheme,
+  [appleNotesDarkTheme.id]: appleNotesDarkTheme,
 };

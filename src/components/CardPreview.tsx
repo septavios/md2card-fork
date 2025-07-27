@@ -9,17 +9,15 @@ import { migrateFromOldSettings } from "../config/configMerger";
 import PaginatedMarkdownViewer from "../utils/PaginatedMarkdownViewer";
 import LongMarkdownViewer from "../utils/LongMarkdownViewer";
 import UniversalCard from "./UniversalCard";
+import { FinalConfig } from '../config/themeConfig';
 
-interface CardPreviewProps {}
-
-const CardPreview = forwardRef<HTMLDivElement, CardPreviewProps>((props, ref) => {
+const CardPreview = forwardRef<HTMLDivElement, object>((props, ref) => {
   const { content: markdown } = useEditorStore();
   const {
     selectedTheme,
     cardWidth: width,
     cardHeight: height,
     viewMode,
-    hideOverflow,
     showPageNumbers,
     layoutMode,
     scale,
@@ -31,15 +29,25 @@ const CardPreview = forwardRef<HTMLDivElement, CardPreviewProps>((props, ref) =>
   } = useSettingsStore();
 
   const [html, setHtml] = useState('');
-  const [finalConfig, setFinalConfig] = useState<any>(null);
+  const [finalConfig, setFinalConfig] = useState<FinalConfig | null>(null);
 
   // 从旧设置迁移到新的用户配置，使用 useMemo 避免无限循环
-  const userConfig: UserConfig = useMemo(() => migrateFromOldSettings({
-    selectedFont,
-    fontSize,
-    lineHeight,
-    background,
-  }), [selectedFont, fontSize, lineHeight, background]);
+  const userConfig: UserConfig = useMemo(() => {
+    const base = {
+      selectedFont,
+      fontSize,
+      lineHeight,
+    };
+    // Only include background if user customized it
+    if (hasUserCustomizations.background) {
+      return migrateFromOldSettings({
+        ...base,
+        background,
+      });
+    } else {
+      return migrateFromOldSettings(base);
+    }
+  }, [selectedFont, fontSize, lineHeight, background, hasUserCustomizations.background]);
 
   // 获取主题渲染器
   const renderer = themeManager.getThemeRenderer(selectedTheme);
@@ -77,14 +85,11 @@ const CardPreview = forwardRef<HTMLDivElement, CardPreviewProps>((props, ref) =>
     );
   }
 
-  const containerStyle: React.CSSProperties = {
+  // Only scale the card content, not the container
+  const scaledContentStyle: React.CSSProperties = {
     transform: `scale(${scale / 100})`,
     transformOrigin: 'top left',
-    // 在长卡片模式下，始终显示所有内容，不受hideOverflow影响
-    overflow: (viewMode === "长卡片") ? 'visible' : (hideOverflow ? 'hidden' : 'visible'),
-    // 调整容器大小以容纳缩放后的内容
-    width: `${100 / (scale / 100)}%`,
-    height: viewMode === "长卡片" ? 'auto' : `${100 / (scale / 100)}%`,
+    display: 'inline-block',
   };
 
   return (
@@ -93,12 +98,11 @@ const CardPreview = forwardRef<HTMLDivElement, CardPreviewProps>((props, ref) =>
       style={{ 
         backgroundColor: 'var(--bg-tertiary)',
         overflow: 'auto',
-        // 确保容器能够滚动查看缩放后的内容
         minWidth: '100%',
         minHeight: '100%'
       }}
     >
-      <div ref={ref} className="export-content" style={containerStyle}>
+      <div ref={ref} className="export-content" style={scaledContentStyle}>
         {
           viewMode === "长卡片" ? (
             <LongMarkdownViewer

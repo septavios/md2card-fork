@@ -19,8 +19,7 @@ const DynamicCardContainer = styled.div<{ $config: FinalConfig }>`
   opacity: var(--card-opacity, 1);
   box-shadow: var(--card-shadow);
   
-  /* 确保内容不会被截断 */
-  overflow: visible;
+  /* 确保内容不会被截断 - 通过props动态控制 */
   word-wrap: break-word;
   word-break: break-word;
   
@@ -238,15 +237,21 @@ const UniversalCard: React.FC<UniversalCardProps> = ({
   config,
   containerRef,
   contentRef,
+  pageNumber,
+  totalPages,
+  showPageNumbers = false,
+  hideOverflow = false,
 }) => {
   // 生成CSS变量
-  const cssVariables = configToCSSVariables(config);
+  const cssVariables = configToCSSVariables(config, config.hasUserCustomizations);
   
   // 合并样式
   const containerStyle = {
     width: width && width > 0 ? `${width}px` : '100%',
     height: height && height > 0 ? `${height}px` : 'auto',
     minHeight: height && height > 0 ? `${height}px` : 'auto',
+    // 根据hideOverflow参数控制overflow
+    overflow: hideOverflow ? 'hidden' : 'visible',
     ...cssVariables,
   };
 
@@ -261,6 +266,27 @@ const UniversalCard: React.FC<UniversalCardProps> = ({
         className="card-content"
         dangerouslySetInnerHTML={{ __html: page }}
       />
+      {showPageNumbers && pageNumber && totalPages && (
+        <div 
+          style={{
+            position: 'absolute',
+            bottom: '8px',
+            right: '12px',
+            fontSize: '12px',
+            color: 'var(--card-color-text)',
+            opacity: 0.7,
+            fontFamily: 'var(--card-font-family)',
+            background: 'rgba(255, 255, 255, 0.8)',
+            padding: '2px 6px',
+            borderRadius: '4px',
+            backdropFilter: 'blur(5px)',
+            border: '1px solid rgba(0, 0, 0, 0.1)',
+            zIndex: 10,
+          }}
+        >
+          {pageNumber} / {totalPages}
+        </div>
+      )}
     </DynamicCardContainer>
   );
 };

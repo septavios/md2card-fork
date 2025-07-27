@@ -93,6 +93,7 @@ export interface UserConfig {
 // 最终合并后的配置
 export interface FinalConfig extends ThemeConfig {
   // 继承 ThemeConfig 的所有属性
+  hasUserCustomizations?: any; // 用户自定义设置信息
 }
 
 // 卡片组件属性接口
@@ -103,6 +104,10 @@ export interface CardProps {
   config: FinalConfig; // 使用合并后的配置
   containerRef?: React.RefObject<HTMLDivElement>;
   contentRef?: React.RefObject<HTMLDivElement>;
+  pageNumber?: number; // 当前页码
+  totalPages?: number; // 总页数
+  showPageNumbers?: boolean; // 是否显示页码
+  hideOverflow?: boolean; // 是否隐藏超出内容
 }
 
 // 主题注册接口

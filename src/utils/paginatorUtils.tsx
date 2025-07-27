@@ -13,7 +13,8 @@ export const createPage = (pageHeight: number, pageWidth: number) => {
   return page;
 };
 
-export const addPageElement = (currentPage: HTMLElement, pageElements: JSX.Element[], CardComponent: React.FC<CardProps>, pageHeight: number, pageWidth: number, config: FinalConfig) => {
+export const addPageElement = (currentPage: HTMLElement, pageElements: JSX.Element[], CardComponent: React.FC<CardProps>, pageHeight: number, pageWidth: number, config: FinalConfig, showPageNumbers?: boolean, totalPages?: number, hideOverflow?: boolean) => {
+  const pageNumber = pageElements.length + 1;
   pageElements.push(
     <CardComponent
       key={`page-${pageElements.length}`}
@@ -21,6 +22,10 @@ export const addPageElement = (currentPage: HTMLElement, pageElements: JSX.Eleme
       width={pageWidth}
       page={currentPage.innerHTML}
       config={config}
+      pageNumber={pageNumber}
+      totalPages={totalPages}
+      showPageNumbers={showPageNumbers}
+      hideOverflow={hideOverflow}
     />
   );
 };
@@ -65,7 +70,7 @@ export const createNewPage = (wrapper: HTMLElement, pageHeight: number, pageWidt
 
 
 
-export const handleTextNode = (node: Node, currentPage: HTMLElement, wrapper: HTMLElement, pageElements: JSX.Element[], CardComponent: React.FC<CardProps>, pageHeight: number, pageWidth: number, config: FinalConfig) => {
+export const handleTextNode = (node: Node, currentPage: HTMLElement, wrapper: HTMLElement, pageElements: JSX.Element[], CardComponent: React.FC<CardProps>, pageHeight: number, pageWidth: number, config: FinalConfig, showPageNumbers?: boolean, totalPages?: number, hideOverflow?: boolean) => {
   const clone = node.cloneNode(true) as HTMLElement;
   const holder = document.createElement(node.nodeType === Node.TEXT_NODE ? 'span' : (node as Element).tagName);
   holder.textContent = clone.textContent;
@@ -79,14 +84,14 @@ export const handleTextNode = (node: Node, currentPage: HTMLElement, wrapper: HT
   const rest = holder.cloneNode(true) as HTMLElement;
   rest.textContent = fullText.slice(splitAt);
 
-  addPageElement(currentPage, pageElements, CardComponent, pageHeight, pageWidth, config);
+  addPageElement(currentPage, pageElements, CardComponent, pageHeight, pageWidth, config, showPageNumbers, totalPages, hideOverflow);
   return {
     newPage: createNewPage(wrapper, pageHeight, pageWidth),
     nodeToAdd: rest
   };
 };
 
-export const handleListNode = (node: Node, currentPage: HTMLElement, wrapper: HTMLElement, pageElements: JSX.Element[], CardComponent: React.FC<CardProps>, pageHeight: number, pageWidth: number, config: FinalConfig) => {
+export const handleListNode = (node: Node, currentPage: HTMLElement, wrapper: HTMLElement, pageElements: JSX.Element[], CardComponent: React.FC<CardProps>, pageHeight: number, pageWidth: number, config: FinalConfig, showPageNumbers?: boolean, totalPages?: number, hideOverflow?: boolean) => {
   const clone = node.cloneNode(true) as HTMLElement;
   const items = Array.from(clone.children);
   const list1 = document.createElement(clone.tagName);
@@ -111,14 +116,14 @@ export const handleListNode = (node: Node, currentPage: HTMLElement, wrapper: HT
     list2.appendChild(items[j].cloneNode(true));
   }
 
-  addPageElement(currentPage, pageElements, CardComponent, pageHeight, pageWidth, config);
+  addPageElement(currentPage, pageElements, CardComponent, pageHeight, pageWidth, config, showPageNumbers, totalPages, hideOverflow);
   return {
     newPage: createNewPage(wrapper, pageHeight, pageWidth),
     nodeToAdd: list2
   };
 };
 
-export const handleTableNode = (node: Node, currentPage: HTMLElement, wrapper: HTMLElement, pageElements: JSX.Element[], CardComponent: React.FC<CardProps>, pageHeight: number, pageWidth: number, config: FinalConfig) => {
+export const handleTableNode = (node: Node, currentPage: HTMLElement, wrapper: HTMLElement, pageElements: JSX.Element[], CardComponent: React.FC<CardProps>, pageHeight: number, pageWidth: number, config: FinalConfig, showPageNumbers?: boolean, totalPages?: number, hideOverflow?: boolean) => {
   const clone = node.cloneNode(true) as HTMLElement;
   const rows = Array.from(clone.querySelectorAll('tbody tr'));
   const thead = clone.querySelector('thead')?.cloneNode(true) as HTMLElement;
@@ -156,25 +161,25 @@ export const handleTableNode = (node: Node, currentPage: HTMLElement, wrapper: H
     body2.appendChild(rows[j].cloneNode(true));
   }
 
-  addPageElement(currentPage, pageElements, CardComponent, pageHeight, pageWidth, config);
+  addPageElement(currentPage, pageElements, CardComponent, pageHeight, pageWidth, config, showPageNumbers, totalPages, hideOverflow);
   return {
     newPage: createNewPage(wrapper, pageHeight, pageWidth),
     nodeToAdd: table2
   };
 };
 
-export const handleImageNode = (node: Node, currentPage: HTMLElement, wrapper: HTMLElement, pageElements: JSX.Element[], CardComponent: React.FC<CardProps>, pageHeight: number, pageWidth: number, config: FinalConfig) => {
+export const handleImageNode = (node: Node, currentPage: HTMLElement, wrapper: HTMLElement, pageElements: JSX.Element[], CardComponent: React.FC<CardProps>, pageHeight: number, pageWidth: number, config: FinalConfig, showPageNumbers?: boolean, totalPages?: number, hideOverflow?: boolean) => {
   const clone = node.cloneNode(true) as HTMLElement;
-  addPageElement(currentPage, pageElements, CardComponent, pageHeight, pageWidth, config);
+  addPageElement(currentPage, pageElements, CardComponent, pageHeight, pageWidth, config, showPageNumbers, totalPages, hideOverflow);
   return {
     newPage: createNewPage(wrapper, pageHeight, pageWidth),
     nodeToAdd: clone
   };
 };
 
-export const handleGenericNode = (node: Node, currentPage: HTMLElement, wrapper: HTMLElement, pageElements: JSX.Element[], CardComponent: React.FC<CardProps>, pageHeight: number, pageWidth: number, config: FinalConfig) => {
+export const handleGenericNode = (node: Node, currentPage: HTMLElement, wrapper: HTMLElement, pageElements: JSX.Element[], CardComponent: React.FC<CardProps>, pageHeight: number, pageWidth: number, config: FinalConfig, showPageNumbers?: boolean, totalPages?: number, hideOverflow?: boolean) => {
   const clone = node.cloneNode(true) as HTMLElement;
-  addPageElement(currentPage, pageElements, CardComponent, pageHeight, pageWidth, config);
+  addPageElement(currentPage, pageElements, CardComponent, pageHeight, pageWidth, config, showPageNumbers, totalPages, hideOverflow);
   return {
     newPage: createNewPage(wrapper, pageHeight, pageWidth),
     nodeToAdd: clone

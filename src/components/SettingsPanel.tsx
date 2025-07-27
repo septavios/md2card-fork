@@ -603,10 +603,10 @@ interface ToggleSwitchProps {
 }
 
 const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ checked, onChange, label, id }) => (
-  <div className="flex items-center justify-between">
+  <div className="flex items-center justify-between py-2">
     <label 
       htmlFor={id}
-      className="text-sm cursor-pointer"
+      className="text-sm font-medium cursor-pointer"
       style={{ color: 'var(--text-primary)' }}
     >
       {label}
@@ -615,15 +615,19 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ checked, onChange, label, i
       id={id}
       role="switch"
       aria-checked={checked}
-      className="w-12 h-6 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500"
+      className="relative w-12 h-6 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500 hover:scale-105"
       style={{
-        backgroundColor: checked ? 'var(--accent-color)' : 'var(--bg-secondary)'
+        backgroundColor: checked ? 'var(--accent-primary)' : 'var(--bg-tertiary)',
+        boxShadow: checked ? '0 2px 8px rgba(139, 92, 246, 0.3)' : '0 1px 3px rgba(0, 0, 0, 0.1)'
       }}
       onClick={() => onChange(!checked)}
     >
       <div
-        className={`w-5 h-5 rounded-full transform transition-transform ${checked ? "translate-x-6" : "translate-x-1"}`}
-        style={{ backgroundColor: 'var(--bg-primary)' }}
+        className={`absolute top-0.5 w-5 h-5 rounded-full transform transition-all duration-300 ${checked ? "translate-x-6" : "translate-x-0.5"}`}
+        style={{ 
+          backgroundColor: 'white',
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.2)'
+        }}
       />
     </button>
   </div>
@@ -643,27 +647,73 @@ interface RangeSliderProps {
 const RangeSlider: React.FC<RangeSliderProps> = ({ 
   value, onChange, min, max, step = 1, label, unit = "", id 
 }) => (
-  <div className="space-y-2">
-    <label 
-      htmlFor={id}
-      className="block text-sm"
-      style={{ color: 'var(--text-primary)' }}
-    >
-      {label}: {value}{unit}
-    </label>
-    <input
-      id={id}
-      type="range"
-      min={min}
-      max={max}
-      step={step}
-      value={value}
-      onChange={(e) => onChange(Number(e.target.value))}
-      className="w-full h-2 rounded-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-purple-500"
-      style={{
-        background: `linear-gradient(to right, var(--accent-color) 0%, var(--accent-color) ${((value - min) / (max - min)) * 100}%, var(--bg-secondary) ${((value - min) / (max - min)) * 100}%, var(--bg-secondary) 100%)`
-      }}
-    />
+  <div className="space-y-3">
+    <div className="flex items-center justify-between">
+      <label 
+        htmlFor={id}
+        className="text-sm font-medium"
+        style={{ color: 'var(--text-primary)' }}
+      >
+        {label}
+      </label>
+      <span 
+        className="text-sm font-semibold px-2 py-1 rounded-md"
+        style={{ 
+          color: 'var(--accent-primary)',
+          backgroundColor: 'var(--bg-tertiary)'
+        }}
+      >
+        {value}{unit}
+      </span>
+    </div>
+    <div className="relative">
+      <input
+        id={id}
+        type="range"
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        onChange={(e) => onChange(Number(e.target.value))}
+        className="w-full h-2 rounded-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-200 range-slider"
+        style={{
+          background: `linear-gradient(to right, var(--accent-primary) 0%, var(--accent-primary) ${((value - min) / (max - min)) * 100}%, var(--bg-tertiary) ${((value - min) / (max - min)) * 100}%, var(--bg-tertiary) 100%)`,
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
+        }}
+      />
+      <style dangerouslySetInnerHTML={{
+        __html: `
+          .range-slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--accent-primary);
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(139, 92, 246, 0.3);
+            transition: all 0.2s ease;
+          }
+          .range-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            box-shadow: 0 3px 8px rgba(139, 92, 246, 0.4);
+          }
+          .range-slider::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--accent-primary);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 6px rgba(139, 92, 246, 0.3);
+            transition: all 0.2s ease;
+          }
+          .range-slider::-moz-range-thumb:hover {
+            transform: scale(1.1);
+            box-shadow: 0 3px 8px rgba(139, 92, 246, 0.4);
+          }
+        `
+      }} />
+    </div>
   </div>
 );
 
@@ -697,33 +747,54 @@ const Section: React.FC<SectionProps> = ({
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h3 
-          className="text-sm font-semibold"
-          style={{ color: 'var(--text-primary)' }}
-        >
-          {title}
-        </h3>
-        {collapsible && (
-          <button
-            onClick={handleToggle}
-            className="text-xs px-2 py-1 rounded transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500"
+    <div 
+      className="rounded-xl border transition-all duration-200 hover:shadow-md"
+      style={{ 
+        backgroundColor: 'var(--bg-secondary)',
+        borderColor: 'var(--border-color)',
+        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
+      }}
+    >
+      <div className="p-4">
+        <div className="flex items-center justify-between mb-3">
+          <h3 
+            className="text-sm font-semibold tracking-wide uppercase"
             style={{ 
-              color: 'var(--text-secondary)',
-              backgroundColor: 'var(--bg-secondary)'
+              color: 'var(--text-primary)',
+              letterSpacing: '0.05em'
             }}
-            aria-expanded={isExpanded}
           >
-            {isExpanded ? '收起' : '展开'}
-          </button>
+            {title}
+          </h3>
+          {collapsible && (
+            <button
+              onClick={handleToggle}
+              className="text-xs px-3 py-1.5 rounded-full transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 flex items-center gap-1"
+              style={{ 
+                color: 'var(--text-secondary)',
+                backgroundColor: 'var(--bg-tertiary)',
+                border: '1px solid var(--border-color)'
+              }}
+              aria-expanded={isExpanded}
+            >
+              <span>{isExpanded ? '收起' : '展开'}</span>
+              <svg 
+                className={`w-3 h-3 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+          )}
+        </div>
+        {isExpanded && (
+          <div className="space-y-4 animate-in slide-in-from-top-2 duration-200">
+            {children}
+          </div>
         )}
       </div>
-      {isExpanded && (
-        <div className="space-y-3">
-          {children}
-        </div>
-      )}
     </div>
   );
 };
@@ -764,8 +835,8 @@ const SettingsPanel: React.FC = () => {
     resetToThemeDefaults,
   } = useSettingsStore();
 
-  const [expandedBackgroundSection, setExpandedBackgroundSection] = useState<BackgroundType | null>(background.type);
-  
+  // const [expandedBackgroundSection, setExpandedBackgroundSection] = useState<BackgroundType | null>(background.type);
+
   // 管理可折叠section的展开状态
   const [isBackgroundSectionExpanded, setIsBackgroundSectionExpanded] = useState(false);
 
@@ -777,7 +848,7 @@ const SettingsPanel: React.FC = () => {
       
       // 收起所有展开的菜单
       setIsBackgroundSectionExpanded(false);
-      setExpandedBackgroundSection(null);
+      // setExpandedBackgroundSection(null);
     }
     setSelectedTheme(newTheme);
   };
@@ -806,114 +877,147 @@ const SettingsPanel: React.FC = () => {
 
   return (
     <div 
-      className="fixed right-0 top-0 h-full w-80 shadow-lg border-l overflow-y-auto"
+      className="fixed right-0 top-0 h-full w-80 shadow-2xl border-l overflow-y-auto backdrop-blur-sm"
       style={{ 
         backgroundColor: 'var(--bg-primary)',
         borderColor: 'var(--border-color)',
-        zIndex: 1000
+        zIndex: 1000,
+        boxShadow: '-4px 0 20px rgba(0, 0, 0, 0.15)'
       }}
       role="complementary"
       aria-label="设置面板"
     >
-      <div className="p-6 space-y-6">
+      <div className="p-5 space-y-5">
         {/* Header */}
-        <div className="border-b pb-4" style={{ borderColor: 'var(--border-color)' }}>
-          <h2 
-            className="text-lg font-bold"
-            style={{ color: 'var(--text-primary)' }}
-          >
-            设置面板
-          </h2>
+        <div className="border-b pb-5 mb-6" style={{ borderColor: 'var(--border-color)' }}>
+          <div className="flex items-center gap-3">
+            <div 
+              className="w-8 h-8 rounded-lg flex items-center justify-center"
+              style={{ 
+                backgroundColor: 'var(--accent-primary)',
+                boxShadow: '0 2px 8px rgba(139, 92, 246, 0.3)'
+              }}
+            >
+              <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" />
+              </svg>
+            </div>
+            <div>
+              <h2 
+                className="text-lg font-bold"
+                style={{ color: 'var(--text-primary)' }}
+              >
+                设置面板
+              </h2>
+              <p 
+                className="text-xs mt-1"
+                style={{ color: 'var(--text-muted)' }}
+              >
+                自定义您的卡片设计
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Layout Mode */}
         <Section title="布局模式">
-          <div 
-            className="flex rounded-lg p-1"
-            style={{ backgroundColor: 'var(--bg-secondary)' }}
-            role="radiogroup"
-            aria-label="选择布局模式"
-          >
-            {(["长卡片", "短卡片"] as const).map((tab) => (
-              <button
-                key={tab}
-                role="radio"
-                aria-checked={viewMode === tab}
-                className="flex-1 py-2 text-sm rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500"
-                style={{
-                  backgroundColor: viewMode === tab ? 'var(--bg-primary)' : 'transparent',
-                  color: viewMode === tab ? 'var(--accent-color)' : 'var(--text-secondary)'
-                }}
-                onClick={() => setViewMode(tab)}
-              >
-                {tab}
-              </button>
-            ))}
-          </div>
+          <div className="space-y-4">
+            <div 
+              className="flex rounded-xl p-1.5 shadow-inner"
+              style={{ 
+                backgroundColor: 'var(--bg-tertiary)',
+                border: '1px solid var(--border-color)'
+              }}
+              role="radiogroup"
+              aria-label="选择布局模式"
+            >
+              {(["长卡片", "短卡片"] as const).map((tab) => (
+                <button
+                  key={tab}
+                  role="radio"
+                  aria-checked={viewMode === tab}
+                  className="flex-1 py-2.5 text-sm rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 hover:scale-[0.98]"
+                  style={{
+                    backgroundColor: viewMode === tab ? 'var(--accent-primary)' : 'transparent',
+                    color: viewMode === tab ? 'white' : 'var(--text-secondary)',
+                    boxShadow: viewMode === tab ? '0 2px 8px rgba(139, 92, 246, 0.3)' : 'none'
+                  }}
+                  onClick={() => setViewMode(tab)}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
 
-          <div 
-            className="flex rounded-lg p-1"
-            style={{ backgroundColor: 'var(--bg-secondary)' }}
-            role="radiogroup"
-            aria-label="选择拆分模式"
-          >
-            {(["自动拆分", "横线拆分"] as LayoutMode[]).map((mode) => (
-              <button
-                key={mode}
-                role="radio"
-                aria-checked={layoutMode === mode}
-                className="flex-1 py-2 text-sm rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500"
-                style={{
-                  backgroundColor: layoutMode === mode ? 'var(--bg-primary)' : 'transparent',
-                  color: layoutMode === mode ? 'var(--accent-color)' : 'var(--text-secondary)'
-                }}
-                onClick={() => setLayoutMode(mode)}
-              >
-                {mode}
-              </button>
-            ))}
+            <div 
+              className="flex rounded-xl p-1.5 shadow-inner"
+              style={{ 
+                backgroundColor: 'var(--bg-tertiary)',
+                border: '1px solid var(--border-color)'
+              }}
+              role="radiogroup"
+              aria-label="选择拆分模式"
+            >
+              {(["自动拆分", "横线拆分"] as LayoutMode[]).map((mode) => (
+                <button
+                  key={mode}
+                  role="radio"
+                  aria-checked={layoutMode === mode}
+                  className="flex-1 py-2.5 text-sm rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 hover:scale-[0.98]"
+                  style={{
+                    backgroundColor: layoutMode === mode ? 'var(--accent-primary)' : 'transparent',
+                    color: layoutMode === mode ? 'white' : 'var(--text-secondary)',
+                    boxShadow: layoutMode === mode ? '0 2px 8px rgba(139, 92, 246, 0.3)' : 'none'
+                  }}
+                  onClick={() => setLayoutMode(mode)}
+                >
+                  {mode}
+                </button>
+              ))}
+            </div>
           </div>
         </Section>
 
         {/* Size Settings */}
         <Section title="尺寸">
-          <div className="space-y-3">
+          <div className="space-y-4">
             <div>
               <label 
                 htmlFor="aspect-ratio"
-                className="block text-sm mb-2"
+                className="block text-sm font-medium mb-3"
                 style={{ color: 'var(--text-primary)' }}
               >
                 设计尺寸
               </label>
               <select 
                 id="aspect-ratio"
-                className="w-full text-sm border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full text-sm border rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-200 hover:border-purple-300"
                 style={{
                   color: 'var(--text-primary)',
                   backgroundColor: 'var(--bg-primary)',
-                  borderColor: 'var(--border-color)'
+                  borderColor: 'var(--border-color)',
+                  boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
                 }}
                 value={aspectRatio}
                 onChange={(e) => handleAspectRatioChange(e.target.value as AspectRatio)}
               >
-                <option value="16:9">16:9</option>
-                <option value="4:3">4:3</option>
-                <option value="1:1">1:1</option>
-                <option value="自定义">自定义</option>
+                <option value="16:9">16:9 (宽屏)</option>
+                <option value="4:3">4:3 (标准)</option>
+                <option value="1:1">1:1 (正方形)</option>
+                <option value="自定义">自定义尺寸</option>
               </select>
             </div>
 
-            <div className="flex gap-4">
-              <div className="flex-1">
+            <div className="grid grid-cols-2 gap-3">
+              <div>
                 <label 
                   htmlFor="card-width"
-                  className="block text-sm mb-2"
-                  style={{ color: 'var(--text-secondary)' }}
+                  className="block text-sm font-medium mb-2"
+                  style={{ color: 'var(--text-primary)' }}
                 >
                   宽度
                 </label>
-                <div className="flex items-center gap-2">
+                <div className="relative">
                   <input
                     id="card-width"
                     type="number"
@@ -924,31 +1028,32 @@ const SettingsPanel: React.FC = () => {
                         setCardWidth(value);
                       }
                     }}
-                    className="w-full text-sm border rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full text-sm border rounded-lg px-3 py-2.5 pr-10 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-200"
                     style={{
                       color: 'var(--text-primary)',
-                      backgroundColor: 'var(--bg-secondary)',
-                      borderColor: 'var(--border-color)'
+                      backgroundColor: aspectRatio !== "自定义" ? 'var(--bg-tertiary)' : 'var(--bg-primary)',
+                      borderColor: 'var(--border-color)',
+                      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
                     }}
                     disabled={aspectRatio !== "自定义"}
                   />
                   <span 
-                    className="text-sm"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-sm pointer-events-none"
                     style={{ color: 'var(--text-secondary)' }}
                   >
                     px
                   </span>
                 </div>
               </div>
-              <div className="flex-1">
+              <div>
                 <label 
                   htmlFor="card-height"
-                  className="block text-sm mb-2"
-                  style={{ color: 'var(--text-secondary)' }}
+                  className="block text-sm font-medium mb-2"
+                  style={{ color: 'var(--text-primary)' }}
                 >
                   高度
                 </label>
-                <div className="flex items-center gap-2">
+                <div className="relative">
                   <input
                     id="card-height"
                     type="number"
@@ -959,17 +1064,18 @@ const SettingsPanel: React.FC = () => {
                         setCardHeight(value);
                       }
                     }}
-                    className="w-full text-sm border rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full text-sm border rounded-lg px-3 py-2.5 pr-10 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-200"
                     style={{
                       color: 'var(--text-primary)',
-                      backgroundColor: 'var(--bg-secondary)',
+                      backgroundColor: (viewMode === "长卡片" || aspectRatio !== "自定义") ? 'var(--bg-tertiary)' : 'var(--bg-primary)',
                       borderColor: 'var(--border-color)',
-                      opacity: (viewMode === "长卡片" || aspectRatio !== "自定义") ? 0.5 : 1
+                      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+                      opacity: (viewMode === "长卡片" || aspectRatio !== "自定义") ? 0.6 : 1
                     }}
                     disabled={viewMode === "长卡片" || aspectRatio !== "自定义"}
                   />
                   <span 
-                    className="text-sm"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-sm pointer-events-none"
                     style={{ color: 'var(--text-secondary)' }}
                   >
                     px
@@ -992,12 +1098,15 @@ const SettingsPanel: React.FC = () => {
 
         {/* Display Options */}
         <Section title="显示选项">
-          <ToggleSwitch
-            id="show-page-numbers"
-            label="显示页码"
-            checked={showPageNumbers}
-            onChange={setShowPageNumbers}
-          />
+          {/* 只在短卡片（分页）模式下显示页码选项 */}
+          {viewMode === "短卡片" && (
+            <ToggleSwitch
+              id="show-page-numbers"
+              label="显示页码"
+              checked={showPageNumbers}
+              onChange={setShowPageNumbers}
+            />
+          )}
           <ToggleSwitch
             id="hide-overflow"
             label="高度超出隐藏"
@@ -1008,25 +1117,29 @@ const SettingsPanel: React.FC = () => {
 
         {/* Font Settings */}
         <Section title="字体选择">
-          <div className="space-y-3">
+          <div className="space-y-4">
             <div>
               <label 
                 htmlFor="font-family"
-                className="block text-sm mb-2"
+                className="block text-sm font-medium mb-3"
                 style={{ color: 'var(--text-primary)' }}
               >
-                字体
+                字体系列
               </label>
               <select 
                 id="font-family"
-                className="w-full text-sm border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full text-sm border rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-200 hover:border-purple-300"
                 style={{
                   color: 'var(--text-primary)',
                   backgroundColor: 'var(--bg-primary)',
-                  borderColor: 'var(--border-color)'
+                  borderColor: 'var(--border-color)',
+                  boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
                 }}
                 value={selectedFont}
-                onChange={(e) => setSelectedFont(e.target.value)}
+                onChange={(e) => {
+                  setSelectedFont(e.target.value);
+                  // Do NOT reset theme or background here
+                }}
               >
                 {FONT_OPTIONS.map((font) => (
                   <option key={font.value} value={font.value} style={{ fontFamily: font.value }}>
@@ -1060,23 +1173,36 @@ const SettingsPanel: React.FC = () => {
 
         {/* Theme Selection */}
         <Section title="主题选择">
-          <select
-            id="theme-select"
-            className="w-full text-sm border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
-            style={{
-              color: 'var(--text-primary)',
-              backgroundColor: 'var(--bg-primary)',
-              borderColor: 'var(--border-color)'
-            }}
-            value={selectedTheme}
-            onChange={(e) => handleThemeChange(e.target.value)}
-          >
-            {themeManager.getAllThemes().map((theme) => (
-              <option key={theme.id} value={theme.id}>
-                {theme.name}
-              </option>
-            ))}
-          </select>
+          <div className="space-y-3">
+            <div className="relative">
+              <select
+                id="theme-select"
+                className="w-full text-sm border rounded-xl p-3 pr-10 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-200 hover:border-purple-300 appearance-none"
+                style={{
+                  color: 'var(--text-primary)',
+                  backgroundColor: 'var(--bg-primary)',
+                  borderColor: 'var(--border-color)',
+                  boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
+                }}
+                value={selectedTheme}
+                onChange={(e) => handleThemeChange(e.target.value)}
+              >
+                {themeManager.getAllThemes().map((theme) => (
+                  <option key={theme.id} value={theme.id}>
+                    {theme.name}
+                  </option>
+                ))}
+              </select>
+              <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                <svg className="w-4 h-4" style={{ color: 'var(--text-secondary)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
+            <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
+              选择主题将重置自定义设置
+            </p>
+          </div>
         </Section>
 
         {/* Background Settings */}
@@ -1086,11 +1212,14 @@ const SettingsPanel: React.FC = () => {
           isExpanded={isBackgroundSectionExpanded}
           onToggle={setIsBackgroundSectionExpanded}
         >
-          <div className="space-y-4">
+          <div className="space-y-5">
             {/* Background Type Selector */}
             <div 
-              className="grid grid-cols-2 gap-2 p-1 rounded-lg"
-              style={{ backgroundColor: 'var(--bg-secondary)' }}
+              className="grid grid-cols-2 gap-2 p-1.5 rounded-xl shadow-inner"
+              style={{ 
+                backgroundColor: 'var(--bg-tertiary)',
+                border: '1px solid var(--border-color)'
+              }}
               role="radiogroup"
               aria-label="选择背景类型"
             >
@@ -1099,14 +1228,15 @@ const SettingsPanel: React.FC = () => {
                   key={type}
                   role="radio"
                   aria-checked={background.type === type}
-                  className="py-2 text-xs rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="py-2.5 text-sm font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 hover:scale-[0.98]"
                   style={{
-                    backgroundColor: background.type === type ? 'var(--bg-primary)' : 'transparent',
-                    color: background.type === type ? 'var(--accent-color)' : 'var(--text-secondary)'
+                    backgroundColor: background.type === type ? 'var(--accent-primary)' : 'transparent',
+                    color: background.type === type ? 'white' : 'var(--text-secondary)',
+                    boxShadow: background.type === type ? '0 2px 8px rgba(139, 92, 246, 0.3)' : 'none'
                   }}
                   onClick={() => {
                     setBackground({ type });
-                    setExpandedBackgroundSection(type);
+                    // setExpandedBackgroundSection(type);
                   }}
                 >
                   {type === "solid" ? "纯色" : 

@@ -119,10 +119,15 @@ function getOptimalTextColor(backgroundColor: string, originalTextColor: string)
 /**
  * 将配置转换为CSS变量对象
  * @param config 最终配置
+ * @param hasUserCustomizations 用户自定义设置信息
  * @returns CSS变量对象
  */
-export function configToCSSVariables(config: FinalConfig): Record<string, any> {
+export function configToCSSVariables(config: FinalConfig, hasUserCustomizations?: any): Record<string, any> {
   const cssVars: Record<string, any> = {};
+  
+  console.log('=== configToCSSVariables Debug ===');
+  console.log('Input config:', config);
+  console.log('Background config:', config.background);
   
   // 字体变量
   cssVars['--card-font-family'] = config.font.family;
@@ -147,7 +152,25 @@ export function configToCSSVariables(config: FinalConfig): Record<string, any> {
   cssVars['--card-color-secondary'] = config.colors.secondary;
   cssVars['--card-color-accent'] = config.colors.accent;
   cssVars['--card-color-text'] = finalTextColor;
-  cssVars['--card-color-background'] = config.colors.background;
+  
+  // 只有在用户真的自定义了背景时才使用用户的背景设置
+  // 否则使用主题的背景颜色
+  const hasCustomBackground = hasUserCustomizations?.background;
+  
+  if (hasCustomBackground && background.type === 'solid' && background.solidColor) {
+    // 用户自定义了纯色背景，使用用户设置的颜色
+    cssVars['--card-color-background'] = background.solidColor;
+    console.log('Using user solid background:', background.solidColor);
+  } else if (hasCustomBackground && (background.type === 'gradient' || background.type === 'texture' || background.type === 'image')) {
+    // 用户自定义了渐变、纹理或图片背景，不设置--card-color-background
+    // 这样可以避免与自定义背景冲突
+    console.log('User has custom background, not setting --card-color-background');
+  } else {
+    // 没有自定义背景，使用主题的背景颜色
+    cssVars['--card-color-background'] = config.colors.background;
+    console.log('Using theme background:', config.colors.background);
+  }
+  
   cssVars['--card-color-border'] = config.colors.border;
   
   // 间距变量
@@ -162,10 +185,18 @@ export function configToCSSVariables(config: FinalConfig): Record<string, any> {
   
   switch (background.type) {
     case 'solid':
-      backgroundValue = background.solidColor || config.colors.background;
+      // 只有在用户真的自定义了背景时才使用用户的纯色背景
+      if (hasCustomBackground && background.solidColor) {
+        backgroundValue = background.solidColor;
+      } else {
+        backgroundValue = config.colors.background;
+      }
       break;
     case 'gradient':
-      backgroundValue = `linear-gradient(${background.gradientDirection || 45}deg, ${background.gradientStart || config.colors.primary}, ${background.gradientEnd || config.colors.secondary})`;
+      // 确保使用用户明确设置的梯度颜色，而不是主题的默认颜色
+      const gradientStart = background.gradientStart || '#ffffff';
+      const gradientEnd = background.gradientEnd || '#f0f0f0';
+      backgroundValue = `linear-gradient(${background.gradientDirection || 45}deg, ${gradientStart}, ${gradientEnd})`;
       console.log('Generated gradient:', backgroundValue);
       break;
     case 'texture':

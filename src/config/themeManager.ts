@@ -82,12 +82,17 @@ class ThemeManager {
     
     // 如果是主题切换，需要根据用户自定义情况决定合并策略
     if (isThemeChange) {
-      // 主题切换时，主题配置优先，但保留用户明确自定义的设置
-      const forceThemeOverride = !hasUserCustomizations || Object.values(hasUserCustomizations || {}).every(v => !v);
-      return getFinalConfig(themeConfig, userConfig, forceThemeOverride);
+      // 主题切换时，只有当用户完全没有任何自定义时才强制覆盖
+      // 否则保留所有用户自定义设置，只应用主题的默认配置到未自定义的部分
+      const hasAnyCustomizations = hasUserCustomizations && Object.values(hasUserCustomizations || {}).some(v => v);
+      const finalConfig = getFinalConfig(themeConfig, userConfig, !hasAnyCustomizations);
+      finalConfig.hasUserCustomizations = hasUserCustomizations;
+      return finalConfig;
     } else {
-      // 同一主题内的设置变更，用户配置优先
-      return getFinalConfig(themeConfig, userConfig, false);
+      // 同一主题内的设置变更，用户配置优先，不强制覆盖
+      const finalConfig = getFinalConfig(themeConfig, userConfig, false);
+      finalConfig.hasUserCustomizations = hasUserCustomizations;
+      return finalConfig;
     }
   }
 

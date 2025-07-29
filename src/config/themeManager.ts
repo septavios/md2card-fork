@@ -5,67 +5,145 @@ import { predefinedThemes } from './predefinedThemes';
 import { customThemeManager } from './customThemeManager';
 import { createAppleNotesRenderer } from './appleNotesRenderer';
 
+// Debug mode flag - can be toggled for development
+const DEBUG_MODE = false;
+
+// Error types
+export class ThemeError extends Error {
+  constructor(message: string, public themeId?: string) {
+    super(message);
+    this.name = 'ThemeError';
+  }
+}
+
 class ThemeManager {
   private themes: ThemeRegistry = {};
   private renderers: Record<string, Renderer> = {};
   private lastSelectedTheme: string | null = null;
 
   constructor() {
-    // 注册预定义主题
-    this.registerPredefinedThemes();
+    try {
+      // 注册预定义主题
+      this.registerPredefinedThemes();
+    } catch (error) {
+      console.error('Failed to initialize theme manager:', error);
+      throw new ThemeError('Theme manager initialization failed');
+    }
   }
 
   /**
    * 注册预定义主题
    */
   private registerPredefinedThemes() {
-    // 这里我们先注册主题配置，组件和渲染器将在后续动态加载
-    Object.values(predefinedThemes).forEach(themeConfig => {
-      // 为Apple Notes主题使用自定义渲染器
-      const renderer = themeConfig.id === 'AppleNotesDark' 
-        ? createAppleNotesRenderer() 
-        : new Renderer();
-      
-      console.log(`Registering theme ${themeConfig.id} with renderer:`, renderer);
-        
-      this.themes[themeConfig.id] = {
-        config: themeConfig,
-        component: null as any, // 将在动态加载时设置
-        renderer: renderer,
-      };
-    });
+    try {
+      // 这里我们先注册主题配置，组件和渲染器将在后续动态加载
+      Object.values(predefinedThemes).forEach(themeConfig => {
+        try {
+          // 为Apple Notes主题使用自定义渲染器
+          const renderer = themeConfig.id === 'AppleNotesDark' 
+            ? createAppleNotesRenderer() 
+            : new Renderer();
+          
+          if (DEBUG_MODE) {
+            console.log(`Registering theme ${themeConfig.id} with renderer:`, renderer);
+          }
+            
+          this.themes[themeConfig.id] = {
+            config: themeConfig,
+            component: null as any, // 将在动态加载时设置
+            renderer: renderer,
+          };
+        } catch (error) {
+          console.error(`Failed to register theme ${themeConfig.id}:`, error);
+          // Continue with other themes even if one fails
+        }
+      });
+    } catch (error) {
+      console.error('Failed to register predefined themes:', error);
+      throw new ThemeError('Failed to register predefined themes');
+    }
   }
 
   /**
    * 注册主题
    */
   registerTheme(themeId: string, registration: ThemeRegistration) {
-    this.themes[themeId] = registration;
-    this.renderers[themeId] = registration.renderer;
+    try {
+      if (!themeId || !registration) {
+        throw new ThemeError('Invalid theme registration parameters', themeId);
+      }
+      
+      this.themes[themeId] = registration;
+      this.renderers[themeId] = registration.renderer;
+      
+      if (DEBUG_MODE) {
+        console.log(`Successfully registered theme: ${themeId}`);
+      }
+    } catch (error) {
+      console.error(`Failed to register theme ${themeId}:`, error);
+      throw error instanceof ThemeError ? error : new ThemeError(`Failed to register theme ${themeId}`, themeId);
+    }
   }
 
   /**
    * 获取主题配置
    */
   getThemeConfig(themeId: string): ThemeConfig | null {
-    return this.themes[themeId]?.config || null;
+    try {
+      if (!themeId) {
+        console.warn('getThemeConfig called with empty themeId');
+        return null;
+      }
+      
+      return this.themes[themeId]?.config || null;
+    } catch (error) {
+      console.error(`Error getting theme config for ${themeId}:`, error);
+      return null;
+    }
   }
 
   /**
    * 获取主题组件
    */
   getThemeComponent(themeId: string) {
-    return this.themes[themeId]?.component || null;
+    try {
+      if (!themeId) {
+        console.warn('getThemeComponent called with empty themeId');
+        return null;
+      }
+      
+      return this.themes[themeId]?.component || null;
+    } catch (error) {
+      console.error(`Error getting theme component for ${themeId}:`, error);
+      return null;
+    }
   }
 
   /**
    * 获取主题渲染器
    */
   getThemeRenderer(themeId: string): Renderer | null {
-    console.log('Getting renderer for theme:', themeId);
-    const renderer = this.themes[themeId]?.renderer || null;
-    console.log('Found renderer:', renderer ? 'yes' : 'no');
-    return renderer;
+    try {
+      if (!themeId) {
+        console.warn('getThemeRenderer called with empty themeId');
+        return null;
+      }
+      
+      if (DEBUG_MODE) {
+        console.log('Getting renderer for theme:', themeId);
+      }
+      
+      const renderer = this.themes[themeId]?.renderer || null;
+      
+      if (DEBUG_MODE) {
+        console.log('Found renderer:', renderer ? 'yes' : 'no');
+      }
+      
+      return renderer;
+    } catch (error) {
+      console.error(`Error getting theme renderer for ${themeId}:`, error);
+      return null;
+    }
   }
 
   /**
@@ -94,38 +172,58 @@ class ThemeManager {
    * 获取最终配置（合并主题配置和用户配置）
    */
   getFinalConfig(themeId: string, userConfig: UserConfig, hasUserCustomizations?: any): FinalConfig | null {
-    // 首先尝试从预定义主题获取配置
-    let themeConfig = this.getThemeConfig(themeId);
-    
-    // 如果预定义主题中没有，尝试从自定义主题获取
-    if (!themeConfig) {
-      const customTheme = customThemeManager.getCustomTheme(themeId);
-      if (customTheme) {
-        themeConfig = customTheme; // CustomTheme extends ThemeConfig
+    try {
+      if (!themeId) {
+        console.warn('getFinalConfig called with empty themeId');
+        return null;
       }
-    }
-    
-    if (!themeConfig) {
+
+      if (!userConfig) {
+        console.warn('getFinalConfig called with null userConfig, using empty config');
+        userConfig = { selectedTheme: themeId };
+      }
+
+      // 首先尝试从预定义主题获取配置
+      let themeConfig = this.getThemeConfig(themeId);
+      
+      // 如果预定义主题中没有，尝试从自定义主题获取
+      if (!themeConfig) {
+        try {
+          const customTheme = customThemeManager.getCustomTheme(themeId);
+          if (customTheme) {
+            themeConfig = customTheme; // CustomTheme extends ThemeConfig
+          }
+        } catch (error) {
+          console.error(`Error getting custom theme ${themeId}:`, error);
+        }
+      }
+      
+      if (!themeConfig) {
+        console.warn(`Theme config not found for theme: ${themeId}`);
+        return null;
+      }
+      
+      // 检测是否切换到不同主题
+      const isThemeChange = this.lastSelectedTheme !== themeId;
+      this.lastSelectedTheme = themeId;
+      
+      // 如果是主题切换，需要根据用户自定义情况决定合并策略
+      if (isThemeChange) {
+        // 主题切换时，只有当用户完全没有任何自定义时才强制覆盖
+        // 否则保留所有用户自定义设置，只应用主题的默认配置到未自定义的部分
+        const hasAnyCustomizations = hasUserCustomizations && Object.values(hasUserCustomizations || {}).some(v => v);
+        const finalConfig = getFinalConfig(themeConfig, userConfig, !hasAnyCustomizations);
+        finalConfig.hasUserCustomizations = hasUserCustomizations;
+        return finalConfig;
+      } else {
+        // 同一主题内的设置变更，用户配置优先，不强制覆盖
+        const finalConfig = getFinalConfig(themeConfig, userConfig, false);
+        finalConfig.hasUserCustomizations = hasUserCustomizations;
+        return finalConfig;
+      }
+    } catch (error) {
+      console.error(`Error getting final config for theme ${themeId}:`, error);
       return null;
-    }
-    
-    // 检测是否切换到不同主题
-    const isThemeChange = this.lastSelectedTheme !== themeId;
-    this.lastSelectedTheme = themeId;
-    
-    // 如果是主题切换，需要根据用户自定义情况决定合并策略
-    if (isThemeChange) {
-      // 主题切换时，只有当用户完全没有任何自定义时才强制覆盖
-      // 否则保留所有用户自定义设置，只应用主题的默认配置到未自定义的部分
-      const hasAnyCustomizations = hasUserCustomizations && Object.values(hasUserCustomizations || {}).some(v => v);
-      const finalConfig = getFinalConfig(themeConfig, userConfig, !hasAnyCustomizations);
-      finalConfig.hasUserCustomizations = hasUserCustomizations;
-      return finalConfig;
-    } else {
-      // 同一主题内的设置变更，用户配置优先，不强制覆盖
-      const finalConfig = getFinalConfig(themeConfig, userConfig, false);
-      finalConfig.hasUserCustomizations = hasUserCustomizations;
-      return finalConfig;
     }
   }
 

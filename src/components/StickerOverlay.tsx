@@ -101,26 +101,32 @@ const StickerOverlay: React.FC<StickerOverlayProps> = ({ containerRef }) => {
     if (!containerRef.current) return null;
     
     const rect = containerRef.current.getBoundingClientRect();
-    // Make the bounding box larger to properly encompass the sticker
-    const stickerSize = 2 * sticker.size; // Base size in rem
-    const padding = 20; // Extra padding around the sticker
-    const stickerWidth = (stickerSize / 100) * rect.width + padding;
-    const stickerHeight = (stickerSize / 100) * rect.height + padding;
+    
+    // Calculate the actual sticker size in pixels
+    // The sticker has font-size: 2rem and is scaled by sticker.size
+    const baseSizeRem = 2; // 2rem base size
+    const remToPx = 16; // Assuming 1rem = 16px
+    const actualStickerSize = baseSizeRem * remToPx * sticker.size;
+    
+    // Add padding around the sticker for the bounding box
+    const padding = 24; // Padding around the sticker
+    const boundingBoxWidth = actualStickerSize + padding;
+    const boundingBoxHeight = actualStickerSize + padding;
     
     // Calculate corner positions relative to sticker center
-    const halfWidth = stickerWidth / 2;
-    const halfHeight = stickerHeight / 2;
+    const halfWidth = boundingBoxWidth / 2;
+    const halfHeight = boundingBoxHeight / 2;
     
-    // Corner positions (before rotation)
+    // Corner positions (before rotation) - these should align with the bounding box corners
     const corners = [
-      { x: -halfWidth, y: -halfHeight, cursor: 'nw-resize' }, // Top-left
-      { x: halfWidth, y: -halfHeight, cursor: 'ne-resize' },  // Top-right
-      { x: halfWidth, y: halfHeight, cursor: 'se-resize' },   // Bottom-right
-      { x: -halfWidth, y: halfHeight, cursor: 'sw-resize' },  // Bottom-left
+      { x: -halfWidth, y: -halfHeight, cursor: 'nwse-resize' }, // Top-left
+      { x: halfWidth, y: -halfHeight, cursor: 'nesw-resize' },  // Top-right
+      { x: halfWidth, y: halfHeight, cursor: 'nwse-resize' },   // Bottom-right
+      { x: -halfWidth, y: halfHeight, cursor: 'nesw-resize' },  // Bottom-left
     ];
     
     // Rotation handle position (above top center)
-    const rotationHandleDistance = halfHeight + 40;
+    const rotationHandleDistance = halfHeight + 30;
     const rotationHandle = { x: 0, y: -rotationHandleDistance };
     
     // Apply rotation to all points
@@ -148,7 +154,7 @@ const StickerOverlay: React.FC<StickerOverlayProps> = ({ containerRef }) => {
     const screenCorners = rotatedCorners.map(toScreenCoords);
     const screenRotationHandle = toScreenCoords(rotatedRotationHandle);
     
-    // Create polygon path for outline
+    // Create polygon path for outline - this should match exactly with corner positions
     const polygonPath = screenCorners.map(corner => `${corner.x}%,${corner.y}%`).join(' ');
     
     const handleCornerDrag = (cornerIndex: number) => (e: React.MouseEvent) => {
@@ -160,42 +166,68 @@ const StickerOverlay: React.FC<StickerOverlayProps> = ({ containerRef }) => {
       setIsResizing(true);
       dragRef.current = null;
       
+      const rect = containerRef.current!.getBoundingClientRect();
+      const centerX = rect.left + (sticker.x / 100) * rect.width;
+      const centerY = rect.top + (sticker.y / 100) * rect.height;
+      
       const startMouseX = e.clientX;
       const startMouseY = e.clientY;
       const startSize = sticker.size;
+      
+      // Calculate initial distance from center
+      const startDistanceFromCenter = Math.sqrt(
+        Math.pow(startMouseX - centerX, 2) + Math.pow(startMouseY - centerY, 2)
+      );
+      
+      let resizeDirection: 'grow' | 'shrink' | null = null;
+      let directionLocked = false;
+      let totalMovement = 0; // Track total movement from start
       
       const handleResize = (e: MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
         
-        const deltaX = e.clientX - startMouseX;
-        const deltaY = e.clientY - startMouseY;
+        // Calculate current distance from center
+        const currentDistanceFromCenter = Math.sqrt(
+          Math.pow(e.clientX - centerX, 2) + Math.pow(e.clientY - centerY, 2)
+        );
         
-        // Calculate the average delta for more stable resizing
-        const avgDelta = (deltaX + deltaY) / 2;
+        // Calculate the change in distance from start
+        const distanceChange = currentDistanceFromCenter - startDistanceFromCenter;
         
-        // Determine direction based on corner
-        let direction = 1;
-        switch (cornerIndex) {
-          case 0: // Top-left: moving away from center increases size
-            direction = (-deltaX - deltaY) > 0 ? 1 : -1;
-            break;
-          case 1: // Top-right: moving away from center increases size
-            direction = (deltaX - deltaY) > 0 ? 1 : -1;
-            break;
-          case 2: // Bottom-right: moving away from center increases size
-            direction = (deltaX + deltaY) > 0 ? 1 : -1;
-            break;
-          case 3: // Bottom-left: moving away from center increases size
-            direction = (-deltaX + deltaY) > 0 ? 1 : -1;
-            break;
+        // Lock direction based on initial movement (after a small threshold to avoid jitter)
+        if (!directionLocked && Math.abs(distanceChange) > 5) {
+          resizeDirection = distanceChange > 0 ? 'grow' : 'shrink';
+          directionLocked = true;
+          totalMovement = 0; // Reset total movement when direction is locked
         }
         
-        // Adjust sensitivity for smooth resizing
-        const sensitivity = 150;
-        const sizeDelta = (Math.abs(avgDelta) * direction) / sensitivity;
+        // If direction is locked, track total movement in that direction
+        let sizeDelta = 0;
+        if (directionLocked && resizeDirection) {
+          // Calculate movement since last frame
+          const currentMovement = Math.sqrt(
+            Math.pow(e.clientX - startMouseX, 2) + Math.pow(e.clientY - startMouseY, 2)
+          );
+          
+          // For shrinking, we want movement towards center to increase the shrink amount
+          // For growing, we want movement away from center to increase the grow amount
+          if (resizeDirection === 'shrink') {
+            // When shrinking, any movement should continue shrinking
+            totalMovement = currentMovement;
+            sizeDelta = -totalMovement / 100; // Negative for shrinking
+          } else {
+            // When growing, any movement should continue growing
+            totalMovement = currentMovement;
+            sizeDelta = totalMovement / 100; // Positive for growing
+          }
+        } else if (!directionLocked) {
+          // Before direction is locked, use normal behavior
+          const sensitivity = 100;
+          sizeDelta = distanceChange / sensitivity;
+        }
         
-        const newSize = Math.max(0.3, Math.min(3, startSize + sizeDelta));
+        const newSize = Math.max(0.3, startSize + sizeDelta);
         updateSticker(sticker.id, { size: newSize });
       };
       
@@ -224,15 +256,23 @@ const StickerOverlay: React.FC<StickerOverlayProps> = ({ containerRef }) => {
       const centerX = rect.left + (sticker.x / 100) * rect.width;
       const centerY = rect.top + (sticker.y / 100) * rect.height;
       
+      // Calculate initial angle to maintain relative rotation
+      const initialAngle = Math.atan2(e.clientY - centerY, e.clientX - centerX) * (180 / Math.PI);
+      const startRotation = sticker.rotation;
+      
       const handleRotate = (e: MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
         
-        const deltaX = e.clientX - centerX;
-        const deltaY = e.clientY - centerY;
-        const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI) + 90;
-        const normalizedAngle = ((angle % 360) + 360) % 360;
-        updateSticker(sticker.id, { rotation: normalizedAngle });
+        const currentAngle = Math.atan2(e.clientY - centerY, e.clientX - centerX) * (180 / Math.PI);
+        let angleDelta = currentAngle - initialAngle;
+        
+        // Normalize angle delta to prevent 360-degree jumps
+        while (angleDelta > 180) angleDelta -= 360;
+        while (angleDelta < -180) angleDelta += 360;
+        
+        const newRotation = startRotation + angleDelta;
+        updateSticker(sticker.id, { rotation: newRotation });
       };
       
       const handleRotateEnd = () => {
@@ -375,7 +415,7 @@ const StickerOverlay: React.FC<StickerOverlayProps> = ({ containerRef }) => {
 
   return (
     <div 
-      className="absolute inset-0 pointer-events-none"
+      className="absolute inset-0 pointer-events-auto"
       onClick={handleContainerClick}
       style={{ zIndex: 10 }}
     >
@@ -383,8 +423,10 @@ const StickerOverlay: React.FC<StickerOverlayProps> = ({ containerRef }) => {
         <div key={sticker.id}>
           {/* Sticker */}
           <div
-            className={`absolute pointer-events-auto cursor-move select-none transition-all duration-150 hover:scale-105 ${
+            className={`absolute pointer-events-auto cursor-move select-none hover:scale-105 ${
               selectedStickerId === sticker.id ? 'ring-2 ring-pink-400 ring-opacity-50' : ''
+            } ${
+              isRotating && selectedStickerId === sticker.id ? '' : 'transition-all duration-150'
             }`}
             style={{
               left: `${sticker.x}%`,

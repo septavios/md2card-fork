@@ -103,7 +103,7 @@ const useStickerStore = create<StickerState>()(
               x: updates.x !== undefined ? Math.max(2, Math.min(98, updates.x)) : s.x,
               y: updates.y !== undefined ? Math.max(2, Math.min(98, updates.y)) : s.y,
               // Ensure size stays within reasonable bounds
-              size: updates.size !== undefined ? Math.max(0.3, Math.min(3, updates.size)) : s.size,
+              size: updates.size !== undefined ? Math.max(0.3, updates.size) : s.size,
               // Ensure rotation stays within 0-360
               rotation: updates.rotation !== undefined ? updates.rotation % 360 : s.rotation,
             } : s

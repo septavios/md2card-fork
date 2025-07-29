@@ -103,90 +103,145 @@ const StickerOverlay: React.FC<StickerOverlayProps> = ({ containerRef }) => {
 
   const StickerControls: React.FC<{ sticker: Sticker }> = ({ sticker }) => (
     <div 
-      className="absolute bg-white rounded-lg shadow-lg border border-gray-200 p-2 z-50"
+      className="absolute bg-white rounded-lg shadow-xl border border-gray-300 p-3 z-[100]"
       style={{
         left: `${sticker.x}%`,
-        top: `${Math.max(0, sticker.y - 15)}%`,
+        top: `${Math.max(0, sticker.y - 20)}%`,
         transform: 'translate(-50%, -100%)',
-        minWidth: '280px',
+        minWidth: '320px',
       }}
       onClick={(e) => e.stopPropagation()}
     >
-      <div className="flex items-center gap-1 flex-wrap">
+      <div className="space-y-2">
         {/* Size controls */}
-        <button
-          onClick={() => updateSticker(sticker.id, { size: Math.max(0.3, sticker.size - 0.1) })}
-          className="w-6 h-6 bg-gray-100 hover:bg-gray-200 rounded text-xs flex items-center justify-center transition-colors"
-          title="缩小"
-        >
-          -
-        </button>
-        <span className="text-xs px-1 min-w-8 text-center">{Math.round(sticker.size * 100)}%</span>
-        <button
-          onClick={() => updateSticker(sticker.id, { size: Math.min(3, sticker.size + 0.1) })}
-          className="w-6 h-6 bg-gray-100 hover:bg-gray-200 rounded text-xs flex items-center justify-center transition-colors"
-          title="放大"
-        >
-          +
-        </button>
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-medium text-gray-600 w-8">大小:</span>
+          <button
+            onClick={() => updateSticker(sticker.id, { size: Math.max(0.3, sticker.size - 0.2) })}
+            className="w-8 h-8 bg-blue-100 hover:bg-blue-200 rounded-lg text-sm font-bold flex items-center justify-center transition-colors"
+            title="缩小"
+          >
+            -
+          </button>
+          <span className="text-sm px-2 min-w-12 text-center font-medium bg-gray-50 rounded py-1">
+            {Math.round(sticker.size * 100)}%
+          </span>
+          <button
+            onClick={() => updateSticker(sticker.id, { size: Math.min(3, sticker.size + 0.2) })}
+            className="w-8 h-8 bg-blue-100 hover:bg-blue-200 rounded-lg text-sm font-bold flex items-center justify-center transition-colors"
+            title="放大"
+          >
+            +
+          </button>
+          
+          {/* Quick size presets */}
+          <div className="flex gap-1 ml-2">
+            <button
+              onClick={() => updateSticker(sticker.id, { size: 0.5 })}
+              className="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded transition-colors"
+              title="小"
+            >
+              小
+            </button>
+            <button
+              onClick={() => updateSticker(sticker.id, { size: 1.0 })}
+              className="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded transition-colors"
+              title="中"
+            >
+              中
+            </button>
+            <button
+              onClick={() => updateSticker(sticker.id, { size: 1.5 })}
+              className="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded transition-colors"
+              title="大"
+            >
+              大
+            </button>
+          </div>
+        </div>
         
-        {/* Rotation */}
-        <button
-          onClick={() => updateSticker(sticker.id, { rotation: (sticker.rotation + 15) % 360 })}
-          className="w-6 h-6 bg-gray-100 hover:bg-gray-200 rounded text-xs flex items-center justify-center transition-colors"
-          title="旋转"
-        >
-          ↻
-        </button>
+        {/* Rotation controls */}
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-medium text-gray-600 w-8">旋转:</span>
+          <button
+            onClick={() => updateSticker(sticker.id, { rotation: (sticker.rotation - 15 + 360) % 360 })}
+            className="w-8 h-8 bg-green-100 hover:bg-green-200 rounded-lg text-sm flex items-center justify-center transition-colors"
+            title="逆时针旋转"
+          >
+            ↺
+          </button>
+          <span className="text-sm px-2 min-w-12 text-center font-medium bg-gray-50 rounded py-1">
+            {Math.round(sticker.rotation)}°
+          </span>
+          <button
+            onClick={() => updateSticker(sticker.id, { rotation: (sticker.rotation + 15) % 360 })}
+            className="w-8 h-8 bg-green-100 hover:bg-green-200 rounded-lg text-sm flex items-center justify-center transition-colors"
+            title="顺时针旋转"
+          >
+            ↻
+          </button>
+          
+          {/* Reset rotation */}
+          <button
+            onClick={() => updateSticker(sticker.id, { rotation: 0 })}
+            className="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded transition-colors ml-2"
+            title="重置旋转"
+          >
+            重置
+          </button>
+        </div>
         
-        {/* Layer controls */}
-        <button
-          onClick={() => bringToFront(sticker.id)}
-          className="w-6 h-6 bg-gray-100 hover:bg-gray-200 rounded text-xs flex items-center justify-center transition-colors"
-          title="置于顶层"
-        >
-          ↑
-        </button>
-        <button
-          onClick={() => sendToBack(sticker.id)}
-          className="w-6 h-6 bg-gray-100 hover:bg-gray-200 rounded text-xs flex items-center justify-center transition-colors"
-          title="置于底层"
-        >
-          ↓
-        </button>
-        
-        {/* Duplicate */}
-        <button
-          onClick={() => {
-            duplicateSticker(sticker.id);
-            setShowControls(null);
-          }}
-          className="w-6 h-6 bg-gray-100 hover:bg-gray-200 rounded text-xs flex items-center justify-center transition-colors"
-          title="复制"
-        >
-          📋
-        </button>
-        
-        {/* Delete */}
-        <button
-          onClick={() => {
-            removeSticker(sticker.id);
-            setShowControls(null);
-          }}
-          className="w-6 h-6 bg-red-100 hover:bg-red-200 rounded text-xs flex items-center justify-center text-red-600 transition-colors"
-          title="删除"
-        >
-          🗑
-        </button>
-        
-        {/* Close controls */}
-        <button
-          onClick={() => setShowControls(null)}
-          className="w-6 h-6 bg-gray-100 hover:bg-gray-200 rounded text-xs flex items-center justify-center transition-colors ml-1"
-          title="关闭"
-        >
-          ✕
-        </button>
+        {/* Action buttons */}
+        <div className="flex items-center gap-1 pt-1 border-t border-gray-200">
+          {/* Layer controls */}
+          <button
+            onClick={() => bringToFront(sticker.id)}
+            className="w-8 h-8 bg-purple-100 hover:bg-purple-200 rounded-lg text-xs flex items-center justify-center transition-colors"
+            title="置于顶层"
+          >
+            ↑
+          </button>
+          <button
+            onClick={() => sendToBack(sticker.id)}
+            className="w-8 h-8 bg-purple-100 hover:bg-purple-200 rounded-lg text-xs flex items-center justify-center transition-colors"
+            title="置于底层"
+          >
+            ↓
+          </button>
+          
+          {/* Duplicate */}
+          <button
+            onClick={() => {
+              duplicateSticker(sticker.id);
+              setShowControls(null);
+            }}
+            className="w-8 h-8 bg-yellow-100 hover:bg-yellow-200 rounded-lg text-xs flex items-center justify-center transition-colors"
+            title="复制"
+          >
+            📋
+          </button>
+          
+          {/* Delete */}
+          <button
+            onClick={() => {
+              removeSticker(sticker.id);
+              setShowControls(null);
+            }}
+            className="w-8 h-8 bg-red-100 hover:bg-red-200 rounded-lg text-xs flex items-center justify-center text-red-600 transition-colors"
+            title="删除"
+          >
+            🗑
+          </button>
+          
+          {/* Close controls */}
+          <button
+            onClick={() => setShowControls(null)}
+            className="w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-lg text-xs flex items-center justify-center transition-colors ml-auto"
+            title="关闭控制面板"
+          >
+            ✕
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -221,7 +276,7 @@ const StickerOverlay: React.FC<StickerOverlayProps> = ({ containerRef }) => {
               e.preventDefault();
               setShowControls(showControls === sticker.id ? null : sticker.id);
             }}
-            title={`${sticker.emoji} - 双击或右键编辑`}
+            title={`${sticker.emoji} - 双击或右键打开控制面板`}
           >
             {sticker.emoji}
           </div>
@@ -236,8 +291,9 @@ const StickerOverlay: React.FC<StickerOverlayProps> = ({ containerRef }) => {
       {/* Instructions overlay when no stickers */}
       {stickers.length === 0 && (
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="bg-black bg-opacity-20 text-white px-4 py-2 rounded-lg text-sm">
-            点击右侧贴纸按钮添加小红书贴纸 🏷️
+          <div className="bg-black bg-opacity-20 text-white px-6 py-3 rounded-lg text-sm text-center max-w-xs">
+            <div className="mb-1">点击右侧贴纸按钮添加小红书贴纸 🏷️</div>
+            <div className="text-xs opacity-80">添加后双击或右键贴纸可调整大小和旋转</div>
           </div>
         </div>
       )}

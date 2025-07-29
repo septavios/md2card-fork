@@ -4,6 +4,7 @@ import { getFinalConfig } from './configMerger';
 import { predefinedThemes } from './predefinedThemes';
 import { customThemeManager } from './customThemeManager';
 import { createAppleNotesRenderer } from './appleNotesRenderer';
+import { devLog, prodLog } from '../utils/logger';
 
 // Debug mode flag - can be toggled for development
 const DEBUG_MODE = false;
@@ -26,7 +27,7 @@ class ThemeManager {
       // 注册预定义主题
       this.registerPredefinedThemes();
     } catch (error) {
-      console.error('Failed to initialize theme manager:', error);
+      prodLog.error('Failed to initialize theme manager:', error);
       throw new ThemeError('Theme manager initialization failed');
     }
   }
@@ -45,7 +46,7 @@ class ThemeManager {
             : new Renderer();
           
           if (DEBUG_MODE) {
-            console.log(`Registering theme ${themeConfig.id} with renderer:`, renderer);
+            devLog.log(`Registering theme ${themeConfig.id} with renderer:`, renderer);
           }
             
           this.themes[themeConfig.id] = {
@@ -54,12 +55,12 @@ class ThemeManager {
             renderer: renderer,
           };
         } catch (error) {
-          console.error(`Failed to register theme ${themeConfig.id}:`, error);
+          prodLog.error(`Failed to register theme ${themeConfig.id}:`, error);
           // Continue with other themes even if one fails
         }
       });
     } catch (error) {
-      console.error('Failed to register predefined themes:', error);
+      prodLog.error('Failed to register predefined themes:', error);
       throw new ThemeError('Failed to register predefined themes');
     }
   }
@@ -77,10 +78,10 @@ class ThemeManager {
       this.renderers[themeId] = registration.renderer;
       
       if (DEBUG_MODE) {
-        console.log(`Successfully registered theme: ${themeId}`);
+        devLog.log(`Successfully registered theme: ${themeId}`);
       }
     } catch (error) {
-      console.error(`Failed to register theme ${themeId}:`, error);
+      prodLog.error(`Failed to register theme ${themeId}:`, error);
       throw error instanceof ThemeError ? error : new ThemeError(`Failed to register theme ${themeId}`, themeId);
     }
   }
@@ -91,13 +92,13 @@ class ThemeManager {
   getThemeConfig(themeId: string): ThemeConfig | null {
     try {
       if (!themeId) {
-        console.warn('getThemeConfig called with empty themeId');
+        devLog.warn('getThemeConfig called with empty themeId');
         return null;
       }
       
       return this.themes[themeId]?.config || null;
     } catch (error) {
-      console.error(`Error getting theme config for ${themeId}:`, error);
+      prodLog.error(`Error getting theme config for ${themeId}:`, error);
       return null;
     }
   }
@@ -108,13 +109,13 @@ class ThemeManager {
   getThemeComponent(themeId: string) {
     try {
       if (!themeId) {
-        console.warn('getThemeComponent called with empty themeId');
+        devLog.warn('getThemeComponent called with empty themeId');
         return null;
       }
       
       return this.themes[themeId]?.component || null;
     } catch (error) {
-      console.error(`Error getting theme component for ${themeId}:`, error);
+      prodLog.error(`Error getting theme component for ${themeId}:`, error);
       return null;
     }
   }
@@ -125,23 +126,23 @@ class ThemeManager {
   getThemeRenderer(themeId: string): Renderer | null {
     try {
       if (!themeId) {
-        console.warn('getThemeRenderer called with empty themeId');
+        devLog.warn('getThemeRenderer called with empty themeId');
         return null;
       }
       
       if (DEBUG_MODE) {
-        console.log('Getting renderer for theme:', themeId);
+        devLog.log('Getting renderer for theme:', themeId);
       }
       
       const renderer = this.themes[themeId]?.renderer || null;
       
       if (DEBUG_MODE) {
-        console.log('Found renderer:', renderer ? 'yes' : 'no');
+        devLog.log('Found renderer:', renderer ? 'yes' : 'no');
       }
       
       return renderer;
     } catch (error) {
-      console.error(`Error getting theme renderer for ${themeId}:`, error);
+      prodLog.error(`Error getting theme renderer for ${themeId}:`, error);
       return null;
     }
   }
@@ -174,12 +175,12 @@ class ThemeManager {
   getFinalConfig(themeId: string, userConfig: UserConfig, hasUserCustomizations?: any): FinalConfig | null {
     try {
       if (!themeId) {
-        console.warn('getFinalConfig called with empty themeId');
+        devLog.warn('getFinalConfig called with empty themeId');
         return null;
       }
 
       if (!userConfig) {
-        console.warn('getFinalConfig called with null userConfig, using empty config');
+        devLog.warn('getFinalConfig called with null userConfig, using empty config');
         userConfig = { selectedTheme: themeId };
       }
 
@@ -194,12 +195,12 @@ class ThemeManager {
             themeConfig = customTheme; // CustomTheme extends ThemeConfig
           }
         } catch (error) {
-          console.error(`Error getting custom theme ${themeId}:`, error);
+          prodLog.error(`Error getting custom theme ${themeId}:`, error);
         }
       }
       
       if (!themeConfig) {
-        console.warn(`Theme config not found for theme: ${themeId}`);
+        devLog.warn(`Theme config not found for theme: ${themeId}`);
         return null;
       }
       
@@ -222,7 +223,7 @@ class ThemeManager {
         return finalConfig;
       }
     } catch (error) {
-      console.error(`Error getting final config for theme ${themeId}:`, error);
+      prodLog.error(`Error getting final config for theme ${themeId}:`, error);
       return null;
     }
   }

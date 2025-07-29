@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useCallback } from 'react';
 import { CardProps } from '../config/themeConfig';
 import useSettingsStore from '../stores/settingsStore';
 import appleNotesTasksCSS from '../styles/apple-notes-tasks.css?raw';
+import { createSafeHtml, sanitizeHtml } from '../utils/htmlSanitizer';
 
 // Utility function moved outside component to prevent recreation
 const camelToKebab = (str: string) => {
@@ -148,12 +149,12 @@ const UniversalCard: React.FC<CardProps> = React.memo(({
     >
       {/* Inject custom styles */}
       {customStylesCSS && (
-        <style dangerouslySetInnerHTML={{ __html: customStylesCSS }} />
+        <style dangerouslySetInnerHTML={createSafeHtml(customStylesCSS)} />
       )}
       
       {/* Inject Apple Notes task list styles */}
       {themeChecks.isAppleNotesTheme && (
-        <style dangerouslySetInnerHTML={{ __html: appleNotesTasksCSS }} />
+        <style dangerouslySetInnerHTML={createSafeHtml(appleNotesTasksCSS)} />
       )}
       
       {needsHeaderStructure ? (
@@ -175,7 +176,7 @@ const UniversalCard: React.FC<CardProps> = React.memo(({
               ref={contentRef}
               className="card-content-inner"
               style={contentStyles}
-              dangerouslySetInnerHTML={{ __html: page }}
+              dangerouslySetInnerHTML={createSafeHtml(page)}
             />
           </div>
           <div className="card-footer"></div>
@@ -188,7 +189,7 @@ const UniversalCard: React.FC<CardProps> = React.memo(({
             ref={contentRef}
             className="card-content p-8 rounded-xl shadow-sm"
             style={contentStyles}
-            dangerouslySetInnerHTML={{ __html: page }}
+            dangerouslySetInnerHTML={createSafeHtml(page)}
           />
           {pageNumberComponent}
         </>

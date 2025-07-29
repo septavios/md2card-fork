@@ -1,4 +1,5 @@
 import { ThemeConfig, UserConfig, FinalConfig } from './themeConfig';
+import { devLog, prodLog } from '../utils/logger';
 
 // Strategy pattern for merging configurations
 interface MergeStrategy {
@@ -59,7 +60,7 @@ export function getFinalConfig(
     
     return strategy.merge(themeConfig, userConfig);
   } catch (error) {
-    console.error('Error merging configurations:', error);
+    prodLog.error('Error merging configurations:', error);
     // Fallback to theme config
     return { ...themeConfig } as FinalConfig;
   }
@@ -80,7 +81,7 @@ export class ColorUtils {
       // Calculate brightness using luminance formula
       return (r * 299 + g * 587 + b * 114) / 1000;
     } catch (error) {
-      console.warn('Error calculating color brightness:', error);
+      devLog.warn('Error calculating color brightness:', error);
       return 128; // Default to medium brightness
     }
   }
@@ -90,7 +91,7 @@ export class ColorUtils {
       const brightness = this.getColorBrightness(backgroundColor);
       return brightness > 128 ? '#000000' : '#ffffff';
     } catch (error) {
-      console.warn('Error getting optimal text color:', error);
+      devLog.warn('Error getting optimal text color:', error);
       return '#000000'; // Default to black
     }
   }
@@ -136,7 +137,7 @@ export function migrateFromOldSettings(oldSettings: any): UserConfig {
 
     return userConfig;
   } catch (error) {
-    console.error('Error migrating old settings:', error);
+    prodLog.error('Error migrating old settings:', error);
     return { selectedTheme: 'default' };
   }
 }
@@ -211,7 +212,7 @@ export function configToCSSVariables(config: FinalConfig, hasUserCustomizations?
 
     return cssVars;
   } catch (error) {
-    console.error('Error converting config to CSS variables:', error);
+    prodLog.error('Error converting config to CSS variables:', error);
     return {};
   }
 }

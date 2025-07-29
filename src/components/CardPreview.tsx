@@ -10,6 +10,7 @@ import PaginatedMarkdownViewer from "../utils/PaginatedMarkdownViewer";
 import LongMarkdownViewer from "../utils/LongMarkdownViewer";
 import UniversalCard from "./UniversalCard";
 import { FinalConfig } from '../config/themeConfig';
+import { devLog } from '../utils/logger';
 
 const CardPreview = forwardRef<HTMLDivElement, object>((props, ref) => {
   const { content: markdown } = useEditorStore();
@@ -51,11 +52,11 @@ const CardPreview = forwardRef<HTMLDivElement, object>((props, ref) => {
 
   // 获取主题渲染器
   const renderer = themeManager.getThemeRenderer(selectedTheme);
-  console.log(`Getting renderer for theme ${selectedTheme}:`, renderer);
+  devLog.log(`Getting renderer for theme ${selectedTheme}:`, renderer);
 
   async function markdownToHtml(markdown: string) {
-    console.log('Converting markdown to HTML with renderer:', renderer);
-    console.log('Input markdown:', markdown);
+    devLog.log('Converting markdown to HTML with renderer:', renderer);
+    devLog.log('Input markdown:', markdown);
     
     // Configure marked to handle task lists
     marked.setOptions({
@@ -70,13 +71,13 @@ const CardPreview = forwardRef<HTMLDivElement, object>((props, ref) => {
       result = await marked.parse(markdown, { renderer });
     }
     
-    console.log('Generated HTML:', result);
+    devLog.log('Generated HTML:', result);
     return result;
   }
 
   useEffect(() => {
     markdownToHtml(markdown).then(parsed => {
-      console.log('Setting HTML:', parsed);
+      devLog.log('Setting HTML:', parsed);
       setHtml(parsed);
     });
   }, [markdown, renderer, selectedTheme]);
@@ -85,13 +86,13 @@ const CardPreview = forwardRef<HTMLDivElement, object>((props, ref) => {
   useEffect(() => {
     const config = themeManager.getFinalConfig(selectedTheme, userConfig, hasUserCustomizations);
     if (config) {
-      console.log('Background config:', userConfig.background);
-      console.log('Final config background:', config.background);
+      devLog.log('Background config:', userConfig.background);
+      devLog.log('Final config background:', config.background);
       setFinalConfig(config);
       
       // 生成CSS变量
       const cssVars = configToCSSVariables(config, hasUserCustomizations);
-      console.log('Generated CSS variables:', cssVars);
+      devLog.log('Generated CSS variables:', cssVars);
       setCssVariables(cssVars);
     }
   }, [selectedTheme, userConfig, hasUserCustomizations]);

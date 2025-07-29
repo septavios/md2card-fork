@@ -4,8 +4,10 @@ import CardPreview from "./components/CardPreview";
 import SettingsPanel from "./components/SettingsPanel";
 import SideButtonPanel from "./components/SideButtonPanel";
 import Layout from "./components/Layout";
+import ErrorBoundary from "./components/ErrorBoundary";
 import Split from "react-split";
 import useThemeStore from "./stores/themeStore";
+import { devLog, prodLog } from "./utils/logger";
 import "./App.css";
 
 function App() {
@@ -27,31 +29,41 @@ function App() {
         link.href = dataUrl;
         link.click();
       } else {
-        console.error("Preview element not found");
+        prodLog.error("Preview element not found");
       }
     } catch (error) {
-      console.error("Export failed:", error);
+      prodLog.error("Export failed:", error);
     }
   };
 
   return (
-    <Layout onExport={handleExport}>
-      <Split
-        className="split flex-1"
-        style={{ width: "calc(100% - 300px)" }}
-        gutterAlign="start"
-        gutterSize={10}
-      >
-        <div>
-          <MarkdownEditor />
-        </div>
-        <div>
-          <CardPreview ref={previewRef} />
-        </div>
-      </Split>
-      <SettingsPanel />
-      <SideButtonPanel previewRef={previewRef} />
-    </Layout>
+    <ErrorBoundary>
+      <Layout onExport={handleExport}>
+        <Split
+          className="split flex-1"
+          style={{ width: "calc(100% - 300px)" }}
+          gutterAlign="start"
+          gutterSize={10}
+        >
+          <div>
+            <ErrorBoundary>
+              <MarkdownEditor />
+            </ErrorBoundary>
+          </div>
+          <div>
+            <ErrorBoundary>
+              <CardPreview ref={previewRef} />
+            </ErrorBoundary>
+          </div>
+        </Split>
+        <ErrorBoundary>
+          <SettingsPanel />
+        </ErrorBoundary>
+        <ErrorBoundary>
+          <SideButtonPanel previewRef={previewRef} />
+        </ErrorBoundary>
+      </Layout>
+    </ErrorBoundary>
   );
 }
 

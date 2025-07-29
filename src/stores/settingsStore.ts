@@ -78,7 +78,7 @@ const useSettingsStore = create<SettingsState>()(
       cardHeight: 586,
       viewMode: "长卡片",
       hideOverflow: false,
-      selectedTheme: "默认",
+      selectedTheme: "AppleNotesDark",
       
       // New settings
       showPageNumbers: false,
@@ -89,11 +89,11 @@ const useSettingsStore = create<SettingsState>()(
       fontSize: 14,
       lineHeight: 1.6,
       background: {
-        type: "solid",
+        type: "gradient",
         solidColor: "#ffffff",
-        gradientStart: "#ffffff",
-        gradientEnd: "#f0f0f0",
-        gradientDirection: 45,
+        gradientStart: "#667eea",
+        gradientEnd: "#764ba2",
+        gradientDirection: 135,
         texturePattern: "none",
         imageUrl: "",
         opacity: 100,

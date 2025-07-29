@@ -92,7 +92,7 @@ const CardPreview = forwardRef<HTMLDivElement, object>((props, ref) => {
 
   return (
     <div
-      className="rounded-lg shadow-sm p-8 h-full"
+      className="rounded-lg shadow-sm p-8 h-full flex items-start justify-center"
       style={{
         minWidth: '100%',
         minHeight: '100%',
@@ -102,7 +102,7 @@ const CardPreview = forwardRef<HTMLDivElement, object>((props, ref) => {
         ...cssVariables, // Apply all CSS variables to this container
       }}
     >
-      <div ref={ref} className="export-content" style={{ display: 'inline-block' }}>
+      <div ref={ref} className="export-content" style={{ width: '100%', maxWidth: `${width}px` }}>
         {
           viewMode === "长卡片" ? (
             <LongMarkdownViewer

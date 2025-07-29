@@ -652,6 +652,30 @@ export function configToCSSVariables(config: FinalConfig, hasUserCustomizations?
     cssVars['--card-shadow'] = 'none';
   }
   
+  // 处理自定义样式
+  if (config.customStyles) {
+    console.log('Processing customStyles:', config.customStyles);
+    
+    // 将自定义样式对象转换为CSS字符串
+    const customStylesCSS = Object.entries(config.customStyles)
+      .map(([selector, styles]) => {
+        if (typeof styles === 'object' && styles !== null) {
+          const cssProperties = Object.entries(styles as Record<string, any>)
+            .map(([property, value]) => `${property}: ${value}`)
+            .join('; ');
+          return `${selector} { ${cssProperties} }`;
+        }
+        return '';
+      })
+      .filter(Boolean)
+      .join(' ');
+    
+    if (customStylesCSS) {
+      cssVars['--custom-styles'] = customStylesCSS;
+      console.log('Generated custom styles CSS:', customStylesCSS);
+    }
+  }
+  
   return cssVars;
 }
 

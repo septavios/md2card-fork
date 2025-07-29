@@ -12,6 +12,7 @@ const UniversalCard: React.FC<CardProps> = ({
   totalPages,
   showPageNumbers = false,
   hideOverflow = false,
+  config,
 }) => {
   const { selectedTheme } = useSettingsStore();
   
@@ -20,7 +21,7 @@ const UniversalCard: React.FC<CardProps> = ({
     '--card-width': `${width}px`,
     '--card-height': `${height}px`,
     '--card-border-radius': 'var(--card-border-radius)',
-    '--card-background': 'var(--card-color-background)',
+    '--card-background': 'var(--card-background)',
     '--card-color': 'var(--card-color-text)',
     '--card-box-shadow': 'var(--card-shadow)',
     '--card-border': 'var(--card-border)',
@@ -36,22 +37,72 @@ const UniversalCard: React.FC<CardProps> = ({
   const isAppleNotesTheme = selectedTheme === 'AppleNotesDark';
   const needsHeaderStructure = isXiaohongshuTheme || isAppleNotesTheme;
 
+  // 将camelCase转换为kebab-case
+  const camelToKebab = (str: string) => {
+    return str.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+  };
+
+  // 生成自定义样式CSS
+  const generateCustomStylesCSS = () => {
+    if (!config.customStyles) return '';
+    
+    console.log('Generating custom styles from config:', config.customStyles);
+    
+    let cssString = '';
+    
+    // 处理 elements 样式
+    if (config.customStyles.elements) {
+      cssString += Object.entries(config.customStyles.elements)
+        .map(([selector, styles]) => {
+          if (typeof styles === 'object' && styles !== null) {
+            const cssProperties = Object.entries(styles as Record<string, any>)
+              .map(([property, value]) => `${camelToKebab(property)}: ${value}`)
+              .join('; ');
+            return `${selector} { ${cssProperties} }`;
+          }
+          return '';
+        })
+        .filter(Boolean)
+        .join(' ');
+    }
+    
+    // 处理其他顶层样式（如果有的话）
+    Object.entries(config.customStyles).forEach(([key, value]) => {
+      if (key !== 'elements' && key !== 'container' && typeof value === 'object' && value !== null) {
+        const cssProperties = Object.entries(value as Record<string, any>)
+          .map(([property, val]) => `${camelToKebab(property)}: ${val}`)
+          .join('; ');
+        cssString += `${key} { ${cssProperties} } `;
+      }
+    });
+    
+    console.log('Custom styles CSS:', cssString);
+    return cssString;
+  };
+
+  const customStylesCSS = generateCustomStylesCSS();
+
   return (
     <div
       ref={containerRef}
       style={styleVars}
       className="relative flex flex-col justify-between"
     >
+      {/* 注入自定义样式 */}
+      {customStylesCSS && (
+        <style dangerouslySetInnerHTML={{ __html: customStylesCSS }} />
+      )}
+      
       {needsHeaderStructure ? (
         // 需要header结构的主题（小红书和Apple Notes）
-        <div className="card">
+        <div className={`card ${isAppleNotesTheme ? 'card-apple-notes' : ''}`}>
           <div className="card-header">
             {isAppleNotesTheme && (
               <>
-                <span className="header-back-button">{"< 备忘录"}</span>
+                <span className="header-back-button">备忘录</span>
                 <div className="header-action-buttons">
-                  <span>{"⤴"}</span>
-                  <span>{"😊"}</span>
+                  <span className="header-action-button share"></span>
+                  <span className="header-action-button more"></span>
                 </div>
               </>
             )}
@@ -61,7 +112,7 @@ const UniversalCard: React.FC<CardProps> = ({
               ref={contentRef}
               className="card-content-inner"
               style={{
-                background: 'var(--card-color-background)',
+                background: 'var(--card-background)',
                 borderRadius: 'var(--card-border-radius)',
                 color: 'var(--card-color-text)',
                 fontFamily: 'var(--card-font-family)',
@@ -79,7 +130,7 @@ const UniversalCard: React.FC<CardProps> = ({
               style={{
                 color: 'var(--card-color-text)',
                 fontFamily: 'var(--card-font-family)',
-                backgroundColor: 'var(--card-color-background)',
+                backgroundColor: 'var(--card-background)',
                 borderColor: 'var(--card-color-accent)',
                 zIndex: 10,
               }}
@@ -95,7 +146,7 @@ const UniversalCard: React.FC<CardProps> = ({
             ref={contentRef}
             className="card-content p-8 rounded-xl shadow-sm"
             style={{
-              background: 'var(--card-color-background)',
+              background: 'var(--card-background)',
               borderRadius: 'var(--card-border-radius)',
               color: 'var(--card-color-text)',
               fontFamily: 'var(--card-font-family)',
@@ -110,7 +161,7 @@ const UniversalCard: React.FC<CardProps> = ({
               style={{
                 color: 'var(--card-color-text)',
                 fontFamily: 'var(--card-font-family)',
-                backgroundColor: 'var(--card-color-background)',
+                backgroundColor: 'var(--card-background)',
                 borderColor: 'var(--card-color-accent)',
               }}
             >

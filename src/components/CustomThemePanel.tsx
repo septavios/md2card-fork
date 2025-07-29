@@ -14,7 +14,7 @@ const CustomThemePanel: React.FC<CustomThemePanelProps> = ({ isOpen, onClose }) 
   );
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [newThemeName, setNewThemeName] = useState('');
-  const [selectedBaseTheme, setSelectedBaseTheme] = useState('默认');
+  const [selectedBaseTheme, setSelectedBaseTheme] = useState('AppleNotesDark');
   const [authorName, setAuthorName] = useState('');
 
   const { selectedTheme, setSelectedTheme } = useSettingsStore();
@@ -54,9 +54,9 @@ const CustomThemePanel: React.FC<CustomThemePanelProps> = ({ isOpen, onClose }) 
     if (confirm('确定要删除这个自定义主题吗？此操作不可撤销。')) {
       if (customThemeManager.deleteCustomTheme(themeId)) {
         refreshCustomThemes();
-        // 如果删除的是当前选中的主题，切换到默认主题
+        // 如果删除的是当前选中的主题，切换到Apple Notes Dark主题
         if (selectedTheme === themeId) {
-          setSelectedTheme('默认');
+          setSelectedTheme('AppleNotesDark');
         }
         alert('主题删除成功');
       } else {

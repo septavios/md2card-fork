@@ -1,4 +1,5 @@
 import { ThemeConfig } from './themeConfig';
+import { prodLog } from '../utils/logger';
 
 export interface CustomTheme extends ThemeConfig {
   isCustom: true;
@@ -34,7 +35,7 @@ class CustomThemeManager {
         });
       }
     } catch (error) {
-      console.error('Failed to load custom themes:', error);
+      prodLog.error('Failed to load custom themes:', error);
     }
   }
 
@@ -46,7 +47,7 @@ class CustomThemeManager {
       const themes = Array.from(this.customThemes.values());
       localStorage.setItem(this.storageKey, JSON.stringify(themes));
     } catch (error) {
-      console.error('Failed to save custom themes:', error);
+      prodLog.error('Failed to save custom themes:', error);
     }
   }
 
@@ -195,7 +196,7 @@ class CustomThemeManager {
 
       return importedTheme;
     } catch (error) {
-      console.error('Failed to import theme:', error);
+      prodLog.error('Failed to import theme:', error);
       return null;
     }
   }

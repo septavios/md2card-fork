@@ -1,6 +1,8 @@
+import React from "react";
 import styled from "styled-components";
 import { Renderer, Tokens } from "marked";
 import { CardConfig, CardProps } from "../../themeConfigs";
+import { createSafeHtml } from "../../utils/htmlSanitizer";
 
 const render = new Renderer();
 render.heading = function ({ text, depth }: Tokens.Heading) {
@@ -294,7 +296,7 @@ const Card: React.FC<CardProps> = ({
     <div
       className="card-content"
       ref={containerRef}
-      dangerouslySetInnerHTML={{ __html: page }}
+      dangerouslySetInnerHTML={createSafeHtml(page)}
     />
   </CardContainer>
 

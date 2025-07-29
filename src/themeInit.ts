@@ -29,7 +29,10 @@
     }, 10);
     
   } catch (error) {
-    console.warn('Failed to initialize theme:', error);
+    // In this initialization script, we'll use a simple fallback since logger may not be available yet
+    if (typeof console !== 'undefined' && console.warn) {
+      console.warn('Failed to initialize theme:', error);
+    }
     // Fallback to dark mode
     document.documentElement.classList.remove('light');
     document.body.classList.remove('theme-loading');

@@ -1,4 +1,5 @@
 import React from 'react';
+import { devLog, prodLog } from '../utils/logger';
 
 interface SideButtonPanelProps {
   previewRef: React.RefObject<HTMLDivElement | null>;
@@ -17,10 +18,10 @@ const SideButtonPanel: React.FC<SideButtonPanelProps> = ({ previewRef, onEditMod
         link.href = dataUrl;
         link.click();
       } else {
-        console.error("Preview element not found");
+        prodLog.error("Preview element not found");
       }
     } catch (error) {
-      console.error("Download failed:", error);
+      prodLog.error("Download failed:", error);
     }
   };
 
@@ -37,13 +38,13 @@ const SideButtonPanel: React.FC<SideButtonPanelProps> = ({ previewRef, onEditMod
             })
           ]);
           // You could add a toast notification here
-          console.log('Image copied to clipboard');
+          devLog.log('Image copied to clipboard');
         }
       } else {
-        console.error("Preview element not found");
+        prodLog.error("Preview element not found");
       }
     } catch (error) {
-      console.error("Copy failed:", error);
+      prodLog.error("Copy failed:", error);
     }
   };
 
@@ -51,7 +52,7 @@ const SideButtonPanel: React.FC<SideButtonPanelProps> = ({ previewRef, onEditMod
   const handleAddSticker = () => {
     // This would open a sticker picker modal or panel
     // For now, just log the action
-    console.log('Add sticker feature - to be implemented');
+    devLog.log('Add sticker feature - to be implemented');
     // You could implement a sticker picker here
   };
 
@@ -61,7 +62,7 @@ const SideButtonPanel: React.FC<SideButtonPanelProps> = ({ previewRef, onEditMod
       onEditMode();
     } else {
       // Default behavior: focus on the editor
-      console.log('Switch to edit mode');
+      devLog.log('Switch to edit mode');
     }
   };
 

@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { CardProps } from '../config/themeConfig';
 import useSettingsStore from '../stores/settingsStore';
+import appleNotesTasksCSS from '../styles/apple-notes-tasks.css?raw';
 
 const UniversalCard: React.FC<CardProps> = ({
   page,
@@ -15,6 +16,31 @@ const UniversalCard: React.FC<CardProps> = ({
   config,
 }) => {
   const { selectedTheme } = useSettingsStore();
+  
+  // 处理任务列表样式
+  useEffect(() => {
+    if (selectedTheme === 'AppleNotesDark' && contentRef?.current) {
+      const container = contentRef.current;
+      
+      // 查找所有包含checkbox的li元素
+      const listItems = container.querySelectorAll('li');
+      
+      listItems.forEach((li) => {
+        const checkbox = li.querySelector('input[type="checkbox"]');
+        if (checkbox) {
+          // 移除之前的类名
+          li.classList.remove('task-item-checked', 'task-item-unchecked');
+          
+          // 根据checkbox状态添加相应的类名
+          if ((checkbox as HTMLInputElement).checked) {
+            li.classList.add('task-item-checked');
+          } else {
+            li.classList.add('task-item-unchecked');
+          }
+        }
+      });
+    }
+  }, [page, selectedTheme, contentRef]);
   
   // Use CSS variables for theme
   const styleVars: React.CSSProperties & Record<string, any> = {
@@ -91,6 +117,11 @@ const UniversalCard: React.FC<CardProps> = ({
       {/* 注入自定义样式 */}
       {customStylesCSS && (
         <style dangerouslySetInnerHTML={{ __html: customStylesCSS }} />
+      )}
+      
+      {/* 注入Apple Notes任务列表样式 */}
+      {isAppleNotesTheme && (
+        <style dangerouslySetInnerHTML={{ __html: appleNotesTasksCSS }} />
       )}
       
       {needsHeaderStructure ? (

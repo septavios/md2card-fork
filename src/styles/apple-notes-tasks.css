@@ -1,0 +1,46 @@
+/* Apple Notes Task List Styles */
+li[data-task="true"] {
+  position: relative;
+  padding-left: 1.5em;
+  list-style: none;
+}
+
+li[data-task="true"]::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 2px;
+  width: 16px;
+  height: 16px;
+  background-color: #1677ff;
+  border-color: #1677ff;
+  border-radius: 2px;
+  border: 1px solid;
+  background-position: 1px 2px;
+  background-repeat: no-repeat;
+  background-size: 80%;
+  background-image: url(data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAUCAYAAACXtf2DAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACLSURBVHgB7ZPBDYAgDEX/SI7AJjIKGziCozCKIzBChRiSHgoIlHjxJb3BexoA+GEQ0RYnxDmgDZNnPLQQ5BmDWSpyh1nSF66U7yTjShvOOFf65RVyzxaFWmREvgmLxUi3nG10rciw/E2kIrfooRAhFXlnxGKGRsRCg0LEQhMWSYdtsAJ6blHzdX/GDSY+GhmjX+BiAAAAAElFTkSuQmCC);
+}
+
+li[data-task="false"] {
+  position: relative;
+  padding-left: 1.5em;
+  list-style: none;
+}
+
+li[data-task="false"]::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 2px;
+  width: 16px;
+  height: 16px;
+  background-color: transparent;
+  border: 1px solid #d9d9d9;
+  border-radius: 2px;
+}
+
+/* Hide the actual checkbox input elements */
+li[data-task] input[type="checkbox"] {
+  display: none;
+}

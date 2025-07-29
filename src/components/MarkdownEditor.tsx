@@ -9,6 +9,7 @@ import {
   FiCode,
   FiList,
   FiAlignLeft,
+  FiMessageSquare,
 } from "react-icons/fi";
 import { TbH1, TbH2, TbH3 } from "react-icons/tb";
 import useEditorStore from "../stores/editorStore";
@@ -69,6 +70,12 @@ const MarkdownEditor: React.FC = () => {
         newText = selectedText
           .split("\n")
           .map((line: string) => `- ${line}`)
+          .join("\n");
+        break;
+      case "quote":
+        newText = selectedText
+          .split("\n")
+          .map((line: string) => `> ${line}`)
           .join("\n");
         break;
       default:
@@ -163,6 +170,9 @@ const MarkdownEditor: React.FC = () => {
         <div className="flex items-center gap-1 px-2">
           <ToolbarButton onClick={() => handleFormat("list")} title="列表">
             <FiList className="w-4 h-4" />
+          </ToolbarButton>
+          <ToolbarButton onClick={() => handleFormat("quote")} title="引用">
+            <FiMessageSquare className="w-4 h-4" />
           </ToolbarButton>
           <ToolbarButton onClick={() => handleFormat("align")} title="对齐">
             <FiAlignLeft className="w-4 h-4" />

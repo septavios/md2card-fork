@@ -51,16 +51,34 @@ const CardPreview = forwardRef<HTMLDivElement, object>((props, ref) => {
 
   // 获取主题渲染器
   const renderer = themeManager.getThemeRenderer(selectedTheme);
+  console.log(`Getting renderer for theme ${selectedTheme}:`, renderer);
 
   async function markdownToHtml(markdown: string) {
+    console.log('Converting markdown to HTML with renderer:', renderer);
+    console.log('Input markdown:', markdown);
+    
+    // Configure marked to handle task lists
+    marked.setOptions({
+      gfm: true, // GitHub Flavored Markdown
+      breaks: false,
+    });
+    
+    let result;
     if (!renderer) {
-      return await marked.parse(markdown);
+      result = await marked.parse(markdown);
+    } else {
+      result = await marked.parse(markdown, { renderer });
     }
-    return await marked.parse(markdown, { renderer });
+    
+    console.log('Generated HTML:', result);
+    return result;
   }
 
   useEffect(() => {
-    markdownToHtml(markdown).then(parsed => setHtml(parsed));
+    markdownToHtml(markdown).then(parsed => {
+      console.log('Setting HTML:', parsed);
+      setHtml(parsed);
+    });
   }, [markdown, renderer, selectedTheme]);
 
   // 获取最终配置

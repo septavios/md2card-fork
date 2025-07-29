@@ -3,6 +3,7 @@ import { ThemeConfig, ThemeRegistration, ThemeRegistry, UserConfig, FinalConfig 
 import { getFinalConfig } from './configMerger';
 import { predefinedThemes } from './predefinedThemes';
 import { customThemeManager } from './customThemeManager';
+import { createAppleNotesRenderer } from './appleNotesRenderer';
 
 class ThemeManager {
   private themes: ThemeRegistry = {};
@@ -20,10 +21,17 @@ class ThemeManager {
   private registerPredefinedThemes() {
     // 这里我们先注册主题配置，组件和渲染器将在后续动态加载
     Object.values(predefinedThemes).forEach(themeConfig => {
+      // 为Apple Notes主题使用自定义渲染器
+      const renderer = themeConfig.id === 'AppleNotesDark' 
+        ? createAppleNotesRenderer() 
+        : new Renderer();
+      
+      console.log(`Registering theme ${themeConfig.id} with renderer:`, renderer);
+        
       this.themes[themeConfig.id] = {
         config: themeConfig,
         component: null as any, // 将在动态加载时设置
-        renderer: new Renderer(), // 默认渲染器，将在动态加载时覆盖
+        renderer: renderer,
       };
     });
   }
@@ -54,7 +62,10 @@ class ThemeManager {
    * 获取主题渲染器
    */
   getThemeRenderer(themeId: string): Renderer | null {
-    return this.themes[themeId]?.renderer || null;
+    console.log('Getting renderer for theme:', themeId);
+    const renderer = this.themes[themeId]?.renderer || null;
+    console.log('Found renderer:', renderer ? 'yes' : 'no');
+    return renderer;
   }
 
   /**

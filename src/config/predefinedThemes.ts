@@ -163,7 +163,7 @@ export const appleNotesDarkTheme: ThemeConfig = {
       
       // 标题样式 - 完整的标题层级系统
       'h1, .md-h1': {
-        color: '#ffffff',
+        color: '#0a84ff', // Apple蓝色，与h2保持一致的设计语言
         fontSize: '28px',
         fontWeight: 700,
         marginTop: '0',
@@ -182,7 +182,7 @@ export const appleNotesDarkTheme: ThemeConfig = {
       },
       
       'h2, .md-h2': {
-        color: '#ffffff',
+        color: '#0a84ff', // Apple蓝色，更符合Apple Notes主题
         fontSize: '22px',
         fontWeight: 600,
         marginTop: '32px',
@@ -279,24 +279,90 @@ export const appleNotesDarkTheme: ThemeConfig = {
         fontWeight: 400,
       },
       
-      // 引用样式 - 匹配截图中的引用
-      '.md-blockquote': {
-        borderLeft: 'none',
-        padding: '0',
-        margin: '8px 0',
-        background: 'transparent',
-        color: '#8e8e93',
-        fontStyle: 'normal',
-        fontSize: '16px',
-        lineHeight: 1.4,
-        position: 'relative',
+      // 引用样式 - Apple Notes 风格 (card-apple-notes blockquote)
+      '.card-apple-notes .md-blockquote, .card-apple-notes blockquote': {
+        padding: '1px 0',
+        borderLeft: '3px solid #0a84ff', // --notes-border
         paddingLeft: '16px',
+        margin: '16px 0',
+        color: '#8e8e93', // --notes-quote-color
+        fontStyle: 'italic',
+        background: 'transparent',
+        borderRadius: '0',
+        boxShadow: 'none',
+        position: 'relative',
+        fontSize: '16px',
+        lineHeight: 1.5,
         '&::before': {
-          content: '"——"',
-          position: 'absolute',
-          left: '0',
+          display: 'none',
+        },
+        '&::after': {
+          display: 'none',
+        },
+        '& p': {
+          margin: '0',
           color: '#8e8e93',
           fontWeight: 400,
+          fontStyle: 'italic',
+        },
+        '& p:last-child': {
+          marginBottom: '0',
+        },
+      },
+      
+      // 通用blockquote样式（非Apple Notes主题）
+      '.md-blockquote': {
+        borderLeft: '4px solid #0a84ff',
+        padding: '16px 20px',
+        margin: '20px 0',
+        background: 'rgba(10, 132, 255, 0.08)',
+        color: '#ffffff',
+        fontStyle: 'italic',
+        fontSize: '16px',
+        lineHeight: 1.6,
+        position: 'relative',
+        borderRadius: '0 8px 8px 0',
+        boxShadow: '0 2px 8px rgba(10, 132, 255, 0.1)',
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          left: '-4px',
+          top: '0',
+          bottom: '0',
+          width: '4px',
+          background: 'linear-gradient(180deg, #0a84ff 0%, #5ac8fa 100%)',
+          borderRadius: '2px',
+        },
+        '&::after': {
+          content: '"💭"',
+          position: 'absolute',
+          top: '12px',
+          right: '16px',
+          fontSize: '20px',
+          opacity: 0.6,
+        },
+        '& p': {
+          margin: '0',
+          color: '#ffffff',
+          fontWeight: 400,
+        },
+        '& p:last-child': {
+          marginBottom: '0',
+        },
+      },
+      
+      // 引用内的作者署名样式
+      '.md-blockquote cite, .md-blockquote .citation': {
+        display: 'block',
+        marginTop: '12px',
+        fontSize: '14px',
+        color: '#8e8e93',
+        fontStyle: 'normal',
+        fontWeight: 500,
+        textAlign: 'right',
+        '&::before': {
+          content: '"— "',
+          color: '#0a84ff',
         },
       },
       
@@ -318,23 +384,96 @@ export const appleNotesDarkTheme: ThemeConfig = {
         position: 'relative',
       },
       
-      // 复选框样式 - 匹配截图中的复选框
+      // 任务列表样式 - 使用用户提供的复选框样式
       'li[data-task="true"]': {
+        position: 'relative',
+        paddingLeft: '1.5em',
+        listStyle: 'none',
         '&::before': {
-          content: '"☑️"',
-          marginRight: '8px',
-          fontSize: '16px',
-          color: '#34c759',
-        },
+          content: '""',
+          position: 'absolute',
+          left: '0',
+          width: '16px',
+          height: '16px',
+          backgroundColor: '#1677ff',
+          borderColor: '#1677ff',
+          borderRadius: '2px',
+          border: '1px solid',
+          backgroundPosition: '1px 2px',
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: '80%',
+          backgroundImage: 'url(data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAUCAYAAACXtf2DAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACLSURBVHgB7ZPBDYAgDEX/SI7AJjIKGziCozCKIzBChRiSHgoIlHjxJb3BexoA+GEQ0RYnxDmgDZNnPLQQ5BmDWSpyh1nSF66U7yTjShvOOFf65RVyzxaFWmREvgmLxUi3nG10rciw/E2kIrfooRAhFXlnxGKGRsRCg0LEQhMWSYdtsAJ6blHzdX/GDSY+GhmjX+BiAAAAAElFTkSuQmCC)'
+        }
       },
-      
       'li[data-task="false"]': {
+        position: 'relative',
+        paddingLeft: '1.5em',
+        listStyle: 'none',
         '&::before': {
-          content: '"☐"',
-          marginRight: '8px',
-          fontSize: '16px',
-          color: '#8e8e93',
-        },
+          content: '""',
+          position: 'absolute',
+          left: '0',
+          width: '16px',
+          height: '16px',
+          backgroundColor: 'transparent',
+          border: '1px solid #d9d9d9',
+          borderRadius: '2px'
+        }
+      },
+      // 显示checkbox输入元素并应用样式
+      'input[type="checkbox"]': {
+        width: '16px',
+        height: '16px',
+        marginRight: '8px',
+        appearance: 'none',
+        border: '1px solid #d9d9d9',
+        borderRadius: '2px',
+        backgroundColor: 'transparent',
+        cursor: 'pointer',
+        '&:checked': {
+          backgroundColor: '#1677ff',
+          borderColor: '#1677ff',
+          backgroundPosition: '1px 2px',
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: '80%',
+          backgroundImage: 'url(data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAUCAYAAACXtf2DAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACLSURBVHgB7ZPBDYAgDEX/SI7AJjIKGziCozCKIzBChRiSHgoIlHjxJb3BexoA+GEQ0RYnxDmgDZNnPLQQ5BmDWSpyh1nSF66U7yTjShvOOFf65RVyzxaFWmREvgmLxUi3nG10rciw/E2kIrfooRAhFXlnxGKGRsRCg0LEQhMWSYdtsAJ6blHzdX/GDSY+GhmjX+BiAAAAAElFTkSuQmCC)'
+        }
+      },
+      // 为包含checkbox的li添加样式（通过JavaScript动态添加类名）
+      'li.task-item-checked': {
+        position: 'relative',
+        paddingLeft: '1.5em',
+        listStyle: 'none',
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          left: '0',
+          width: '16px',
+          height: '16px',
+          backgroundColor: '#1677ff',
+          borderColor: '#1677ff',
+          borderRadius: '2px',
+          border: '1px solid',
+          backgroundPosition: '1px 2px',
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: '80%',
+          backgroundImage: 'url(data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAUCAYAAACXtf2DAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACLSURBVHgB7ZPBDYAgDEX/SO7AJjIKGziCozCKIzBChRiSHgoIlHjxJb3BexoA+GEQ0RYnxDmgDZNnPLQQ5BmDWSpyh1nSF66U7yTjShvOOFf65RVyzxaFWmREvgmLxUi3nG10rciw/E2kIrfooRAhFXlnxGKGRsRCg0LEQhMWSYdtsAJ6blHzdX/GDSY+GhmjX+BiAAAAAElFTkSuQmCC)'
+        }
+      },
+      'li.task-item-unchecked': {
+        position: 'relative',
+        paddingLeft: '1.5em',
+        listStyle: 'none',
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          left: '0',
+          width: '16px',
+          height: '16px',
+          backgroundColor: 'transparent',
+          border: '1px solid #d9d9d9',
+          borderRadius: '2px'
+        }
       },
       
       // 普通列表项

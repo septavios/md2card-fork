@@ -20,6 +20,7 @@ const StickerOverlay: React.FC<StickerOverlayProps> = ({ containerRef }) => {
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [showControls, setShowControls] = useState<string | null>(null);
+  const [showContextMenu, setShowContextMenu] = useState<string | null>(null);
   const dragRef = useRef<string | null>(null);
   const clickTimeoutRef = useRef<number | null>(null);
 
@@ -89,6 +90,7 @@ const StickerOverlay: React.FC<StickerOverlayProps> = ({ containerRef }) => {
     if (e.target === e.currentTarget) {
       selectSticker(null);
       setShowControls(null);
+      setShowContextMenu(null);
     }
   }, [selectSticker]);
 
@@ -105,10 +107,10 @@ const StickerOverlay: React.FC<StickerOverlayProps> = ({ containerRef }) => {
     <>
       {/* Resize handle - bottom right corner */}
       <div
-        className="absolute w-6 h-6 bg-blue-500 rounded-full border-2 border-white shadow-lg cursor-nw-resize flex items-center justify-center text-white text-xs font-bold hover:bg-blue-600 transition-colors"
+        className="absolute w-4 h-4 bg-blue-500 rounded-full border border-white shadow-md cursor-nw-resize hover:bg-blue-600 transition-colors"
         style={{
-          left: `${sticker.x + 2}%`,
-          top: `${sticker.y + 2}%`,
+          left: `${sticker.x + 1.5}%`,
+          top: `${sticker.y + 1.5}%`,
           transform: 'translate(-50%, -50%)',
           zIndex: sticker.zIndex + 20,
         }}
@@ -123,7 +125,7 @@ const StickerOverlay: React.FC<StickerOverlayProps> = ({ containerRef }) => {
           const handleResize = (e: MouseEvent) => {
             const deltaX = e.clientX - startX;
             const deltaY = e.clientY - startY;
-            const delta = (deltaX + deltaY) / 200; // Sensitivity adjustment
+            const delta = (deltaX + deltaY) / 200;
             const newSize = Math.max(0.3, Math.min(3, startSize + delta));
             updateSticker(sticker.id, { size: newSize });
           };
@@ -137,16 +139,14 @@ const StickerOverlay: React.FC<StickerOverlayProps> = ({ containerRef }) => {
           document.addEventListener('mouseup', handleResizeEnd);
         }}
         title="拖拽调整大小"
-      >
-        ⤡
-      </div>
+      />
       
       {/* Rotation handle - top right corner */}
       <div
-        className="absolute w-6 h-6 bg-green-500 rounded-full border-2 border-white shadow-lg cursor-grab flex items-center justify-center text-white text-xs font-bold hover:bg-green-600 transition-colors"
+        className="absolute w-4 h-4 bg-green-500 rounded-full border border-white shadow-md cursor-grab hover:bg-green-600 transition-colors"
         style={{
-          left: `${sticker.x + 2}%`,
-          top: `${sticker.y - 2}%`,
+          left: `${sticker.x + 1.5}%`,
+          top: `${sticker.y - 1.5}%`,
           transform: 'translate(-50%, -50%)',
           zIndex: sticker.zIndex + 20,
         }}
@@ -177,48 +177,40 @@ const StickerOverlay: React.FC<StickerOverlayProps> = ({ containerRef }) => {
           document.addEventListener('mouseup', handleRotateEnd);
         }}
         title="拖拽旋转"
-      >
-        ↻
-      </div>
-      
-      {/* Delete handle - top left corner */}
-      <div
-        className="absolute w-6 h-6 bg-red-500 rounded-full border-2 border-white shadow-lg cursor-pointer flex items-center justify-center text-white text-xs font-bold hover:bg-red-600 transition-colors"
-        style={{
-          left: `${sticker.x - 2}%`,
-          top: `${sticker.y - 2}%`,
-          transform: 'translate(-50%, -50%)',
-          zIndex: sticker.zIndex + 20,
-        }}
-        onClick={(e) => {
-          e.stopPropagation();
-          removeSticker(sticker.id);
-          setShowControls(null);
-        }}
-        title="删除贴纸"
-      >
-        ×
-      </div>
-      
-      {/* Duplicate handle - bottom left corner */}
-      <div
-        className="absolute w-6 h-6 bg-yellow-500 rounded-full border-2 border-white shadow-lg cursor-pointer flex items-center justify-center text-white text-xs font-bold hover:bg-yellow-600 transition-colors"
-        style={{
-          left: `${sticker.x - 2}%`,
-          top: `${sticker.y + 2}%`,
-          transform: 'translate(-50%, -50%)',
-          zIndex: sticker.zIndex + 20,
-        }}
-        onClick={(e) => {
-          e.stopPropagation();
-          duplicateSticker(sticker.id);
-          setShowControls(null);
-        }}
-        title="复制贴纸"
-      >
-        📋
-      </div>
+      />
     </>
+  );
+
+  const ContextMenu: React.FC<{ sticker: Sticker }> = ({ sticker }) => (
+    <div 
+      className="absolute bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-[100]"
+      style={{
+        left: `${sticker.x}%`,
+        top: `${sticker.y - 8}%`,
+        transform: 'translate(-50%, -100%)',
+        minWidth: '120px',
+      }}
+      onClick={(e) => e.stopPropagation()}
+    >
+      <button
+        onClick={() => {
+          duplicateSticker(sticker.id);
+          setShowContextMenu(null);
+        }}
+        className="w-full px-3 py-2 text-left text-sm hover:bg-gray-100 transition-colors"
+      >
+        📋 复制
+      </button>
+      <button
+        onClick={() => {
+          removeSticker(sticker.id);
+          setShowContextMenu(null);
+        }}
+        className="w-full px-3 py-2 text-left text-sm hover:bg-gray-100 text-red-600 transition-colors"
+      >
+        🗑 删除
+      </button>
+    </div>
   );
 
   return (
@@ -247,11 +239,19 @@ const StickerOverlay: React.FC<StickerOverlayProps> = ({ containerRef }) => {
               msUserSelect: 'none',
             }}
             onMouseDown={(e) => handleMouseDown(e, sticker.id)}
-            onContextMenu={(e) => {
+            onDoubleClick={(e) => {
               e.preventDefault();
+              e.stopPropagation();
+              setShowContextMenu(null);
               setShowControls(showControls === sticker.id ? null : sticker.id);
             }}
-            title={`${sticker.emoji} - 双击或右键显示操作手柄`}
+            onContextMenu={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setShowControls(null);
+              setShowContextMenu(showContextMenu === sticker.id ? null : sticker.id);
+            }}
+            title={`${sticker.emoji} - 双击显示调整手柄，右键显示菜单`}
           >
             {sticker.emoji}
           </div>
@@ -259,6 +259,11 @@ const StickerOverlay: React.FC<StickerOverlayProps> = ({ containerRef }) => {
           {/* Controls */}
           {showControls === sticker.id && (
             <StickerControls sticker={sticker} />
+          )}
+          
+          {/* Context Menu */}
+          {showContextMenu === sticker.id && (
+            <ContextMenu sticker={sticker} />
           )}
         </div>
       ))}
@@ -268,11 +273,10 @@ const StickerOverlay: React.FC<StickerOverlayProps> = ({ containerRef }) => {
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <div className="bg-black bg-opacity-20 text-white px-6 py-3 rounded-lg text-sm text-center max-w-xs">
             <div className="mb-1">点击右侧贴纸按钮添加小红书贴纸 🏷️</div>
-            <div className="text-xs opacity-80">双击或右键选择贴纸显示操作手柄</div>
-            <div className="text-xs opacity-80">🔵 蓝色手柄：拖拽调整大小</div>
-            <div className="text-xs opacity-80">🟢 绿色手柄：拖拽旋转角度</div>
-            <div className="text-xs opacity-80">🔴 红色手柄：删除贴纸</div>
-            <div className="text-xs opacity-80">🟡 黄色手柄：复制贴纸</div>
+            <div className="text-xs opacity-80">双击贴纸显示调整手柄</div>
+            <div className="text-xs opacity-80">🔵 蓝色：拖拽调整大小</div>
+            <div className="text-xs opacity-80">🟢 绿色：拖拽旋转角度</div>
+            <div className="text-xs opacity-80">右键显示更多选项</div>
           </div>
         </div>
       )}

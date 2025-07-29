@@ -18,6 +18,8 @@ const StickerOverlay: React.FC<StickerOverlayProps> = ({ containerRef }) => {
   } = useStickerStore();
   
   const [isDragging, setIsDragging] = useState(false);
+  const [isResizing, setIsResizing] = useState(false);
+  const [isRotating, setIsRotating] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [showControls, setShowControls] = useState<string | null>(null);
   const [showContextMenu, setShowContextMenu] = useState<string | null>(null);
@@ -39,21 +41,13 @@ const StickerOverlay: React.FC<StickerOverlayProps> = ({ containerRef }) => {
     dragRef.current = stickerId;
     selectSticker(stickerId);
     
-    // Handle double click for controls
-    if (clickTimeoutRef.current) {
-      clearTimeout(clickTimeoutRef.current);
-      clickTimeoutRef.current = null;
-      // Double click detected
-      setShowControls(showControls === stickerId ? null : stickerId);
-    } else {
-      clickTimeoutRef.current = setTimeout(() => {
-        clickTimeoutRef.current = null;
-      }, 300);
-    }
-  }, [containerRef, showControls, selectSticker]);
+    // Show controls immediately on click
+    setShowControls(stickerId);
+    setShowContextMenu(null);
+  }, [containerRef, selectSticker]);
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
-    if (!isDragging || !dragRef.current || !containerRef.current) return;
+    if (!isDragging || !dragRef.current || !containerRef.current || isResizing || isRotating) return;
     
     e.preventDefault();
     
@@ -66,7 +60,7 @@ const StickerOverlay: React.FC<StickerOverlayProps> = ({ containerRef }) => {
     const clampedY = Math.max(2, Math.min(98, y));
     
     updateSticker(dragRef.current, { x: clampedX, y: clampedY });
-  }, [isDragging, containerRef, updateSticker]);
+  }, [isDragging, isResizing, isRotating, containerRef, updateSticker]);
 
   const handleMouseUp = useCallback(() => {
     setIsDragging(false);
@@ -161,37 +155,45 @@ const StickerOverlay: React.FC<StickerOverlayProps> = ({ containerRef }) => {
       e.stopPropagation();
       e.preventDefault();
       
+      // Disable the main sticker dragging while resizing
+      setIsDragging(false);
+      setIsResizing(true);
+      dragRef.current = null;
+      
       const startMouseX = e.clientX;
       const startMouseY = e.clientY;
       const startSize = sticker.size;
       
       const handleResize = (e: MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
         const deltaX = e.clientX - startMouseX;
         const deltaY = e.clientY - startMouseY;
         
-        // Calculate distance from start point for more natural resizing
-        const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+        // Calculate the average delta for more stable resizing
+        const avgDelta = (deltaX + deltaY) / 2;
         
-        // Determine direction based on corner and mouse movement
+        // Determine direction based on corner
         let direction = 1;
         switch (cornerIndex) {
-          case 0: // Top-left
-            direction = (deltaX < 0 || deltaY < 0) ? 1 : -1;
+          case 0: // Top-left: moving away from center increases size
+            direction = (-deltaX - deltaY) > 0 ? 1 : -1;
             break;
-          case 1: // Top-right
-            direction = (deltaX > 0 || deltaY < 0) ? 1 : -1;
+          case 1: // Top-right: moving away from center increases size
+            direction = (deltaX - deltaY) > 0 ? 1 : -1;
             break;
-          case 2: // Bottom-right
-            direction = (deltaX > 0 || deltaY > 0) ? 1 : -1;
+          case 2: // Bottom-right: moving away from center increases size
+            direction = (deltaX + deltaY) > 0 ? 1 : -1;
             break;
-          case 3: // Bottom-left
-            direction = (deltaX < 0 || deltaY > 0) ? 1 : -1;
+          case 3: // Bottom-left: moving away from center increases size
+            direction = (-deltaX + deltaY) > 0 ? 1 : -1;
             break;
         }
         
         // Adjust sensitivity for smooth resizing
-        const sensitivity = 200;
-        const sizeDelta = (distance * direction) / sensitivity;
+        const sensitivity = 150;
+        const sizeDelta = (Math.abs(avgDelta) * direction) / sensitivity;
         
         const newSize = Math.max(0.3, Math.min(3, startSize + sizeDelta));
         updateSticker(sticker.id, { size: newSize });
@@ -201,6 +203,7 @@ const StickerOverlay: React.FC<StickerOverlayProps> = ({ containerRef }) => {
         document.removeEventListener('mousemove', handleResize);
         document.removeEventListener('mouseup', handleResizeEnd);
         document.body.style.cursor = 'default';
+        setIsResizing(false);
       };
       
       document.body.style.cursor = corners[cornerIndex].cursor;
@@ -212,11 +215,19 @@ const StickerOverlay: React.FC<StickerOverlayProps> = ({ containerRef }) => {
       e.stopPropagation();
       e.preventDefault();
       
+      // Disable the main sticker dragging while rotating
+      setIsDragging(false);
+      setIsRotating(true);
+      dragRef.current = null;
+      
       const rect = containerRef.current!.getBoundingClientRect();
       const centerX = rect.left + (sticker.x / 100) * rect.width;
       const centerY = rect.top + (sticker.y / 100) * rect.height;
       
       const handleRotate = (e: MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
         const deltaX = e.clientX - centerX;
         const deltaY = e.clientY - centerY;
         const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI) + 90;
@@ -228,6 +239,7 @@ const StickerOverlay: React.FC<StickerOverlayProps> = ({ containerRef }) => {
         document.removeEventListener('mousemove', handleRotate);
         document.removeEventListener('mouseup', handleRotateEnd);
         document.body.style.cursor = 'default';
+        setIsRotating(false);
       };
       
       document.body.style.cursor = 'grabbing';
@@ -257,33 +269,40 @@ const StickerOverlay: React.FC<StickerOverlayProps> = ({ containerRef }) => {
          {screenCorners.map((corner, index) => (
            <div
              key={`corner-${index}`}
-             className="absolute w-4 h-4 bg-purple-500 rounded-full border-2 border-white shadow-lg hover:bg-purple-600 hover:scale-110 transition-all duration-200"
+             className="absolute w-4 h-4 bg-purple-500 rounded-full border-2 border-white shadow-lg hover:bg-purple-600 hover:scale-110 transition-all duration-200 cursor-pointer"
              style={{
                left: `${corner.x}%`,
                top: `${corner.y}%`,
                transform: 'translate(-50%, -50%)',
                zIndex: sticker.zIndex + 20,
                cursor: corners[index].cursor,
+               pointerEvents: 'auto',
              }}
              onMouseDown={handleCornerDrag(index)}
+             onMouseEnter={(e) => {
+               e.currentTarget.style.cursor = corners[index].cursor;
+             }}
              title="拖拽调整大小"
            />
          ))}
          
          {/* Rotation handle - larger and more prominent */}
          <div
-           className="absolute w-5 h-5 bg-purple-500 rounded-full border-2 border-white shadow-lg hover:bg-purple-600 hover:scale-110 transition-all duration-200"
+           className="absolute w-5 h-5 bg-purple-500 rounded-full border-2 border-white shadow-lg hover:bg-purple-600 hover:scale-110 transition-all duration-200 cursor-grab hover:cursor-grab"
            style={{
              left: `${screenRotationHandle.x}%`,
              top: `${screenRotationHandle.y}%`,
              transform: 'translate(-50%, -50%)',
              zIndex: sticker.zIndex + 20,
-             cursor: 'grab',
+             pointerEvents: 'auto',
            }}
            onMouseDown={handleRotationDrag}
+           onMouseEnter={(e) => {
+             e.currentTarget.style.cursor = 'grab';
+           }}
            title="拖拽旋转 ↻"
          >
-           <div className="absolute inset-0 flex items-center justify-center text-white text-sm font-bold">
+           <div className="absolute inset-0 flex items-center justify-center text-white text-sm font-bold pointer-events-none">
              ↻
            </div>
          </div>
@@ -383,8 +402,11 @@ const StickerOverlay: React.FC<StickerOverlayProps> = ({ containerRef }) => {
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              setShowContextMenu(null);
-              setShowControls(sticker.id); // Show controls on single click
+              // Only handle click if we're not dragging, resizing, or rotating
+              if (!isDragging && !isResizing && !isRotating) {
+                setShowContextMenu(null);
+                setShowControls(sticker.id); // Show controls on single click
+              }
             }}
             onContextMenu={(e) => {
               e.preventDefault();

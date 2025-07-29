@@ -3,16 +3,19 @@ import MarkdownEditor from "./components/MarkdownEditor";
 import CardPreview from "./components/CardPreview";
 import SettingsPanel from "./components/SettingsPanel";
 import SideButtonPanel from "./components/SideButtonPanel";
+import StickerPicker from "./components/StickerPicker";
 import Layout from "./components/Layout";
 import ErrorBoundary from "./components/ErrorBoundary";
 import Split from "react-split";
 import useThemeStore from "./stores/themeStore";
+import useStickerStore from "./stores/stickerStore";
 import { devLog, prodLog } from "./utils/logger";
 import "./App.css";
 
 function App() {
   const previewRef = useRef<HTMLDivElement>(null);
   const initializeTheme = useThemeStore((state) => state.initializeTheme);
+  const { isPickerOpen, setPickerOpen } = useStickerStore();
 
   useEffect(() => {
     // Initialize theme on app mount
@@ -63,6 +66,11 @@ function App() {
           <SideButtonPanel previewRef={previewRef} />
         </ErrorBoundary>
       </Layout>
+      
+      {/* Sticker Picker Modal - Render at root level to avoid z-index issues */}
+      {isPickerOpen && (
+        <StickerPicker onClose={() => setPickerOpen(false)} />
+      )}
     </ErrorBoundary>
   );
 }

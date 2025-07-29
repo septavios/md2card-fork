@@ -3,12 +3,13 @@ import useSettingsStore from "../stores/settingsStore";
 import useEditorStore from "../stores/editorStore";
 
 import "../styles/themes.css";
-import { useEffect, useState, forwardRef, useMemo } from "react";
+import { useEffect, useState, forwardRef, useMemo, useRef } from "react";
 import { themeManager, UserConfig } from "../config/themeManager";
 import { migrateFromOldSettings, configToCSSVariables } from "../config/configMerger";
 import PaginatedMarkdownViewer from "../utils/PaginatedMarkdownViewer";
 import LongMarkdownViewer from "../utils/LongMarkdownViewer";
 import UniversalCard from "./UniversalCard";
+import StickerOverlay from "./StickerOverlay";
 import { FinalConfig } from '../config/themeConfig';
 import { devLog } from '../utils/logger';
 
@@ -31,6 +32,9 @@ const CardPreview = forwardRef<HTMLDivElement, object>((props, ref) => {
   const [html, setHtml] = useState('');
   const [finalConfig, setFinalConfig] = useState<FinalConfig | null>(null);
   const [cssVariables, setCssVariables] = useState<Record<string, any>>({});
+  
+  // Create a separate ref for the sticker overlay container
+  const stickerContainerRef = useRef<HTMLDivElement>(null);
 
   // 从旧设置迁移到新的用户配置，使用 useMemo 避免无限循环
   const userConfig: UserConfig = useMemo(() => {
@@ -121,29 +125,34 @@ const CardPreview = forwardRef<HTMLDivElement, object>((props, ref) => {
         ...cssVariables, // Apply all CSS variables to this container
       }}
     >
-      <div ref={ref} className="export-content" style={{ width: '100%', maxWidth: `${width}px` }}>
-        {
-          viewMode === "长卡片" ? (
-            <LongMarkdownViewer
-              html={html}
-              CardComponent={UniversalCard}
-              pageWidth={width}
-              showPageNumbers={showPageNumbers}
-              layoutMode={layoutMode}
-              config={finalConfig}
-            />
-          ) : (
-            <PaginatedMarkdownViewer
-              CardComponent={UniversalCard}
-              pageWidth={width}
-              pageHeight={height}
-              html={html}
-              showPageNumbers={showPageNumbers}
-              layoutMode={layoutMode}
-              config={finalConfig}
-            />
-          )
-        }
+      <div ref={ref} className="export-content" style={{ width: '100%', maxWidth: `${width}px`, position: 'relative' }}>
+        <div ref={stickerContainerRef} style={{ position: 'relative', width: '100%', height: '100%' }}>
+          {
+            viewMode === "长卡片" ? (
+              <LongMarkdownViewer
+                html={html}
+                CardComponent={UniversalCard}
+                pageWidth={width}
+                showPageNumbers={showPageNumbers}
+                layoutMode={layoutMode}
+                config={finalConfig}
+              />
+            ) : (
+              <PaginatedMarkdownViewer
+                CardComponent={UniversalCard}
+                pageWidth={width}
+                pageHeight={height}
+                html={html}
+                showPageNumbers={showPageNumbers}
+                layoutMode={layoutMode}
+                config={finalConfig}
+              />
+            )
+          }
+          
+          {/* Sticker Overlay */}
+          <StickerOverlay containerRef={stickerContainerRef} />
+        </div>
       </div>
     </div>
   );

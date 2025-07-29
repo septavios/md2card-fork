@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { devLog, prodLog } from '../utils/logger';
+import useStickerStore from '../stores/stickerStore';
 
 interface SideButtonPanelProps {
   previewRef: React.RefObject<HTMLDivElement | null>;
@@ -7,6 +8,8 @@ interface SideButtonPanelProps {
 }
 
 const SideButtonPanel: React.FC<SideButtonPanelProps> = ({ previewRef, onEditMode }) => {
+  const { stickers, clearAllStickers, setPickerOpen, isPickerOpen } = useStickerStore();
+  const [showStickerMenu, setShowStickerMenu] = useState(false);
   // Download PNG file
   const handleDownloadPNG = async () => {
     try {
@@ -50,10 +53,19 @@ const SideButtonPanel: React.FC<SideButtonPanelProps> = ({ previewRef, onEditMod
 
   // Add sticker to preview card
   const handleAddSticker = () => {
-    // This would open a sticker picker modal or panel
-    // For now, just log the action
-    devLog.log('Add sticker feature - to be implemented');
-    // You could implement a sticker picker here
+    devLog.log('Opening sticker picker...');
+    setPickerOpen(true);
+  };
+
+  // Toggle sticker menu
+  const handleStickerMenu = () => {
+    setShowStickerMenu(!showStickerMenu);
+  };
+
+  // Clear all stickers
+  const handleClearStickers = () => {
+    clearAllStickers();
+    setShowStickerMenu(false);
   };
 
   // Change to edit mode
@@ -106,13 +118,57 @@ const SideButtonPanel: React.FC<SideButtonPanelProps> = ({ previewRef, onEditMod
         </button>
 
         {/* Add Sticker */}
-        <button
-          onClick={handleAddSticker}
-          className={buttonClass}
-          title="Add Sticker"
-        >
-          🏷
-        </button>
+        <div className="relative">
+          <button
+            onClick={handleAddSticker}
+            onContextMenu={(e) => {
+              e.preventDefault();
+              handleStickerMenu();
+            }}
+            className={`${buttonClass} ${stickers.length > 0 ? 'bg-pink-600 hover:bg-pink-500' : ''}`}
+            title="添加贴纸 (右键查看更多选项)"
+          >
+            🏷
+            {stickers.length > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                {stickers.length}
+              </span>
+            )}
+          </button>
+          
+          {/* Sticker Menu */}
+          {showStickerMenu && (
+            <>
+              {/* Backdrop to close menu */}
+              <div 
+                className="fixed inset-0 z-40" 
+                onClick={() => setShowStickerMenu(false)}
+              />
+              <div className="absolute right-full mr-2 top-0 bg-white rounded-lg shadow-lg border border-gray-200 p-2 min-w-32 z-50">
+                <button
+                  onClick={() => {
+                    handleAddSticker();
+                    setShowStickerMenu(false);
+                  }}
+                  className="w-full text-left px-3 py-2 hover:bg-gray-100 rounded text-sm flex items-center gap-2"
+                >
+                  🏷 添加贴纸
+                </button>
+                {stickers.length > 0 && (
+                  <>
+                    <div className="border-t border-gray-200 my-1"></div>
+                    <button
+                      onClick={handleClearStickers}
+                      className="w-full text-left px-3 py-2 hover:bg-red-100 rounded text-sm text-red-600 flex items-center gap-2"
+                    >
+                      🗑 清除所有 ({stickers.length})
+                    </button>
+                  </>
+                )}
+              </div>
+            </>
+          )}
+        </div>
 
         {/* Edit Mode */}
         <button

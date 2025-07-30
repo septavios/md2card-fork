@@ -10,12 +10,12 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children, onExport }) => {
   return (
     <div 
-      className="min-h-screen"
+      className="h-screen flex flex-col"
       style={{ backgroundColor: 'var(--bg-primary)' }}
     >
       <Header onExport={onExport} />
       <div 
-        className="flex"
+        className="flex flex-1"
         style={{ backgroundColor: 'var(--bg-secondary)' }}
       >
         <div 

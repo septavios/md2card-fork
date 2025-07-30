@@ -172,7 +172,7 @@ const CardContainer = styled.div`
     background: linear-gradient(45deg, #ff9a9e 0%, #fad0c4 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    margin: 1.5em 0 0.8em;
+    margin: 1em 0 0.8em; /* 减少上边距从1.5em到1em */
     font-weight: 600;
   }
 
@@ -268,7 +268,7 @@ const CardContainer = styled.div`
 
   .md-text {
     line-height: 1.6;
-    margin: 1em 0;
+    margin: 0.5em 0; /* 减少margin从1em到0.5em */
     color: #4a4a4a;
   }
 

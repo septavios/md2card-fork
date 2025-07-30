@@ -253,7 +253,7 @@ const CardContianer = styled.div`
 
   .md-text {
     line-height: 1.6;
-    margin: 1em 0;
+    margin: 0.5em 0; /* 减少margin从1em到0.5em */
     color: #fff;
   }
 
@@ -273,7 +273,7 @@ const CardContianer = styled.div`
   h5,
   h6 {
     color: #ff4081;
-    margin: 1em 0 0.5em;
+    margin: 0.5em 0 0.5em; /* 减少上边距从1em到0.5em */
   }
 
   ol > li {

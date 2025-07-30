@@ -4,22 +4,25 @@ import {
   FiBold,
   FiItalic,
   FiUnderline,
-  FiLink2,
+  FiLink,
   FiImage,
   FiCode,
   FiList,
-  FiAlignLeft,
   FiMessageSquare,
+  FiAlignLeft,
+  FiBarChart,
 } from "react-icons/fi";
 import { TbH1, TbH2, TbH3 } from "react-icons/tb";
 import useEditorStore from "../stores/editorStore";
 import useThemeStore from "../stores/themeStore";
+import WritingStats from "./WritingStats";
 
 const MarkdownEditor: React.FC = () => {
   const { content, setContent } = useEditorStore();
   const { isDarkMode } = useThemeStore();
   const [isMonacoLoaded, setIsMonacoLoaded] = useState(false);
   const [monacoError, setMonacoError] = useState<string | null>(null);
+
   const editorRef = useRef<any>(null);
 
   const handleFormat = (format: string) => {
@@ -158,7 +161,7 @@ const MarkdownEditor: React.FC = () => {
           style={{ borderColor: 'var(--border-color)' }}
         >
           <ToolbarButton onClick={() => handleFormat("link")} title="链接">
-            <FiLink2 className="w-4 h-4" />
+            <FiLink className="w-4 h-4" />
           </ToolbarButton>
           <ToolbarButton onClick={() => handleFormat("image")} title="图片">
             <FiImage className="w-4 h-4" />
@@ -179,64 +182,82 @@ const MarkdownEditor: React.FC = () => {
           </ToolbarButton>
         </div>
       </div>
-      {/* Monaco Editor with fallback */}
-      {monacoError ? (
-        <div className="flex-1 flex flex-col">
-          <div 
-            className="border p-3 mb-2 rounded"
-            style={{
-              backgroundColor: 'var(--bg-tertiary)',
-              borderColor: 'var(--border-color)',
-              color: 'var(--text-primary)'
-            }}
-          >
-            <p className="text-sm">Monaco Editor failed to load: {monacoError}</p>
-            <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>Using fallback textarea editor</p>
-          </div>
-          <textarea
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            className="flex-1 w-full p-4 border outline-none resize-none font-mono text-sm rounded"
-            style={{
-              backgroundColor: 'var(--bg-primary)',
-              borderColor: 'var(--border-color)',
-              color: 'var(--text-primary)'
-            }}
-            placeholder="Type your markdown here..."
-          />
+      
+      {/* Main content area */}
+      <div className="flex-1 flex flex-col">
+        {/* Stats panel - always visible at top */}
+        <div 
+          className="border-b"
+          style={{ 
+            borderColor: 'var(--border-color)',
+            backgroundColor: 'var(--bg-secondary)'
+          }}
+        >
+          <WritingStats />
         </div>
-      ) : (
-        <Editor
-           value={content}
-           onChange={(value) => setContent(value || "")}
-           language="markdown"
-           theme={isDarkMode ? "vs-dark" : "light"}
-           className="flex-1"
-           onMount={(editor, monaco) => {
-             editorRef.current = editor;
-             setIsMonacoLoaded(true);
-           }}
-           loading={
-             <div 
-               className="flex items-center justify-center h-full"
-               style={{ color: 'var(--text-muted)' }}
-             >
-               <div>Loading Monaco Editor...</div>
-             </div>
-           }
-           options={{
-             minimap: { enabled: false },
-             fontSize: 14,
-             lineNumbers: "off",
-             wordWrap: "on",
-             contextmenu: false,
-             scrollbar: {
-               vertical: "visible",
-               horizontal: "visible",
-             },
-           }}
-         />
-      )}
+        
+        {/* Editor area */}
+        <div className="flex-1">
+          {/* Monaco Editor with fallback */}
+          {monacoError ? (
+            <div className="h-full flex flex-col">
+              <div 
+                className="border p-3 mb-2 rounded"
+                style={{
+                  backgroundColor: 'var(--bg-tertiary)',
+                  borderColor: 'var(--border-color)',
+                  color: 'var(--text-primary)'
+                }}
+              >
+                <p className="text-sm">Monaco Editor failed to load: {monacoError}</p>
+                <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>Using fallback textarea editor</p>
+              </div>
+              <textarea
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                className="flex-1 w-full p-4 border outline-none resize-none font-mono text-sm rounded"
+                style={{
+                  backgroundColor: 'var(--bg-primary)',
+                  borderColor: 'var(--border-color)',
+                  color: 'var(--text-primary)'
+                }}
+                placeholder="Type your markdown here..."
+              />
+            </div>
+          ) : (
+            <Editor
+               value={content}
+               onChange={(value) => setContent(value || "")}
+               language="markdown"
+               theme={isDarkMode ? "vs-dark" : "light"}
+               className="flex-1"
+               onMount={(editor, monaco) => {
+                 editorRef.current = editor;
+                 setIsMonacoLoaded(true);
+               }}
+               loading={
+                 <div 
+                   className="flex items-center justify-center h-full"
+                   style={{ color: 'var(--text-muted)' }}
+                 >
+                   <div>Loading Monaco Editor...</div>
+                 </div>
+               }
+               options={{
+                 minimap: { enabled: false },
+                 fontSize: 14,
+                 lineNumbers: "off",
+                 wordWrap: "on",
+                 contextmenu: false,
+                 scrollbar: {
+                   vertical: "visible",
+                   horizontal: "visible",
+                 },
+               }}
+             />
+          )}
+        </div>
+      </div>
     </div>
   );
 };

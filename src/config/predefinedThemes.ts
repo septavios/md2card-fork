@@ -185,7 +185,7 @@ export const appleNotesDarkTheme: ThemeConfig = {
         color: '#0a84ff', // Apple蓝色，更符合Apple Notes主题
         fontSize: '22px',
         fontWeight: 600,
-        marginTop: '32px',
+        marginTop: '16px', // 减少上边距从32px到16px
         marginBottom: '16px',
         lineHeight: 1.3,
         paddingBottom: '6px',
@@ -209,6 +209,10 @@ export const appleNotesDarkTheme: ThemeConfig = {
         lineHeight: 1.3,
         display: 'block',
         position: 'relative',
+        background: 'linear-gradient(135deg, rgba(90, 200, 250, 0.1) 0%, rgba(10, 132, 255, 0.05) 100%)',
+        padding: '8px 12px',
+        borderRadius: '6px',
+        borderLeft: '3px solid #5ac8fa',
         '&::before': {
           content: '"🚀"',
           marginRight: '8px',
@@ -284,7 +288,7 @@ export const appleNotesDarkTheme: ThemeConfig = {
         padding: '1px 0',
         borderLeft: '3px solid #0a84ff', // --notes-border
         paddingLeft: '16px',
-        margin: '16px 0',
+        margin: '4px 0', // 减少margin从16px到4px
         color: '#8e8e93', // --notes-quote-color
         fontStyle: 'italic',
         background: 'transparent',
@@ -370,7 +374,7 @@ export const appleNotesDarkTheme: ThemeConfig = {
       'ul': {
         listStyle: 'none',
         padding: '0',
-        margin: '16px 0',
+        margin: '4px 0', // 减少margin从16px到4px
       },
       
       'li': {
@@ -490,7 +494,7 @@ export const appleNotesDarkTheme: ThemeConfig = {
       'ol': {
         listStyle: 'none',
         padding: '0',
-        margin: '16px 0',
+        margin: '4px 0', // 减少margin从16px到4px
         counterReset: 'apple-counter',
       },
       
@@ -505,10 +509,14 @@ export const appleNotesDarkTheme: ThemeConfig = {
         },
       },
       
-      // 强调文本
+      // 强调文本 - 增强产品复盘文章的视觉效果
       '.md-strong, strong': {
-        color: '#ffffff',
-        fontWeight: 600,
+        color: '#ff9f0a', // Apple橙色，用于强调关键词如"问题："、"解决策略："
+        fontWeight: 700,
+        background: 'linear-gradient(135deg, rgba(255, 159, 10, 0.1) 0%, rgba(255, 159, 10, 0.05) 100%)',
+        padding: '2px 6px',
+        borderRadius: '4px',
+        fontSize: '16px',
       },
       
       '.md-em, em': {
@@ -516,51 +524,113 @@ export const appleNotesDarkTheme: ThemeConfig = {
         fontStyle: 'italic',
       },
       
-      // 分割线
+      // 分割线 - 增强产品复盘文章的视觉分隔效果
       '.md-hr, hr': {
         border: 'none',
-        height: '0.5px',
-        background: '#2c2c2e',
-        margin: '24px 0',
+        height: '2px',
+        background: 'linear-gradient(90deg, transparent 0%, #2c2c2e 20%, #0a84ff 50%, #2c2c2e 80%, transparent 100%)',
+        margin: '8px 0', // 减少margin从32px到8px
+        borderRadius: '1px',
+        boxShadow: '0 1px 3px rgba(10, 132, 255, 0.3)',
       },
       
-      // 代码样式
+      // 代码样式 - 增强技术术语和项目地址的可读性
       'code': {
-        background: '#2c2c2e',
-        color: '#ffffff',
-        padding: '2px 6px',
-        borderRadius: '4px',
-        fontFamily: 'SF Mono, Monaco, Consolas, monospace',
+        background: 'rgba(142, 142, 147, 0.12)',
+        color: '#5ac8fa',
+        padding: '3px 8px',
+        borderRadius: '6px',
+        fontFamily: 'SF Mono, Monaco, Inconsolata, "Roboto Mono", Consolas, "Courier New", monospace',
         fontSize: '14px',
+        border: '1px solid rgba(142, 142, 147, 0.2)',
+        fontWeight: 500,
       },
       
+      // 代码块样式 - 增强代码展示效果
       'pre': {
-        background: '#2c2c2e',
+        background: '#1a1a1a',
         color: '#ffffff',
         padding: '16px',
         borderRadius: '8px',
         overflow: 'auto',
-        margin: '16px 0',
+        margin: '4px 0', // 减少margin从16px到4px
         fontFamily: 'SF Mono, Monaco, Consolas, monospace',
         fontSize: '14px',
         lineHeight: 1.4,
-      },
-      
-      // 链接样式
-      'a': {
-        color: '#0a84ff',
-        textDecoration: 'none',
-        '&:hover': {
-          textDecoration: 'underline',
+        border: '1px solid #2c2c2e',
+        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
+        '& code': {
+          background: 'transparent',
+          border: 'none',
+          padding: '0',
+          color: '#ffffff',
         },
       },
       
+      // 链接样式 - 增强链接的视觉效果和交互体验
+      'a': {
+        color: '#5ac8fa',
+        textDecoration: 'none',
+        borderBottom: '1px solid rgba(90, 200, 250, 0.3)',
+        transition: 'all 0.2s ease',
+        fontWeight: 500,
+        '&:hover': {
+          color: '#0a84ff',
+          borderBottomColor: '#0a84ff',
+          textDecoration: 'none',
+        },
+      },
+
+      // 产品复盘文章特殊样式
+      // 文章末尾的hashtag标签样式
+      'p:last-child': {
+        textAlign: 'center',
+        marginTop: '32px',
+        paddingTop: '16px',
+        borderTop: '1px solid #2c2c2e',
+        '& code': {
+          background: 'linear-gradient(135deg, #0a84ff 0%, #5ac8fa 100%)',
+          color: '#ffffff',
+          padding: '4px 10px',
+          borderRadius: '12px',
+          fontSize: '12px',
+          fontWeight: 600,
+          marginRight: '6px',
+          border: 'none',
+          display: 'inline-block',
+          marginBottom: '4px',
+          boxShadow: '0 2px 4px rgba(10, 132, 255, 0.3)',
+          transition: 'transform 0.2s ease',
+          '&:hover': {
+            transform: 'translateY(-1px)',
+          },
+        },
+      },
+
+      // 特殊引用框样式 (用于"最近花了几周时间..."这样的开头引用)
+      'blockquote:first-of-type': {
+        background: 'linear-gradient(135deg, rgba(10, 132, 255, 0.1) 0%, rgba(90, 200, 250, 0.05) 100%)',
+        borderLeft: '4px solid #0a84ff',
+        padding: '16px 20px',
+        margin: '20px 0',
+        borderRadius: '0 8px 8px 0',
+        position: 'relative',
+        '&::before': {
+          content: '"💭"',
+          position: 'absolute',
+          top: '12px',
+          right: '16px',
+          fontSize: '20px',
+          opacity: 0.6,
+        },
+      },
+
       // 表格样式 - 完整的表格设计系统
       'table, .md-table': {
         width: '100%',
         borderCollapse: 'separate',
         borderSpacing: '0',
-        margin: '20px 0',
+        margin: '4px 0', // 减少margin从20px到4px
         fontSize: '15px',
         backgroundColor: '#1c1c1e',
         borderRadius: '8px',

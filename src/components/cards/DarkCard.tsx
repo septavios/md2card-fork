@@ -171,7 +171,7 @@ const CardContainer = styled.div`
 
   .md-h1, .md-h2, .md-h3, .md-h4, .md-h5, .md-h6 {
     color: #fff;
-    margin: 1.5em 0 0.8em;
+    margin: 1em 0 0.8em; /* 减少上边距从1.5em到1em */
     font-weight: 600;
   }
 
@@ -262,7 +262,7 @@ const CardContainer = styled.div`
 
   .md-text {
     line-height: 1.6;
-    margin: 1em 0;
+    margin: 0.5em 0; /* 减少margin从1em到0.5em */
     color: #a9b1d6;
   }
 

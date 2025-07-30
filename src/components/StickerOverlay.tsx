@@ -495,19 +495,7 @@ const StickerOverlay: React.FC<StickerOverlayProps> = ({ containerRef }) => {
         </div>
       ))}
       
-      {/* Instructions overlay when no stickers */}
-      {stickers.length === 0 && (
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="bg-black bg-opacity-20 text-white px-6 py-3 rounded-lg text-sm text-center max-w-xs">
-            <div className="mb-1">点击右侧贴纸按钮添加小红书贴纸 🏷️</div>
-            <div className="text-xs opacity-80">点击贴纸显示紫色操作框</div>
-            <div className="text-xs opacity-80">🟣 紫色边框：选中状态</div>
-            <div className="text-xs opacity-80">🟣 角落圆点：拖拽调整大小</div>
-            <div className="text-xs opacity-80">🟣 顶部圆点：拖拽旋转角度 ↻</div>
-            <div className="text-xs opacity-80">右键显示更多选项</div>
-          </div>
-        </div>
-      )}
+      {/* Instructions overlay when no stickers - removed to prevent showing in final output */}
     </div>
   );
 };

@@ -44,16 +44,16 @@ function App() {
       <Layout onExport={handleExport}>
         <Split
           className="split flex-1"
-          style={{ width: "calc(100% - 300px)" }}
+          style={{ width: "calc(100% - 300px)", height: "100%" }}
           gutterAlign="start"
           gutterSize={10}
         >
-          <div>
+          <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
             <ErrorBoundary>
               <MarkdownEditor />
             </ErrorBoundary>
           </div>
-          <div>
+          <div style={{ height: "100%" }}>
             <ErrorBoundary>
               <CardPreview ref={previewRef} />
             </ErrorBoundary>

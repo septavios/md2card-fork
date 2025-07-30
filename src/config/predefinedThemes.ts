@@ -173,12 +173,13 @@ export const appleNotesDarkTheme: ThemeConfig = {
         borderBottom: '2px solid #2c2c2e',
         display: 'block',
         position: 'relative',
-        '&::before': {
-          content: '"📚"',
-          marginRight: '12px',
-          fontSize: '24px',
-          verticalAlign: 'middle',
-        },
+      },
+      
+      'h1::before, .md-h1::before': {
+        content: '"📚"',
+        marginRight: '12px',
+        fontSize: '24px',
+        verticalAlign: 'middle',
       },
       
       'h2, .md-h2': {
@@ -192,12 +193,13 @@ export const appleNotesDarkTheme: ThemeConfig = {
         borderBottom: '1px solid #2c2c2e',
         display: 'block',
         position: 'relative',
-        '&::before': {
-          content: '"✨"',
-          marginRight: '10px',
-          fontSize: '18px',
-          verticalAlign: 'middle',
-        },
+      },
+      
+      'h2::before, .md-h2::before': {
+        content: '"✨"',
+        marginRight: '10px',
+        fontSize: '18px',
+        verticalAlign: 'middle',
       },
       
       'h3, .md-h3': {
@@ -213,12 +215,13 @@ export const appleNotesDarkTheme: ThemeConfig = {
         padding: '8px 12px',
         borderRadius: '6px',
         borderLeft: '3px solid #5ac8fa',
-        '&::before': {
-          content: '"🚀"',
-          marginRight: '8px',
-          fontSize: '16px',
-          verticalAlign: 'middle',
-        },
+      },
+      
+      'h3::before, .md-h3::before': {
+        content: '"🚀"',
+        marginRight: '8px',
+        fontSize: '16px',
+        verticalAlign: 'middle',
       },
       
       'h4, .md-h4': {
@@ -230,12 +233,13 @@ export const appleNotesDarkTheme: ThemeConfig = {
         lineHeight: 1.4,
         display: 'block',
         position: 'relative',
-        '&::before': {
-          content: '"💡"',
-          marginRight: '8px',
-          fontSize: '14px',
-          verticalAlign: 'middle',
-        },
+      },
+      
+      'h4::before, .md-h4::before': {
+        content: '"💡"',
+        marginRight: '8px',
+        fontSize: '14px',
+        verticalAlign: 'middle',
       },
       
       'h5, .md-h5': {
@@ -247,12 +251,13 @@ export const appleNotesDarkTheme: ThemeConfig = {
         lineHeight: 1.4,
         display: 'block',
         position: 'relative',
-        '&::before': {
-          content: '"🔹"',
-          marginRight: '6px',
-          fontSize: '12px',
-          verticalAlign: 'middle',
-        },
+      },
+      
+      'h5::before, .md-h5::before': {
+        content: '"🔹"',
+        marginRight: '6px',
+        fontSize: '12px',
+        verticalAlign: 'middle',
       },
       
       'h6, .md-h6': {
@@ -266,12 +271,13 @@ export const appleNotesDarkTheme: ThemeConfig = {
         position: 'relative',
         textTransform: 'uppercase',
         letterSpacing: '0.5px',
-        '&::before': {
-          content: '"▪"',
-          marginRight: '6px',
-          fontSize: '10px',
-          verticalAlign: 'middle',
-        },
+      },
+      
+      'h6::before, .md-h6::before': {
+        content: '"▪"',
+        marginRight: '6px',
+        fontSize: '10px',
+        verticalAlign: 'middle',
       },
       
       // 段落样式
@@ -297,21 +303,25 @@ export const appleNotesDarkTheme: ThemeConfig = {
         position: 'relative',
         fontSize: '16px',
         lineHeight: 1.5,
-        '&::before': {
-          display: 'none',
-        },
-        '&::after': {
-          display: 'none',
-        },
-        '& p': {
-          margin: '0',
-          color: '#8e8e93',
-          fontWeight: 400,
-          fontStyle: 'italic',
-        },
-        '& p:last-child': {
-          marginBottom: '0',
-        },
+      },
+      
+      '.card-apple-notes .md-blockquote::before, .card-apple-notes blockquote::before': {
+        display: 'none',
+      },
+      
+      '.card-apple-notes .md-blockquote::after, .card-apple-notes blockquote::after': {
+        display: 'none',
+      },
+      
+      '.card-apple-notes .md-blockquote p, .card-apple-notes blockquote p': {
+        margin: '0',
+        color: '#8e8e93',
+        fontWeight: 400,
+        fontStyle: 'italic',
+      },
+      
+      '.card-apple-notes .md-blockquote p:last-child, .card-apple-notes blockquote p:last-child': {
+        marginBottom: '0',
       },
       
       // 通用blockquote样式（非Apple Notes主题）
@@ -327,32 +337,36 @@ export const appleNotesDarkTheme: ThemeConfig = {
         position: 'relative',
         borderRadius: '0 8px 8px 0',
         boxShadow: '0 2px 8px rgba(10, 132, 255, 0.1)',
-        '&::before': {
-          content: '""',
-          position: 'absolute',
-          left: '-4px',
-          top: '0',
-          bottom: '0',
-          width: '4px',
-          background: 'linear-gradient(180deg, #0a84ff 0%, #5ac8fa 100%)',
-          borderRadius: '2px',
-        },
-        '&::after': {
-          content: '"💭"',
-          position: 'absolute',
-          top: '12px',
-          right: '16px',
-          fontSize: '20px',
-          opacity: 0.6,
-        },
-        '& p': {
-          margin: '0',
-          color: '#ffffff',
-          fontWeight: 400,
-        },
-        '& p:last-child': {
-          marginBottom: '0',
-        },
+      },
+      
+      '.md-blockquote::before': {
+        content: '""',
+        position: 'absolute',
+        left: '-4px',
+        top: '0',
+        bottom: '0',
+        width: '4px',
+        background: 'linear-gradient(180deg, #0a84ff 0%, #5ac8fa 100%)',
+        borderRadius: '2px',
+      },
+      
+      '.md-blockquote::after': {
+        content: '"💭"',
+        position: 'absolute',
+        top: '12px',
+        right: '16px',
+        fontSize: '20px',
+        opacity: 0.6,
+      },
+      
+      '.md-blockquote p': {
+        margin: '0',
+        color: '#ffffff',
+        fontWeight: 400,
+      },
+      
+      '.md-blockquote p:last-child': {
+        marginBottom: '0',
       },
       
       // 引用内的作者署名样式
@@ -364,10 +378,11 @@ export const appleNotesDarkTheme: ThemeConfig = {
         fontStyle: 'normal',
         fontWeight: 500,
         textAlign: 'right',
-        '&::before': {
-          content: '"— "',
-          color: '#0a84ff',
-        },
+      },
+      
+      '.md-blockquote cite::before, .md-blockquote .citation::before': {
+        content: '"— "',
+        color: '#0a84ff',
       },
       
       // 列表样式 - 匹配截图中的复选框列表
@@ -393,36 +408,36 @@ export const appleNotesDarkTheme: ThemeConfig = {
         position: 'relative',
         paddingLeft: '1.5em',
         listStyle: 'none',
-        '&::before': {
-          content: '""',
-          position: 'absolute',
-          left: '0',
-          width: '16px',
-          height: '16px',
-          backgroundColor: '#1677ff',
-          borderColor: '#1677ff',
-          borderRadius: '2px',
-          border: '1px solid',
-          backgroundPosition: '1px 2px',
-          backgroundRepeat: 'no-repeat',
-          backgroundSize: '80%',
-          backgroundImage: 'url(data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAUCAYAAACXtf2DAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACLSURBVHgB7ZPBDYAgDEX/SI7AJjIKGziCozCKIzBChRiSHgoIlHjxJb3BexoA+GEQ0RYnxDmgDZNnPLQQ5BmDWSpyh1nSF66U7yTjShvOOFf65RVyzxaFWmREvgmLxUi3nG10rciw/E2kIrfooRAhFXlnxGKGRsRCg0LEQhMWSYdtsAJ6blHzdX/GDSY+GhmjX+BiAAAAAElFTkSuQmCC)'
-        }
+      },
+      'li[data-task="true"]::before': {
+        content: '""',
+        position: 'absolute',
+        left: '0',
+        width: '16px',
+        height: '16px',
+        backgroundColor: '#1677ff',
+        borderColor: '#1677ff',
+        borderRadius: '2px',
+        border: '1px solid',
+        backgroundPosition: '1px 2px',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: '80%',
+        backgroundImage: 'url(data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAUCAYAAACXtf2DAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACLSURBVHgB7ZPBDYAgDEX/SI7AJjIKGziCozCKIzBChRiSHgoIlHjxJb3BexoA+GEQ0RYnxDmgDZNnPLQQ5BmDWSpyh1nSF66U7yTjShvOOFf65RVyzxaFWmREvgmLxUi3nG10rciw/E2kIrfooRAhFXlnxGKGRsRCg0LEQhMWSYdtsAJ6blHzdX/GDSY+GhmjX+BiAAAAAElFTkSuQmCC)'
       },
       'li[data-task="false"]': {
         position: 'relative',
         paddingLeft: '1.5em',
         listStyle: 'none',
-        '&::before': {
-          content: '""',
-          position: 'absolute',
-          left: '0',
-          width: '16px',
-          height: '16px',
-          backgroundColor: 'transparent',
-          border: '1px solid #d9d9d9',
-          borderRadius: '2px'
-        }
+      },
+      'li[data-task="false"]::before': {
+        content: '""',
+        position: 'absolute',
+        left: '0',
+        width: '16px',
+        height: '16px',
+        backgroundColor: 'transparent',
+        border: '1px solid #d9d9d9',
+        borderRadius: '2px'
       },
       // 显示checkbox输入元素并应用样式
       'input[type="checkbox"]': {
@@ -434,60 +449,60 @@ export const appleNotesDarkTheme: ThemeConfig = {
         borderRadius: '2px',
         backgroundColor: 'transparent',
         cursor: 'pointer',
-        '&:checked': {
-          backgroundColor: '#1677ff',
-          borderColor: '#1677ff',
-          backgroundPosition: '1px 2px',
-          backgroundRepeat: 'no-repeat',
-          backgroundSize: '80%',
-          backgroundImage: 'url(data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAUCAYAAACXtf2DAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACLSURBVHgB7ZPBDYAgDEX/SI7AJjIKGziCozCKIzBChRiSHgoIlHjxJb3BexoA+GEQ0RYnxDmgDZNnPLQQ5BmDWSpyh1nSF66U7yTjShvOOFf65RVyzxaFWmREvgmLxUi3nG10rciw/E2kIrfooRAhFXlnxGKGRsRCg0LEQhMWSYdtsAJ6blHzdX/GDSY+GhmjX+BiAAAAAElFTkSuQmCC)'
-        }
+      },
+      'input[type="checkbox"]:checked': {
+        backgroundColor: '#1677ff',
+        borderColor: '#1677ff',
+        backgroundPosition: '1px 2px',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: '80%',
+        backgroundImage: 'url(data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAUCAYAAACXtf2DAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACLSURBVHgB7ZPBDYAgDEX/SI7AJjIKGziCozCKIzBChRiSHgoIlHjxJb3BexoA+GEQ0RYnxDmgDZNnPLQQ5BmDWSpyh1nSF66U7yTjShvOOFf65RVyzxaFWmREvgmLxUi3nG10rciw/E2kIrfooRAhFXlnxGKGRsRCg0LEQhMWSYdtsAJ6blHzdX/GDSY+GhmjX+BiAAAAAElFTkSuQmCC)'
       },
       // 为包含checkbox的li添加样式（通过JavaScript动态添加类名）
       'li.task-item-checked': {
         position: 'relative',
         paddingLeft: '1.5em',
         listStyle: 'none',
-        '&::before': {
-          content: '""',
-          position: 'absolute',
-          left: '0',
-          width: '16px',
-          height: '16px',
-          backgroundColor: '#1677ff',
-          borderColor: '#1677ff',
-          borderRadius: '2px',
-          border: '1px solid',
-          backgroundPosition: '1px 2px',
-          backgroundRepeat: 'no-repeat',
-          backgroundSize: '80%',
-          backgroundImage: 'url(data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAUCAYAAACXtf2DAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACLSURBVHgB7ZPBDYAgDEX/SO7AJjIKGziCozCKIzBChRiSHgoIlHjxJb3BexoA+GEQ0RYnxDmgDZNnPLQQ5BmDWSpyh1nSF66U7yTjShvOOFf65RVyzxaFWmREvgmLxUi3nG10rciw/E2kIrfooRAhFXlnxGKGRsRCg0LEQhMWSYdtsAJ6blHzdX/GDSY+GhmjX+BiAAAAAElFTkSuQmCC)'
-        }
+      },
+      'li.task-item-checked::before': {
+        content: '""',
+        position: 'absolute',
+        left: '0',
+        width: '16px',
+        height: '16px',
+        backgroundColor: '#1677ff',
+        borderColor: '#1677ff',
+        borderRadius: '2px',
+        border: '1px solid',
+        backgroundPosition: '1px 2px',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: '80%',
+        backgroundImage: 'url(data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAUCAYAAACXtf2DAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACLSURBVHgB7ZPBDYAgDEX/SO7AJjIKGziCozCKIzBChRiSHgoIlHjxJb3BexoA+GEQ0RYnxDmgDZNnPLQQ5BmDWSpyh1nSF66U7yTjShvOOFf65RVyzxaFWmREvgmLxUi3nG10rciw/E2kIrfooRAhFXlnxGKGRsRCg0LEQhMWSYdtsAJ6blHzdX/GDSY+GhmjX+BiAAAAAElFTkSuQmCC)'
       },
       'li.task-item-unchecked': {
         position: 'relative',
         paddingLeft: '1.5em',
         listStyle: 'none',
-        '&::before': {
-          content: '""',
-          position: 'absolute',
-          left: '0',
-          width: '16px',
-          height: '16px',
-          backgroundColor: 'transparent',
-          border: '1px solid #d9d9d9',
-          borderRadius: '2px'
-        }
+      },
+      'li.task-item-unchecked::before': {
+        content: '""',
+        position: 'absolute',
+        left: '0',
+        width: '16px',
+        height: '16px',
+        backgroundColor: 'transparent',
+        border: '1px solid #d9d9d9',
+        borderRadius: '2px'
       },
       
       // 普通列表项
       'li:not([data-task])': {
-        '&::before': {
-          content: '"•"',
-          marginRight: '8px',
-          fontSize: '16px',
-          color: '#8e8e93',
-        },
+      },
+      'li:not([data-task])::before': {
+        content: '"•"',
+        marginRight: '8px',
+        fontSize: '16px',
+        color: '#8e8e93',
       },
       
       // 有序列表
@@ -500,13 +515,13 @@ export const appleNotesDarkTheme: ThemeConfig = {
       
       'ol li': {
         counterIncrement: 'apple-counter',
-        '&::before': {
-          content: 'counter(apple-counter) "."',
-          marginRight: '8px',
-          fontSize: '16px',
-          color: '#8e8e93',
-          fontWeight: 500,
-        },
+      },
+      'ol li::before': {
+        content: 'counter(apple-counter) "."',
+        marginRight: '8px',
+        fontSize: '16px',
+        color: '#8e8e93',
+        fontWeight: 500,
       },
       
       // 强调文本 - 增强产品复盘文章的视觉效果
@@ -514,6 +529,16 @@ export const appleNotesDarkTheme: ThemeConfig = {
         color: '#ff9f0a', // Apple橙色，用于强调关键词如"问题："、"解决策略："
         fontWeight: 700,
         background: 'linear-gradient(135deg, rgba(255, 159, 10, 0.1) 0%, rgba(255, 159, 10, 0.05) 100%)',
+        padding: '2px 6px',
+        borderRadius: '4px',
+        fontSize: '16px',
+      },
+      
+      // 确保列表内的强调文本也有正确的样式
+      'ul .md-strong, ul strong, ol .md-strong, ol strong, li .md-strong, li strong': {
+        color: '#ff9f0a !important',
+        fontWeight: 700,
+        background: 'linear-gradient(135deg, rgba(255, 159, 10, 0.1) 0%, rgba(255, 159, 10, 0.05) 100%) !important',
         padding: '2px 6px',
         borderRadius: '4px',
         fontSize: '16px',
@@ -559,12 +584,12 @@ export const appleNotesDarkTheme: ThemeConfig = {
         lineHeight: 1.4,
         border: '1px solid #2c2c2e',
         boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
-        '& code': {
-          background: 'transparent',
-          border: 'none',
-          padding: '0',
-          color: '#ffffff',
-        },
+      },
+      'pre code': {
+        background: 'transparent',
+        border: 'none',
+        padding: '0',
+        color: '#ffffff',
       },
       
       // 链接样式 - 增强链接的视觉效果和交互体验
@@ -574,11 +599,11 @@ export const appleNotesDarkTheme: ThemeConfig = {
         borderBottom: '1px solid rgba(90, 200, 250, 0.3)',
         transition: 'all 0.2s ease',
         fontWeight: 500,
-        '&:hover': {
-          color: '#0a84ff',
-          borderBottomColor: '#0a84ff',
-          textDecoration: 'none',
-        },
+      },
+      'a:hover': {
+        color: '#0a84ff',
+        borderBottomColor: '#0a84ff',
+        textDecoration: 'none',
       },
 
       // 产品复盘文章特殊样式
@@ -588,23 +613,23 @@ export const appleNotesDarkTheme: ThemeConfig = {
         marginTop: '32px',
         paddingTop: '16px',
         borderTop: '1px solid #2c2c2e',
-        '& code': {
-          background: 'linear-gradient(135deg, #0a84ff 0%, #5ac8fa 100%)',
-          color: '#ffffff',
-          padding: '4px 10px',
-          borderRadius: '12px',
-          fontSize: '12px',
-          fontWeight: 600,
-          marginRight: '6px',
-          border: 'none',
-          display: 'inline-block',
-          marginBottom: '4px',
-          boxShadow: '0 2px 4px rgba(10, 132, 255, 0.3)',
-          transition: 'transform 0.2s ease',
-          '&:hover': {
-            transform: 'translateY(-1px)',
-          },
-        },
+      },
+      'p:last-child code': {
+        background: 'linear-gradient(135deg, #0a84ff 0%, #5ac8fa 100%)',
+        color: '#ffffff',
+        padding: '4px 10px',
+        borderRadius: '12px',
+        fontSize: '12px',
+        fontWeight: 600,
+        marginRight: '6px',
+        border: 'none',
+        display: 'inline-block',
+        marginBottom: '4px',
+        boxShadow: '0 2px 4px rgba(10, 132, 255, 0.3)',
+        transition: 'transform 0.2s ease',
+      },
+      'p:last-child code:hover': {
+        transform: 'translateY(-1px)',
       },
 
       // 特殊引用框样式 (用于"最近花了几周时间..."这样的开头引用)
@@ -615,14 +640,14 @@ export const appleNotesDarkTheme: ThemeConfig = {
         margin: '20px 0',
         borderRadius: '0 8px 8px 0',
         position: 'relative',
-        '&::before': {
-          content: '"💭"',
-          position: 'absolute',
-          top: '12px',
-          right: '16px',
-          fontSize: '20px',
-          opacity: 0.6,
-        },
+      },
+      'blockquote:first-of-type::before': {
+        content: '"💭"',
+        position: 'absolute',
+        top: '12px',
+        right: '16px',
+        fontSize: '20px',
+        opacity: 0.6,
       },
 
       // 表格样式 - 完整的表格设计系统
@@ -654,18 +679,18 @@ export const appleNotesDarkTheme: ThemeConfig = {
         borderBottom: '2px solid #3a3a3c',
         borderRight: '1px solid #3a3a3c',
         position: 'relative',
-        '&:last-child': {
-          borderRight: 'none',
-        },
-        '&::before': {
-          content: '""',
-          position: 'absolute',
-          top: '0',
-          left: '0',
-          right: '0',
-          height: '2px',
-          background: 'linear-gradient(90deg, #0a84ff 0%, #5ac8fa 100%)',
-        },
+      },
+      'th:last-child, .md-th:last-child': {
+        borderRight: 'none',
+      },
+      'th::before, .md-th::before': {
+        content: '""',
+        position: 'absolute',
+        top: '0',
+        left: '0',
+        right: '0',
+        height: '2px',
+        background: 'linear-gradient(90deg, #0a84ff 0%, #5ac8fa 100%)',
       },
       
       'tbody, .md-tbody': {
@@ -682,18 +707,16 @@ export const appleNotesDarkTheme: ThemeConfig = {
         lineHeight: 1.4,
         verticalAlign: 'top',
         transition: 'background-color 0.2s ease',
-        '&:last-child': {
-          borderRight: 'none',
-        },
+      },
+      'td:last-child, .md-td:last-child': {
+        borderRight: 'none',
       },
       
-      'tr, .md-tr': {
-        '&:hover td': {
-          backgroundColor: 'rgba(255, 255, 255, 0.05)',
-        },
-        '&:last-child td': {
-          borderBottom: 'none',
-        },
+      'tr:hover td, .md-tr:hover .md-td': {
+        backgroundColor: 'rgba(255, 255, 255, 0.05)',
+      },
+      'tr:last-child td, .md-tr:last-child .md-td': {
+        borderBottom: 'none',
       },
       
       // 表格标题样式
@@ -721,16 +744,20 @@ export const appleNotesDarkTheme: ThemeConfig = {
         color: '#0a84ff',
         textDecoration: 'none',
         fontWeight: 500,
-        '&:hover': {
-          textDecoration: 'underline',
-          color: '#5ac8fa',
-        },
+      },
+      'table a:hover, .md-table a:hover': {
+        textDecoration: 'underline',
+        color: '#5ac8fa',
       },
       
       // 表格内的强调文本
       'table strong, .md-table strong': {
-        color: '#ffffff',
-        fontWeight: 600,
+        color: '#ff9f0a', // 保持Apple橙色
+        fontWeight: 700,
+        background: 'linear-gradient(135deg, rgba(255, 159, 10, 0.1) 0%, rgba(255, 159, 10, 0.05) 100%)',
+        padding: '2px 6px',
+        borderRadius: '4px',
+        fontSize: '15px', // 稍微调整表格内的字体大小
       },
       
       'table em, .md-table em': {

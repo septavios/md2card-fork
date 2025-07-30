@@ -77,7 +77,9 @@ const UniversalCard: React.FC<CardProps> = React.memo(({
 
   // Memoize custom styles CSS generation
   const customStylesCSS = useMemo(() => {
-    if (!config.customStyles) return '';
+    if (!config.customStyles) {
+      return '';
+    }
     
     let cssString = '';
     

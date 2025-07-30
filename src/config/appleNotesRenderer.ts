@@ -24,6 +24,18 @@ export function createAppleNotesRenderer(): Renderer {
     return `<input type="checkbox" ${checked ? 'checked' : ''} disabled />`;
   };
 
+  // 添加strong渲染器以确保一致的样式应用
+  renderer.strong = function({ text }: Tokens.Strong) {
+    devLog.log('Apple Notes renderer strong called:', text);
+    return `<strong class="md-strong">${text}</strong>`;
+  };
+
+  // 添加em渲染器以确保一致的样式应用
+  renderer.em = function({ text }: Tokens.Em) {
+    devLog.log('Apple Notes renderer em called:', text);
+    return `<em class="md-em">${text}</em>`;
+  };
+
   devLog.log('Apple Notes renderer created successfully');
   return renderer;
 }

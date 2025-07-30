@@ -38,6 +38,9 @@ interface SettingsState {
   lineHeight: number;
   background: BackgroundSettings;
   
+  // Settings panel visibility
+  isSettingsPanelVisible: boolean;
+  
   // 用户自定义设置跟踪
   hasUserCustomizations: {
     font: boolean;
@@ -63,6 +66,10 @@ interface SettingsState {
   setFontSize: (size: number) => void;
   setLineHeight: (height: number) => void;
   setBackground: (background: Partial<BackgroundSettings>) => void;
+  
+  // Settings panel visibility setter
+  setSettingsPanelVisible: (visible: boolean) => void;
+  toggleSettingsPanel: () => void;
   
   // 自定义设置管理
   markUserCustomization: (type: keyof SettingsState['hasUserCustomizations']) => void;
@@ -102,6 +109,9 @@ const useSettingsStore = create<SettingsState>()(
         blurAmount: 0,
       },
       
+      // Settings panel visibility
+      isSettingsPanelVisible: false,
+      
       // 用户自定义设置跟踪
       hasUserCustomizations: {
         font: false,
@@ -140,6 +150,10 @@ const useSettingsStore = create<SettingsState>()(
           state.hasUserCustomizations.background = true;
           return { background: { ...state.background, ...background } };
         }),
+      
+      // Settings panel visibility setters
+      setSettingsPanelVisible: (visible: boolean) => set({ isSettingsPanelVisible: visible }),
+      toggleSettingsPanel: () => set((state) => ({ isSettingsPanelVisible: !state.isSettingsPanelVisible })),
       
       // 自定义设置管理
       markUserCustomization: (type: keyof SettingsState['hasUserCustomizations']) => 

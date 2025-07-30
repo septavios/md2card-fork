@@ -8,6 +8,7 @@ import Layout from "./components/Layout";
 import ErrorBoundary from "./components/ErrorBoundary";
 import Split from "react-split";
 import useThemeStore from "./stores/themeStore";
+import useSettingsStore from "./stores/settingsStore";
 import useStickerStore from "./stores/stickerStore";
 import { devLog, prodLog } from "./utils/logger";
 import "./App.css";
@@ -15,6 +16,7 @@ import "./App.css";
 function App() {
   const previewRef = useRef<HTMLDivElement>(null);
   const initializeTheme = useThemeStore((state) => state.initializeTheme);
+  const { isSettingsPanelVisible } = useSettingsStore();
   const { isPickerOpen, setPickerOpen } = useStickerStore();
 
   useEffect(() => {
@@ -59,9 +61,6 @@ function App() {
             </ErrorBoundary>
           </div>
         </Split>
-        <ErrorBoundary>
-          <SettingsPanel />
-        </ErrorBoundary>
         <ErrorBoundary>
           <SideButtonPanel previewRef={previewRef} />
         </ErrorBoundary>

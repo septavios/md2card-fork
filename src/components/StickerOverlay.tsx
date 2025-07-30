@@ -81,9 +81,20 @@ const StickerOverlay: React.FC<StickerOverlayProps> = ({ containerRef }) => {
 
   // 点击空白区域取消选择
   const handleContainerClick = useCallback((e: React.MouseEvent) => {
+    // Check if clicking on a context menu or its children
+    const target = e.target as HTMLElement;
+    const isContextMenuClick = target.closest('[data-context-menu]');
+    
+    if (isContextMenuClick) {
+      return; // Don't handle container clicks when clicking on context menu
+    }
+    
     if (e.target === e.currentTarget) {
       selectSticker(null);
       setShowControls(null);
+      setShowContextMenu(null);
+    } else {
+      // Hide context menu when clicking anywhere else
       setShowContextMenu(null);
     }
   }, [selectSticker]);
@@ -373,20 +384,28 @@ const StickerOverlay: React.FC<StickerOverlayProps> = ({ containerRef }) => {
     const menuX = Math.max(10, Math.min(90, sticker.x));
     const menuY = sticker.y > 20 ? sticker.y - 8 : sticker.y + 8;
     
+    console.log('Rendering context menu for sticker:', sticker.id, 'at position:', menuX, menuY);
+    
     return (
       <div 
-        className="absolute bg-white rounded-lg shadow-xl border border-gray-200 py-1"
+        data-context-menu="true"
+        className="absolute bg-white rounded-lg shadow-2xl border-2 border-purple-300 py-2"
         style={{
           left: `${menuX}%`,
           top: `${menuY}%`,
           transform: sticker.y > 20 ? 'translate(-50%, -100%)' : 'translate(-50%, 0%)',
-          minWidth: '120px',
-          zIndex: 9999, // Use a very high z-index
+          minWidth: '140px',
+          zIndex: 99999, // Use an even higher z-index
           pointerEvents: 'auto', // Ensure pointer events work
+          backgroundColor: 'white', // Explicit background
+          border: '2px solid #a855f7', // Purple border for visibility
         }}
         onClick={(e) => e.stopPropagation()}
         onMouseDown={(e) => e.stopPropagation()} // Prevent drag interference
       >
+        <div className="px-3 py-1 text-xs text-gray-500 border-b border-gray-200">
+          贴纸操作菜单
+        </div>
         <button
           onClick={(e) => {
             e.stopPropagation();
@@ -394,20 +413,22 @@ const StickerOverlay: React.FC<StickerOverlayProps> = ({ containerRef }) => {
             duplicateSticker(sticker.id);
             setShowContextMenu(null);
           }}
-          className="w-full px-3 py-2 text-left text-sm hover:bg-gray-100 transition-colors"
+          className="w-full px-3 py-2 text-left text-sm hover:bg-purple-50 transition-colors flex items-center gap-2"
         >
-          📋 复制
+          📋 <span>复制贴纸</span>
         </button>
         <button
           onClick={(e) => {
             e.stopPropagation();
-            console.log('Deleting sticker:', sticker.id); // Debug log
+            console.log('Delete button clicked for sticker:', sticker.id);
+            console.log('About to call removeSticker...');
             removeSticker(sticker.id);
+            console.log('removeSticker called, hiding context menu...');
             setShowContextMenu(null);
           }}
-          className="w-full px-3 py-2 text-left text-sm hover:bg-gray-100 text-red-600 transition-colors"
+          className="w-full px-3 py-2 text-left text-sm hover:bg-red-50 text-red-600 transition-colors flex items-center gap-2"
         >
-          🗑 删除
+          🗑 <span>删除贴纸</span>
         </button>
       </div>
     );
@@ -453,6 +474,7 @@ const StickerOverlay: React.FC<StickerOverlayProps> = ({ containerRef }) => {
             onContextMenu={(e) => {
               e.preventDefault();
               e.stopPropagation();
+              console.log('Right-click on sticker:', sticker.id, 'Current context menu:', showContextMenu);
               setShowControls(null);
               setShowContextMenu(showContextMenu === sticker.id ? null : sticker.id);
             }}

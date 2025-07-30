@@ -201,7 +201,7 @@ export const appleNotesDarkTheme: ThemeConfig = {
       },
       
       'h3, .md-h3': {
-        color: '#ffffff',
+        color: '#5ac8fa', // Light blue - creates nice hierarchy between h2 and h4
         fontSize: '18px',
         fontWeight: 600,
         marginTop: '24px',

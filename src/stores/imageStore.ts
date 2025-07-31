@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, createJSONStorage } from 'zustand/middleware';
 
 interface ImageData {
   id: string;
@@ -112,7 +112,23 @@ export const useImageStore = create<ImageStore>()(
     }),
     {
       name: 'image-storage',
-      // Use default storage for simplicity
+      storage: createJSONStorage(() => localStorage),
+      // Only persist the essential data, exclude blobUrl as it's session-specific
+      partialize: (state) => ({
+        images: Object.fromEntries(
+          Object.entries(state.images).map(([id, imageData]) => [
+            id,
+            {
+              id: imageData.id,
+              name: imageData.name,
+              size: imageData.size,
+              type: imageData.type,
+              base64: imageData.base64,
+              // Exclude blobUrl from persistence
+            }
+          ])
+        )
+      }),
     }
   )
 );

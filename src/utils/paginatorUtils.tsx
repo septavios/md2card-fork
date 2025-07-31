@@ -170,6 +170,24 @@ export const handleTableNode = (node: Node, currentPage: HTMLElement, wrapper: H
 
 export const handleImageNode = (node: Node, currentPage: HTMLElement, wrapper: HTMLElement, pageElements: JSX.Element[], CardComponent: React.FC<CardProps>, pageHeight: number, pageWidth: number, config: FinalConfig, showPageNumbers?: boolean, totalPages?: number, hideOverflow?: boolean) => {
   const clone = node.cloneNode(true) as HTMLElement;
+  
+  // 确保图片的src属性被正确保持
+  if (clone.tagName === 'IMG') {
+    const imgElement = clone as HTMLImageElement;
+    // 如果图片没有src或src为空，尝试从原始节点获取
+    if (!imgElement.src || imgElement.src === '') {
+      const originalImg = node as HTMLImageElement;
+      if (originalImg.src) {
+        imgElement.src = originalImg.src;
+      }
+    }
+    
+    // 确保图片有正确的样式类
+    if (!imgElement.className.includes('md-image')) {
+      imgElement.className = (imgElement.className + ' md-image').trim();
+    }
+  }
+  
   addPageElement(currentPage, pageElements, CardComponent, pageHeight, pageWidth, config, showPageNumbers, totalPages, hideOverflow);
   return {
     newPage: createNewPage(wrapper, pageHeight, pageWidth),

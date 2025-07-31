@@ -50,7 +50,9 @@
   background: white;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+  overflow: auto; /* Allow scrollbars and wheel events */
+  height: 100%;
+  min-height: 0;
 }
 
 .preview-container {
@@ -108,17 +110,91 @@
 .split {
   display: flex;
   flex-direction: row;
+  height: 100%;
+  overflow: hidden; /* Prevent any overflow at the split level */
+  min-height: 0;
+}
+
+/* Ensure each split pane has independent scrolling */
+.split > div {
+  position: relative;
+  isolation: isolate;
+  contain: layout style paint; /* CSS containment for better isolation */
+  height: 100%;
+  min-height: 0;
+}
+
+/* Monaco editor container specific styles */
+.split > div:first-child {
+  display: flex;
+  flex-direction: column;
+  overflow: auto; /* Allow visible scrollbars and scrollwheel */
+  height: 100%;
+  min-height: 0;
+}
+
+/* Force visible scrollbars for Monaco editor */
+.split > div:first-child .monaco-editor {
+  overflow: auto !important;
+}
+
+.split > div:first-child .monaco-scrollable-element {
+  overflow: auto !important;
+}
+
+.split > div:first-child .monaco-editor .overflow-guard {
+  overflow: auto !important;
+}
+
+/* Ensure Monaco editor has proper height and scrollbars */
+.split > div:first-child .monaco-editor,
+.split > div:first-child .monaco-editor .overflow-guard,
+.split > div:first-child .monaco-scrollable-element {
+  height: 100% !important;
+  min-height: 100% !important;
+}
+
+/* Force scrollbar visibility */
+.split > div:first-child ::-webkit-scrollbar {
+  width: 14px !important;
+  height: 14px !important;
+}
+
+.split > div:first-child ::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1) !important;
+}
+
+.split > div:first-child ::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.3) !important;
+  border-radius: 7px !important;
+}
+
+.split > div:first-child ::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Card preview container specific styles */
+.split > div:last-child {
+  overflow: auto;
+  scroll-behavior: smooth;
+  overscroll-behavior: contain; /* Prevent scroll chaining */
 }
 
 .gutter {
   background-color: #eee;
   background-repeat: no-repeat;
   background-position: 50%;
+  transition: background-color 0.2s ease;
+}
+
+.gutter:hover {
+  background-color: #ddd;
 }
 
 .gutter.gutter-horizontal {
   background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==");
   cursor: col-resize;
+  width: 10px;
 }
 
 

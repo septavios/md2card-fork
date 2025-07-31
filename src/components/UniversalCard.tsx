@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useCallback } from 'react';
 import { CardProps } from '../config/themeConfig';
 import useSettingsStore from '../stores/settingsStore';
 import appleNotesTasksCSS from '../styles/apple-notes-tasks.css?raw';
-import { createSafeHtml, sanitizeHtml } from '../utils/htmlSanitizer';
+import { createSafeHtml } from '../utils/htmlSanitizer';
 
 // Utility function moved outside component to prevent recreation
 const camelToKebab = (str: string) => {
@@ -142,7 +142,7 @@ const UniversalCard: React.FC<CardProps> = React.memo(({
   }, [page, handleTaskListStyling, handleAppleNotesBoldStyling, themeChecks.isAppleNotesTheme]);
   
   // Memoize style variables
-  const styleVars = useMemo((): React.CSSProperties & Record<string, any> => ({
+  const styleVars = useMemo((): React.CSSProperties & Record<string, string> => ({
     '--card-width': `${width}px`,
     '--card-height': `${height}px`,
     '--card-border-radius': 'var(--card-border-radius)',
@@ -170,7 +170,7 @@ const UniversalCard: React.FC<CardProps> = React.memo(({
       cssString += Object.entries(config.customStyles.elements)
         .map(([selector, styles]) => {
           if (typeof styles === 'object' && styles !== null) {
-            const cssProperties = Object.entries(styles as Record<string, any>)
+            const cssProperties = Object.entries(styles as Record<string, string>)
               .map(([property, value]) => `${camelToKebab(property)}: ${value}`)
               .join('; ');
             return `${selector} { ${cssProperties} }`;
@@ -184,7 +184,7 @@ const UniversalCard: React.FC<CardProps> = React.memo(({
     // Process other top-level styles
     Object.entries(config.customStyles).forEach(([key, value]) => {
       if (key !== 'elements' && key !== 'container' && typeof value === 'object' && value !== null) {
-        const cssProperties = Object.entries(value as Record<string, any>)
+        const cssProperties = Object.entries(value as Record<string, string>)
           .map(([property, val]) => `${camelToKebab(property)}: ${val}`)
           .join('; ');
         cssString += `${key} { ${cssProperties} } `;

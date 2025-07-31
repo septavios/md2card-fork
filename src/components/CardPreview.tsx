@@ -13,9 +13,150 @@ import UniversalCard from "./UniversalCard";
 import StickerOverlay from "./StickerOverlay";
 import { FinalConfig } from '../config/themeConfig';
 import { devLog } from '../utils/logger';
+import { LayoutMode } from '../stores/settingsStore';
 
-const CardPreview = forwardRef<HTMLDivElement, object>((props, ref) => {
-  const { content: markdown } = useEditorStore();
+// Component to handle individual card sections
+const CardSection = ({ 
+  section, 
+  renderer, 
+  viewMode, 
+  width, 
+  height, 
+  showPageNumbers, 
+  layoutMode, 
+  finalConfig 
+}: {
+  section: string;
+  renderer: any;
+  viewMode: string;
+  width: number;
+  height: number;
+  showPageNumbers: boolean;
+  layoutMode: LayoutMode;
+  finalConfig: FinalConfig;
+}) => {
+  const [sectionHtml, setSectionHtml] = useState('');
+  
+  useEffect(() => {
+    const processSectionHtml = async () => {
+      let result;
+      if (!renderer) {
+        result = await marked.parse(section);
+      } else {
+        result = await marked.parse(section, { renderer });
+      }
+      setSectionHtml(result);
+    };
+    processSectionHtml();
+  }, [section, renderer]);
+  
+  return (
+    <>
+      {
+        viewMode === "长卡片" ? (
+          <LongMarkdownViewer
+            html={sectionHtml}
+            CardComponent={UniversalCard}
+            pageWidth={width}
+            showPageNumbers={showPageNumbers}
+            layoutMode={layoutMode}
+            config={finalConfig}
+          />
+        ) : (
+          <PaginatedMarkdownViewer
+            CardComponent={UniversalCard}
+            pageWidth={width}
+            pageHeight={height}
+            html={sectionHtml}
+            showPageNumbers={showPageNumbers}
+            layoutMode={layoutMode}
+            config={finalConfig}
+          />
+        )
+      }
+    </>
+  );
+};
+
+// Component to handle multiple card sections or single card
+const CardSections = ({ 
+  markdown, 
+  renderer, 
+  viewMode, 
+  width, 
+  height, 
+  showPageNumbers, 
+  layoutMode, 
+  finalConfig, 
+  html 
+}: {
+  markdown: string;
+  renderer: any;
+  viewMode: string;
+  width: number;
+  height: number;
+  showPageNumbers: boolean;
+  layoutMode: LayoutMode;
+  finalConfig: FinalConfig;
+  html: string;
+}) => {
+  // 只有在横线拆分模式下且包含卡片分隔符 ---- 时才进行拆分
+  if (layoutMode === "横线拆分" && markdown.includes('----')) {
+    // 按照 ---- 分割内容
+    const sections = markdown.split(/^----$/gm).map(section => section.trim()).filter(section => section.length > 0);
+    devLog.log('Found card separator in 横线拆分 mode, splitting into sections:', sections.length);
+    
+    return (
+      <div className="card-sections-container">
+        {sections.map((section, index) => (
+          <div key={index} className="card-section-wrapper" style={{ marginBottom: '2rem' }}>
+            <CardSection
+              section={section}
+              renderer={renderer}
+              viewMode={viewMode}
+              width={width}
+              height={height}
+              showPageNumbers={showPageNumbers}
+              layoutMode={layoutMode}
+              finalConfig={finalConfig}
+            />
+          </div>
+        ))}
+      </div>
+    );
+  } else {
+    // 正常的单卡片渲染（包括自动拆分模式或横线拆分模式但没有----的情况）
+    return (
+      <>
+        {
+          viewMode === "长卡片" ? (
+            <LongMarkdownViewer
+              html={html}
+              CardComponent={UniversalCard}
+              pageWidth={width}
+              showPageNumbers={showPageNumbers}
+              layoutMode={layoutMode}
+              config={finalConfig}
+            />
+          ) : (
+            <PaginatedMarkdownViewer
+              CardComponent={UniversalCard}
+              pageWidth={width}
+              pageHeight={height}
+              html={html}
+              showPageNumbers={showPageNumbers}
+              layoutMode={layoutMode}
+              config={finalConfig}
+            />
+          )
+        }
+      </>
+    );
+  }
+};
+  
+  const CardPreview = forwardRef<HTMLDivElement, object>((props, ref) => {
+    const { content: markdown } = useEditorStore();
   const { getImageUrl } = useImageStore();
   const {
     selectedTheme,
@@ -160,6 +301,7 @@ const CardPreview = forwardRef<HTMLDivElement, object>((props, ref) => {
       breaks: false,
     });
     
+    // 正常处理，不在这里分割
     let result;
     if (!renderer) {
       result = await marked.parse(markdown);
@@ -173,9 +315,9 @@ const CardPreview = forwardRef<HTMLDivElement, object>((props, ref) => {
 
   useEffect(() => {
     markdownToHtml(markdown).then(parsed => {
-      devLog.log('Setting HTML:', parsed);
-      setHtml(parsed);
-    });
+        devLog.log('Setting HTML:', parsed);
+        setHtml(parsed);
+      });
   }, [markdown, renderer, selectedTheme]);
 
   // 获取最终配置
@@ -214,33 +356,32 @@ const CardPreview = forwardRef<HTMLDivElement, object>((props, ref) => {
         fontFamily: cssVariables['--card-font-family'] || 'var(--font-family)',
         backgroundColor: cssVariables['--card-color-background'] || 'var(--bg-tertiary)',
         color: cssVariables['--card-color-text'] || 'var(--text-primary)',
+        overflow: 'auto',
+        overflowX: 'hidden',
+        overflowY: 'auto',
+        scrollBehavior: 'smooth',
+        isolation: 'isolate',
         ...cssVariables, // Apply all CSS variables to this container
+      }}
+      onWheel={(e) => {
+        // Completely prevent wheel events from bubbling up to parent elements
+        e.stopPropagation();
+        e.preventDefault();
       }}
     >
       <div ref={ref} className="export-content" style={{ width: '100%', maxWidth: `${width}px`, position: 'relative' }}>
         <div ref={stickerContainerRef} style={{ position: 'relative', width: '100%', height: '100%' }}>
-          {
-            viewMode === "长卡片" ? (
-              <LongMarkdownViewer
-                html={html}
-                CardComponent={UniversalCard}
-                pageWidth={width}
-                showPageNumbers={showPageNumbers}
-                layoutMode={layoutMode}
-                config={finalConfig}
-              />
-            ) : (
-              <PaginatedMarkdownViewer
-                CardComponent={UniversalCard}
-                pageWidth={width}
-                pageHeight={height}
-                html={html}
-                showPageNumbers={showPageNumbers}
-                layoutMode={layoutMode}
-                config={finalConfig}
-              />
-            )
-          }
+          <CardSections 
+            markdown={markdown}
+            renderer={renderer}
+            viewMode={viewMode}
+            width={width}
+            height={height}
+            showPageNumbers={showPageNumbers}
+            layoutMode={layoutMode}
+            finalConfig={finalConfig}
+            html={html}
+          />
           
           {/* Sticker Overlay */}
           <StickerOverlay containerRef={stickerContainerRef} />

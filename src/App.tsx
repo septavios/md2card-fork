@@ -75,7 +75,7 @@ function App() {
         
         const dataUrl = await htmlToImage.toPng(previewRef.current, {
           backgroundColor: 'transparent',
-          pixelRatio: 2, // Higher quality
+          pixelRatio: 3, // Higher quality for social media
           skipAutoScale: true
         });
         
@@ -115,12 +115,20 @@ function App() {
           gutterAlign="start"
           gutterSize={10}
         >
-          <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
+          <div style={{ 
+            height: "100%", 
+            display: "flex", 
+            flexDirection: "column",
+            position: "relative"
+          }}>
             <ErrorBoundary>
               <MarkdownEditor />
             </ErrorBoundary>
           </div>
-          <div style={{ height: "100%" }}>
+          <div style={{ 
+            height: "100%",
+            position: "relative"
+          }}>
             <ErrorBoundary>
               <CardPreview ref={previewRef} />
             </ErrorBoundary>

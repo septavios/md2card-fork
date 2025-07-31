@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { Renderer, Tokens } from "marked";
+import { marked, Renderer, Tokens } from "marked";
+import { useImageStore } from "../../stores/imageStore";
 import { CardConfig, CardProps } from "../../themeConfigs";
 import { createSafeHtml } from "../../utils/htmlSanitizer";
 
@@ -314,8 +315,60 @@ const Card: React.FC<CardProps> = ({
   height: settingHeight,
   containerRef,
 }) => {
+  const { getImageUrl } = useImageStore();
+  const [renderedHtml, setRenderedHtml] = useState<string>('');
   const width = settingWidth;
   const height = !settingHeight ? "auto" : settingHeight;
+
+  useEffect(() => {
+    // Create a custom renderer that handles img: references
+    const customRender = new Renderer();
+    
+    // Copy all existing render methods
+    Object.assign(customRender, render);
+    
+    // Override the image renderer to handle img: references
+    customRender.image = function ({ href, title, text }: Tokens.Image) {
+      // Handle img: references
+      if (href.startsWith('img:')) {
+        const imageId = href.substring(4); // Remove 'img:' prefix
+        const blobUrl = getImageUrl(imageId);
+        
+        if (blobUrl) {
+          return `<img class="md-image" src="${blobUrl}" alt="${text}" ${title ? `title="${title}"` : ''} />`;
+        } else {
+          // Fallback for missing images
+          return `<div class="missing-image" style="
+            padding: 20px;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            text-align: center;
+            color: #666;
+            background: rgba(0,0,0,0.05);
+            margin: 10px 0;
+          ">
+            <div>Image not found: ${text}</div>
+            <small style="color: #999;">
+              The image may have been removed or the page was refreshed.<br>
+              Please re-upload the image.
+            </small>
+          </div>`;
+        }
+      }
+      
+      // Handle regular image URLs
+      return `<img class="md-image" src="${href}" alt="${text}" ${title ? `title="${title}"` : ''} />`;
+    };
+
+    // Re-render the page content with the custom renderer
+    const result = marked.parse(page, { renderer: customRender });
+    
+    if (typeof result === 'string') {
+      setRenderedHtml(result);
+    } else {
+      result.then(setRenderedHtml);
+    }
+  }, [page, getImageUrl]);
 
   return (
 
@@ -326,7 +379,7 @@ const Card: React.FC<CardProps> = ({
       <div
         className="card-content"
         ref={containerRef}
-        dangerouslySetInnerHTML={createSafeHtml(page)}
+        dangerouslySetInnerHTML={createSafeHtml(renderedHtml)}
       />
     </CardContainer>
   );

@@ -526,22 +526,108 @@ export const appleNotesDarkTheme: ThemeConfig = {
       
       // 强调文本 - 增强产品复盘文章的视觉效果
       '.md-strong, strong': {
-        color: '#ff9f0a', // Apple橙色，用于强调关键词如"问题："、"解决策略："
-        fontWeight: 700,
-        background: 'linear-gradient(135deg, rgba(255, 159, 10, 0.1) 0%, rgba(255, 159, 10, 0.05) 100%)',
-        padding: '2px 6px',
-        borderRadius: '4px',
-        fontSize: '16px',
+        color: '#ff9f0a !important', // Apple橙色，用于强调关键词如"问题："、"解决策略："
+        fontWeight: '700 !important',
+        background: 'linear-gradient(135deg, rgba(255, 159, 10, 0.1) 0%, rgba(255, 159, 10, 0.05) 100%) !important',
+        padding: '2px 6px !important',
+        borderRadius: '4px !important',
+        fontSize: '16px !important',
+      },
+      
+      // 更高优先级的选择器，确保覆盖其他卡片组件的样式
+      '.card-apple-notes .md-strong, .card-apple-notes strong': {
+        color: '#ff9f0a !important',
+        fontWeight: '700 !important',
+        background: 'linear-gradient(135deg, rgba(255, 159, 10, 0.1) 0%, rgba(255, 159, 10, 0.05) 100%) !important',
+        padding: '2px 6px !important',
+        borderRadius: '4px !important',
+        fontSize: '16px !important',
+      },
+      
+      // 最高优先级选择器，覆盖所有可能的样式冲突，包括styled-components
+      'div.card.card-apple-notes .card-content .card-content-inner .md-strong, div.card.card-apple-notes .card-content .card-content-inner strong': {
+        color: '#ff9f0a !important',
+        fontWeight: '700 !important',
+        background: 'linear-gradient(135deg, rgba(255, 159, 10, 0.1) 0%, rgba(255, 159, 10, 0.05) 100%) !important',
+        padding: '2px 6px !important',
+        borderRadius: '4px !important',
+        fontSize: '16px !important',
       },
       
       // 确保列表内的强调文本也有正确的样式
       'ul .md-strong, ul strong, ol .md-strong, ol strong, li .md-strong, li strong': {
         color: '#ff9f0a !important',
-        fontWeight: 700,
+        fontWeight: '700 !important',
         background: 'linear-gradient(135deg, rgba(255, 159, 10, 0.1) 0%, rgba(255, 159, 10, 0.05) 100%) !important',
-        padding: '2px 6px',
-        borderRadius: '4px',
-        fontSize: '16px',
+        padding: '2px 6px !important',
+        borderRadius: '4px !important',
+        fontSize: '16px !important',
+      },
+      
+      // 更高优先级的列表选择器，确保覆盖其他卡片组件的样式
+      '.card-apple-notes ul .md-strong, .card-apple-notes ul strong, .card-apple-notes ol .md-strong, .card-apple-notes ol strong, .card-apple-notes li .md-strong, .card-apple-notes li strong': {
+        color: '#ff9f0a !important',
+        fontWeight: '700 !important',
+        background: 'linear-gradient(135deg, rgba(255, 159, 10, 0.1) 0%, rgba(255, 159, 10, 0.05) 100%) !important',
+        padding: '2px 6px !important',
+        borderRadius: '4px !important',
+        fontSize: '16px !important',
+      },
+      
+      // 最高优先级列表选择器，覆盖所有可能的样式冲突，包括styled-components
+      'div.card.card-apple-notes .card-content .card-content-inner ul .md-strong, div.card.card-apple-notes .card-content .card-content-inner ul strong, div.card.card-apple-notes .card-content .card-content-inner ol .md-strong, div.card.card-apple-notes .card-content .card-content-inner ol strong, div.card.card-apple-notes .card-content .card-content-inner li .md-strong, div.card.card-apple-notes .card-content .card-content-inner li strong': {
+        color: '#ff9f0a !important',
+        fontWeight: '700 !important',
+        background: 'linear-gradient(135deg, rgba(255, 159, 10, 0.1) 0%, rgba(255, 159, 10, 0.05) 100%) !important',
+        padding: '2px 6px !important',
+        borderRadius: '4px !important',
+        fontSize: '16px !important',
+      },
+      
+      // 超高优先级选择器，针对所有可能的列表嵌套结构
+      'div.card.card-apple-notes .card-content .card-content-inner ul li .md-strong, div.card.card-apple-notes .card-content .card-content-inner ul li strong, div.card.card-apple-notes .card-content .card-content-inner ol li .md-strong, div.card.card-apple-notes .card-content .card-content-inner ol li strong, div.card.card-apple-notes .card-content .card-content-inner li.md-listitem .md-strong, div.card.card-apple-notes .card-content .card-content-inner li.md-listitem strong': {
+        color: '#ff9f0a !important',
+        fontWeight: '700 !important',
+        background: 'linear-gradient(135deg, rgba(255, 159, 10, 0.1) 0%, rgba(255, 159, 10, 0.05) 100%) !important',
+        padding: '2px 6px !important',
+        borderRadius: '4px !important',
+        fontSize: '16px !important',
+      },
+      
+      // 终极优先级选择器，使用属性选择器和伪类
+      'div.card.card-apple-notes .card-content .card-content-inner [class*="md-"] .md-strong, div.card.card-apple-notes .card-content .card-content-inner [class*="md-"] strong, div.card.card-apple-notes .card-content .card-content-inner .md-listitem .md-strong, div.card.card-apple-notes .card-content .card-content-inner .md-listitem strong': {
+        color: '#ff9f0a !important',
+        fontWeight: '700 !important',
+        background: 'linear-gradient(135deg, rgba(255, 159, 10, 0.1) 0%, rgba(255, 159, 10, 0.05) 100%) !important',
+        padding: '2px 6px !important',
+        borderRadius: '4px !important',
+        fontSize: '16px !important',
+      },
+      
+      // 使用CSS自定义属性和最高优先级选择器
+      'div.card.card-apple-notes .card-content .card-content-inner': {
+        '--apple-notes-bold-color': '#ff9f0a',
+        '--apple-notes-bold-bg': 'linear-gradient(135deg, rgba(255, 159, 10, 0.1) 0%, rgba(255, 159, 10, 0.05) 100%)',
+      },
+      
+      // 使用CSS变量的超高优先级选择器
+      'div.card.card-apple-notes .card-content .card-content-inner .md-strong[class], div.card.card-apple-notes .card-content .card-content-inner strong[class]': {
+        color: 'var(--apple-notes-bold-color, #ff9f0a) !important',
+        fontWeight: '700 !important',
+        background: 'var(--apple-notes-bold-bg, linear-gradient(135deg, rgba(255, 159, 10, 0.1) 0%, rgba(255, 159, 10, 0.05) 100%)) !important',
+        padding: '2px 6px !important',
+        borderRadius: '4px !important',
+        fontSize: '16px !important',
+      },
+      
+      // 针对所有可能的强调文本，无论在什么容器中
+      'div.card.card-apple-notes .card-content .card-content-inner *:not(code):not(pre) > .md-strong, div.card.card-apple-notes .card-content .card-content-inner *:not(code):not(pre) > strong': {
+        color: '#ff9f0a !important',
+        fontWeight: '700 !important',
+        background: 'linear-gradient(135deg, rgba(255, 159, 10, 0.1) 0%, rgba(255, 159, 10, 0.05) 100%) !important',
+        padding: '2px 6px !important',
+        borderRadius: '4px !important',
+        fontSize: '16px !important',
       },
       
       '.md-em, em': {

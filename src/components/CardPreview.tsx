@@ -1,6 +1,7 @@
 import { marked } from "marked";
 import useSettingsStore from "../stores/settingsStore";
 import useEditorStore from "../stores/editorStore";
+import { useImageStore } from "../stores/imageStore";
 
 import "../styles/themes.css";
 import { useEffect, useState, forwardRef, useMemo, useRef } from "react";
@@ -15,6 +16,7 @@ import { devLog } from '../utils/logger';
 
 const CardPreview = forwardRef<HTMLDivElement, object>((props, ref) => {
   const { content: markdown } = useEditorStore();
+  const { getImageUrl } = useImageStore();
   const {
     selectedTheme,
     cardWidth: width,
@@ -54,8 +56,98 @@ const CardPreview = forwardRef<HTMLDivElement, object>((props, ref) => {
     }
   }, [selectedFont, fontSize, lineHeight, background, hasUserCustomizations.background]);
 
-  // 获取主题渲染器
-  const renderer = themeManager.getThemeRenderer(selectedTheme);
+  // 获取主题渲染器并扩展它以处理图片引用
+  const renderer = useMemo(() => {
+    const baseRenderer = themeManager.getThemeRenderer(selectedTheme);
+    
+    if (!baseRenderer) {
+      // Create a new renderer if no base renderer exists
+      const customRenderer = new marked.Renderer();
+      
+      // Override image rendering to handle img: references
+      customRenderer.image = function(token: any) {
+        const { href, title, text } = token;
+        
+        if (href.startsWith('img:')) {
+          const imageId = href.substring(4); // Remove 'img:' prefix
+          const blobUrl = getImageUrl(imageId);
+          
+          if (blobUrl) {
+            return `<img class="md-image" src="${blobUrl}" alt="${text}" ${title ? `title="${title}"` : ''} />`;
+          } else {
+            // Fallback for missing images - show a more helpful message
+            return `<div class="missing-image" style="
+              color: #666; 
+              font-style: italic; 
+              padding: 20px; 
+              border: 2px dashed #ccc; 
+              border-radius: 8px; 
+              text-align: center;
+              background: #f9f9f9;
+              margin: 10px 0;
+            ">
+              <div style="font-size: 24px; margin-bottom: 8px;">📷</div>
+              <div>Image not found: ${text}</div>
+              <div style="font-size: 12px; color: #999; margin-top: 4px;">
+                The image may have been removed or the page was refreshed.<br>
+                Please re-upload the image.
+              </div>
+            </div>`;
+          }
+        }
+        
+        // Handle regular image URLs
+        return `<img class="md-image" src="${href}" alt="${text}" ${title ? `title="${title}"` : ''} />`;
+      };
+      
+      return customRenderer;
+    } else {
+      // Extend existing renderer
+      const originalImage = baseRenderer.image;
+      
+      baseRenderer.image = function(token: any) {
+        const { href, title, text } = token;
+        
+        if (href.startsWith('img:')) {
+          const imageId = href.substring(4); // Remove 'img:' prefix
+          const blobUrl = getImageUrl(imageId);
+          
+          if (blobUrl) {
+            // Create a new token with the resolved blob URL
+            const newToken = { ...token, href: blobUrl };
+            return originalImage ? originalImage.call(this, newToken) : 
+                   `<img class="md-image" src="${blobUrl}" alt="${text}" ${title ? `title="${title}"` : ''} />`;
+          } else {
+            // Fallback for missing images - show a more helpful message
+            return `<div class="missing-image" style="
+              color: #666; 
+              font-style: italic; 
+              padding: 20px; 
+              border: 2px dashed #ccc; 
+              border-radius: 8px; 
+              text-align: center;
+              background: #f9f9f9;
+              margin: 10px 0;
+            ">
+              <div style="font-size: 24px; margin-bottom: 8px;">📷</div>
+              <div>Image not found: ${text}</div>
+              <div style="font-size: 12px; color: #999; margin-top: 4px;">
+                The image may have been removed or the page was refreshed.<br>
+                Please re-upload the image.
+              </div>
+            </div>`;
+          }
+        }
+        
+        // Use original renderer for regular URLs
+        return originalImage ? originalImage.call(this, token) : 
+               `<img class="md-image" src="${href}" alt="${text}" ${title ? `title="${title}"` : ''} />`;
+      };
+      
+      return baseRenderer;
+    }
+  }, [selectedTheme, getImageUrl]);
+  
   devLog.log(`Getting renderer for theme ${selectedTheme}:`, renderer);
 
   async function markdownToHtml(markdown: string) {

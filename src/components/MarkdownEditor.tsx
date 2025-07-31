@@ -1,5 +1,5 @@
 import { Editor } from "@monaco-editor/react";
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
 import {
   FiBold,
   FiItalic,
@@ -15,15 +15,162 @@ import {
 import { TbH1, TbH2, TbH3 } from "react-icons/tb";
 import useEditorStore from "../stores/editorStore";
 import useThemeStore from "../stores/themeStore";
+import { useImageStore } from "../stores/imageStore";
 import WritingStats from "./WritingStats";
 
 const MarkdownEditor: React.FC = () => {
   const { content, setContent } = useEditorStore();
   const { isDarkMode } = useThemeStore();
+  const { addImage } = useImageStore();
   const [isMonacoLoaded, setIsMonacoLoaded] = useState(false);
   const [monacoError, setMonacoError] = useState<string | null>(null);
 
   const editorRef = useRef<any>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Convert file to base64
+  const fileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = error => reject(error);
+    });
+  };
+
+  // Insert image markdown at cursor position
+  const insertImageMarkdown = useCallback((imageId: string, altText: string = "image") => {
+    const editor = editorRef.current;
+    if (!editor) return;
+
+    const position = editor.getPosition();
+    if (!position) return;
+
+    // Use a clean, user-friendly reference format
+    const imageMarkdown = `![${altText}](img:${imageId})`;
+    
+    editor.executeEdits("", [
+      {
+        range: {
+          startLineNumber: position.lineNumber,
+          startColumn: position.column,
+          endLineNumber: position.lineNumber,
+          endColumn: position.column,
+        },
+        text: imageMarkdown,
+      },
+    ]);
+
+    // Move cursor to end of inserted text
+    const newPosition = {
+      lineNumber: position.lineNumber,
+      column: position.column + imageMarkdown.length,
+    };
+    editor.setPosition(newPosition);
+    editor.focus();
+  }, []);
+
+  // Handle paste events for images
+  const handlePaste = useCallback(async (event: ClipboardEvent) => {
+    const items = event.clipboardData?.items;
+    if (!items) return;
+
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      if (item.type.startsWith('image/')) {
+        event.preventDefault();
+        
+        const file = item.getAsFile();
+        if (!file) continue;
+
+        try {
+          // Add image to store and get the ID
+          const imageId = await addImage(file);
+          
+          // Use original filename if available, otherwise generate a name
+          const altText = file.name && file.name !== 'image.png' ? 
+            file.name.split('.')[0] : `pasted-image-${Date.now()}`;
+          insertImageMarkdown(imageId, altText);
+        } catch (error) {
+          console.error('Error handling pasted image:', error);
+        }
+        break;
+      }
+    }
+  }, [insertImageMarkdown, addImage]);
+
+  // Handle file input change
+  const handleFileSelect = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Check if it's an image file
+    if (!file.type.startsWith('image/')) {
+      alert('请选择图片文件');
+      return;
+    }
+
+    try {
+      // Add image to store and get the ID
+      const imageId = await addImage(file);
+      
+      // Use original filename without extension as alt text
+      const altText = file.name.split('.')[0] || `uploaded-image-${imageId}`;
+      insertImageMarkdown(imageId, altText);
+      
+      // Clear the file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    } catch (error) {
+      console.error('Error handling selected image:', error);
+    }
+  }, [insertImageMarkdown, addImage]);
+
+  // Handle paste events for textarea
+  const handleTextareaPaste = useCallback(async (event: React.ClipboardEvent<HTMLTextAreaElement>) => {
+    const items = event.clipboardData?.items;
+    if (!items) return;
+
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      
+      // Check if the item is an image
+      if (item.type.indexOf('image') !== -1) {
+        event.preventDefault();
+        
+        const file = item.getAsFile();
+        if (file) {
+          try {
+            const base64 = await fileToBase64(file);
+            const altText = `pasted-image-${Date.now()}`;
+            const imageMarkdown = `![${altText}](${base64})`;
+            
+            // Insert at current cursor position in textarea
+            const textarea = event.target as HTMLTextAreaElement;
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const newContent = content.substring(0, start) + imageMarkdown + content.substring(end);
+            setContent(newContent);
+            
+            // Set cursor position after inserted text
+            setTimeout(() => {
+              textarea.selectionStart = textarea.selectionEnd = start + imageMarkdown.length;
+              textarea.focus();
+            }, 0);
+          } catch (error) {
+            console.error('Error converting image to base64:', error);
+          }
+        }
+        break;
+      }
+    }
+  }, [content, setContent, fileToBase64]);
+
+  // Handle image button click
+  const handleImageButtonClick = () => {
+    fileInputRef.current?.click();
+  };
 
   const handleFormat = (format: string) => {
     const editor = editorRef.current;
@@ -62,8 +209,8 @@ const MarkdownEditor: React.FC = () => {
         newText = `[${selectedText}](url)`;
         break;
       case "image":
-        newText = `![${selectedText}](url)`;
-        break;
+        handleImageButtonClick();
+        return;
       case "code":
         newText = selectedText.includes("\n")
           ? `\`\`\`\n${selectedText}\n\`\`\``
@@ -121,6 +268,14 @@ const MarkdownEditor: React.FC = () => {
       className="h-full shadow-sm overflow-hidden flex flex-col"
       style={{ backgroundColor: 'var(--bg-primary)' }}
     >
+      {/* Hidden file input for image selection */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        onChange={handleFileSelect}
+        style={{ display: 'none' }}
+      />
       <div 
         className="flex items-center gap-1 p-2 border-b"
         style={{ 
@@ -215,6 +370,7 @@ const MarkdownEditor: React.FC = () => {
               <textarea
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
+                onPaste={handleTextareaPaste}
                 className="flex-1 w-full p-4 border outline-none resize-none font-mono text-sm rounded"
                 style={{
                   backgroundColor: 'var(--bg-primary)',
@@ -234,6 +390,12 @@ const MarkdownEditor: React.FC = () => {
                onMount={(editor, monaco) => {
                  editorRef.current = editor;
                  setIsMonacoLoaded(true);
+                 
+                 // Add paste event listener for image handling
+                 const editorDomNode = editor.getDomNode();
+                 if (editorDomNode) {
+                   editorDomNode.addEventListener('paste', handlePaste);
+                 }
                }}
                loading={
                  <div 

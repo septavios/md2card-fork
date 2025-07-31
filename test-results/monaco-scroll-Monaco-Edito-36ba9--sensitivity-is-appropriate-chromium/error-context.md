@@ -37,17 +37,17 @@
 - img
 - text: 创作统计
 - img
-- text: "180"
+- text: "420"
 - img
-- text: 1分
+- text: 2分
 - img
-- text: "15"
+- text: "14"
 - img
 - text: "4"
 - img
-- text: 不错的开始，可以添加更多细节
+- text: 内容充实，适合短文分享
 - code:
-  - textbox "Editor content"
+  - textbox "Editor content": Scroll test line 73 Scroll test line 74 Scroll test line 75 Scroll test line 76 Scroll test line 77 Scroll test line 78 Scroll test line 79 Scroll test line 80 | 姓名 | 分数 | 等级 | |------|------|------|
 - text: 备忘录
 - heading "📚一级标题" [level=1]
 - paragraph: 这是一个很长很长的段落，用于测试分页系统对普通文本的智能分割能力。这段话会被自动拆分到多个页面中，确保页面不会出现内容溢出问题。
@@ -61,6 +61,7 @@
   - listitem: • 有序项二
   - listitem: • 有序项三
 - heading "🚀表格示例" [level=3]
+- paragraph: Scroll test line 1 Scroll test line 2 Scroll test line 3 Scroll test line 4 Scroll test line 5 Scroll test line 6 Scroll test line 7 Scroll test line 8 Scroll test line 9 Scroll test line 10 Scroll test line 11 Scroll test line 12 Scroll test line 13 Scroll test line 14 Scroll test line 15 Scroll test line 16 Scroll test line 17 Scroll test line 18 Scroll test line 19 Scroll test line 20 Scroll test line 21 Scroll test line 22 Scroll test line 23 Scroll test line 24 Scroll test line 25 Scroll test line 26 Scroll test line 27 Scroll test line 28 Scroll test line 29 Scroll test line 30 Scroll test line 31 Scroll test line 32 Scroll test line 33 Scroll test line 34 Scroll test line 35 Scroll test line 36 Scroll test line 37 Scroll test line 38 Scroll test line 39 Scroll test line 40 Scroll test line 41 Scroll test line 42 Scroll test line 43 Scroll test line 44 Scroll test line 45 Scroll test line 46 Scroll test line 47 Scroll test line 48 Scroll test line 49 Scroll test line 50 Scroll test line 51 Scroll test line 52 Scroll test line 53 Scroll test line 54 Scroll test line 55 Scroll test line 56 Scroll test line 57 Scroll test line 58 Scroll test line 59 Scroll test line 60 Scroll test line 61 Scroll test line 62 Scroll test line 63 Scroll test line 64 Scroll test line 65 Scroll test line 66 Scroll test line 67 Scroll test line 68 Scroll test line 69 Scroll test line 70 Scroll test line 71 Scroll test line 72 Scroll test line 73 Scroll test line 74 Scroll test line 75 Scroll test line 76 Scroll test line 77 Scroll test line 78 Scroll test line 79 Scroll test line 80
 - table:
   - rowgroup:
     - row "姓名 分数 等级":

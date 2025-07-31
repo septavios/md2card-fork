@@ -37,17 +37,19 @@
 - img
 - text: 创作统计
 - img
-- text: "180"
+- text: "321"
 - img
-- text: 1分
+- text: 2分
 - img
-- text: "15"
+- text: "14"
 - img
 - text: "4"
 - img
-- text: 不错的开始，可以添加更多细节
+- text: 内容充实，适合短文分享
 - code:
-  - textbox "Editor content"
+  - textbox "Editor content": "Test line 65 Test line 66 Test line 67 Test line 68 Test line 69 Test line 70 Tes 行内代码示例：`console.log('Hello')` ```javascript"
+  - listbox "Suggest":
+    - option "Test":  Test
 - text: 备忘录
 - heading "📚一级标题" [level=1]
 - paragraph: 这是一个很长很长的段落，用于测试分页系统对普通文本的智能分割能力。这段话会被自动拆分到多个页面中，确保页面不会出现内容溢出问题。
@@ -101,10 +103,9 @@
   - img "占位图"
 - heading "🚀引用和代码" [level=3]
 - blockquote:
-  - paragraph: 这是一段引用内容，用于测试分页逻辑。
-- paragraph:
-  - text: 行内代码示例：
-  - code: console.log('Hello')
+  - paragraph:
+    - text: 这是一段引用内容，用于测试分页逻辑。 Test line 1 Test line 2 Test line 3 Test line 4 Test line 5 Test line 6 Test line 7 Test line 8 Test line 9 Test line 10 Test line 11 Test line 12 Test line 13 Test line 14 Test line 15 Test line 16 Test line 17 Test line 18 Test line 19 Test line 20 Test line 21 Test line 22 Test line 23 Test line 24 Test line 25 Test line 26 Test line 27 Test line 28 Test line 29 Test line 30 Test line 31 Test line 32 Test line 33 Test line 34 Test line 35 Test line 36 Test line 37 Test line 38 Test line 39 Test line 40 Test line 41 Test line 42 Test line 43 Test line 44 Test line 45 Test line 46 Test line 47 Test line 48 Test line 49 Test line 50 Test line 51 Test line 52 Test line 53 Test line 54 Test line 55 Test line 56 Test line 57 Test line 58 Test line 59 Test line 60 Test line 61 Test line 62 Test line 63 Test line 64 Test line 65 Test line 66 Test line 67 Test line 68 Test line 69 Test line 70 Tes 行内代码示例：
+    - code: console.log('Hello')
 - code: "function greet(name) { console.log(\"Hello \" + name); } greet(\"World\");"
 - paragraph: 分页测试结束。
 - button "⬇"

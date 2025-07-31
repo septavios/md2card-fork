@@ -37,17 +37,19 @@
 - img
 - text: 创作统计
 - img
-- text: "180"
+- text: "723"
 - img
-- text: 1分
+- text: 4分
 - img
-- text: "15"
+- text: "14"
 - img
 - text: "4"
 - img
-- text: 不错的开始，可以添加更多细节
+- text: 篇幅适中，很好的长度
 - code:
-  - textbox "Editor content"
+  - textbox "Editor content": This is a long line of text that will create scrollable content in the Monaco Editor. 32 This is a long line of text that will create scrollable content in the Monaco Editor. 33 This is a long line of text that will create scrollable content in the Monac | 姓名 | 分数 | 等级 | |------|------|------| | Alice | 95 | A | | Bob | 88 | B |
+  - listbox "Suggest":
+    - option "Monaco":  Monaco
 - text: 备忘录
 - heading "📚一级标题" [level=1]
 - paragraph: 这是一个很长很长的段落，用于测试分页系统对普通文本的智能分割能力。这段话会被自动拆分到多个页面中，确保页面不会出现内容溢出问题。
@@ -61,6 +63,7 @@
   - listitem: • 有序项二
   - listitem: • 有序项三
 - heading "🚀表格示例" [level=3]
+- paragraph: This is a long line of text that will create scrollable content in the Monaco Editor. 1 This is a long line of text that will create scrollable content in the Monaco Editor. 2 This is a long line of text that will create scrollable content in the Monaco Editor. 3 This is a long line of text that will create scrollable content in the Monaco Editor. 4 This is a long line of text that will create scrollable content in the Monaco Editor. 5 This is a long line of text that will create scrollable content in the Monaco Editor. 6 This is a long line of text that will create scrollable content in the Monaco Editor. 7 This is a long line of text that will create scrollable content in the Monaco Editor. 8 This is a long line of text that will create scrollable content in the Monaco Editor. 9 This is a long line of text that will create scrollable content in the Monaco Editor. 10 This is a long line of text that will create scrollable content in the Monaco Editor. 11 This is a long line of text that will create scrollable content in the Monaco Editor. 12 This is a long line of text that will create scrollable content in the Monaco Editor. 13 This is a long line of text that will create scrollable content in the Monaco Editor. 14 This is a long line of text that will create scrollable content in the Monaco Editor. 15 This is a long line of text that will create scrollable content in the Monaco Editor. 16 This is a long line of text that will create scrollable content in the Monaco Editor. 17 This is a long line of text that will create scrollable content in the Monaco Editor. 18 This is a long line of text that will create scrollable content in the Monaco Editor. 19 This is a long line of text that will create scrollable content in the Monaco Editor. 20 This is a long line of text that will create scrollable content in the Monaco Editor. 21 This is a long line of text that will create scrollable content in the Monaco Editor. 22 This is a long line of text that will create scrollable content in the Monaco Editor. 23 This is a long line of text that will create scrollable content in the Monaco Editor. 24 This is a long line of text that will create scrollable content in the Monaco Editor. 25 This is a long line of text that will create scrollable content in the Monaco Editor. 26 This is a long line of text that will create scrollable content in the Monaco Editor. 27 This is a long line of text that will create scrollable content in the Monaco Editor. 28 This is a long line of text that will create scrollable content in the Monaco Editor. 29 This is a long line of text that will create scrollable content in the Monaco Editor. 30 This is a long line of text that will create scrollable content in the Monaco Editor. 31 This is a long line of text that will create scrollable content in the Monaco Editor. 32 This is a long line of text that will create scrollable content in the Monaco Editor. 33 This is a long line of text that will create scrollable content in the Monac
 - table:
   - rowgroup:
     - row "姓名 分数 等级":

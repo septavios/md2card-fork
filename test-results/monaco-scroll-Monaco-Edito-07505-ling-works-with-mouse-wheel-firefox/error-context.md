@@ -37,17 +37,17 @@
 - img
 - text: 创作统计
 - img
-- text: "180"
+- text: "330"
 - img
-- text: 1分
+- text: 2分
 - img
-- text: "15"
+- text: "14"
 - img
 - text: "4"
 - img
-- text: 不错的开始，可以添加更多细节
+- text: 内容充实，适合短文分享
 - code:
-  - textbox "Editor content"
+  - textbox "Editor content": "This is line 45 This is line 46 This is line 47 This is line 48 This is line 49 This is line 50 行内代码示例：`console.log('Hello')` ```javascript function greet(name) {"
 - text: 备忘录
 - heading "📚一级标题" [level=1]
 - paragraph: 这是一个很长很长的段落，用于测试分页系统对普通文本的智能分割能力。这段话会被自动拆分到多个页面中，确保页面不会出现内容溢出问题。
@@ -101,10 +101,9 @@
   - img "占位图"
 - heading "🚀引用和代码" [level=3]
 - blockquote:
-  - paragraph: 这是一段引用内容，用于测试分页逻辑。
-- paragraph:
-  - text: 行内代码示例：
-  - code: console.log('Hello')
+  - paragraph:
+    - text: 这是一段引用内容，用于测试分页逻辑。 This is line 1 This is line 2 This is line 3 This is line 4 This is line 5 This is line 6 This is line 7 This is line 8 This is line 9 This is line 10 This is line 11 This is line 12 This is line 13 This is line 14 This is line 15 This is line 16 This is line 17 This is line 18 This is line 19 This is line 20 This is line 21 This is line 22 This is line 23 This is line 24 This is line 25 This is line 26 This is line 27 This is line 28 This is line 29 This is line 30 This is line 31 This is line 32 This is line 33 This is line 34 This is line 35 This is line 36 This is line 37 This is line 38 This is line 39 This is line 40 This is line 41 This is line 42 This is line 43 This is line 44 This is line 45 This is line 46 This is line 47 This is line 48 This is line 49 This is line 50 行内代码示例：
+    - code: console.log('Hello')
 - code: "function greet(name) { console.log(\"Hello \" + name); } greet(\"World\");"
 - paragraph: 分页测试结束。
 - button "⬇"

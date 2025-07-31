@@ -37,17 +37,19 @@
 - img
 - text: 创作统计
 - img
-- text: "180"
+- text: "355"
 - img
-- text: 1分
+- text: 2分
 - img
-- text: "15"
+- text: "14"
 - img
 - text: "4"
 - img
-- text: 不错的开始，可以添加更多细节
+- text: 内容充实，适合短文分享
 - code:
-  - textbox "Editor content"
+  - textbox "Editor content": "This is a long line of text that will create scrollable content in the Monaco Editor. 8 This is a long line of text that will create scrollable content in the Monaco Editor. 9 This is a long line of text that will create scrollable content in the Monaco Editor. 10 This is a long line of text that will create scrollable content in the Mon 行内代码示例：`console.log('Hello')`"
+  - listbox "Suggest":
+    - option "Monaco": 
 - text: 备忘录
 - heading "📚一级标题" [level=1]
 - paragraph: 这是一个很长很长的段落，用于测试分页系统对普通文本的智能分割能力。这段话会被自动拆分到多个页面中，确保页面不会出现内容溢出问题。
@@ -101,10 +103,9 @@
   - img "占位图"
 - heading "🚀引用和代码" [level=3]
 - blockquote:
-  - paragraph: 这是一段引用内容，用于测试分页逻辑。
-- paragraph:
-  - text: 行内代码示例：
-  - code: console.log('Hello')
+  - paragraph:
+    - text: 这是一段引用内容，用于测试分页逻辑。 This is a long line of text that will create scrollable content in the Monaco Editor. 1 This is a long line of text that will create scrollable content in the Monaco Editor. 2 This is a long line of text that will create scrollable content in the Monaco Editor. 3 This is a long line of text that will create scrollable content in the Monaco Editor. 4 This is a long line of text that will create scrollable content in the Monaco Editor. 5 This is a long line of text that will create scrollable content in the Monaco Editor. 6 This is a long line of text that will create scrollable content in the Monaco Editor. 7 This is a long line of text that will create scrollable content in the Monaco Editor. 8 This is a long line of text that will create scrollable content in the Monaco Editor. 9 This is a long line of text that will create scrollable content in the Monaco Editor. 10 This is a long line of text that will create scrollable content in the Mo 行内代码示例：
+    - code: console.log('Hello')
 - code: "function greet(name) { console.log(\"Hello \" + name); } greet(\"World\");"
 - paragraph: 分页测试结束。
 - button "⬇"

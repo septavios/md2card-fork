@@ -37,17 +37,19 @@
 - img
 - text: 创作统计
 - img
-- text: "180"
+- text: "273"
 - img
-- text: 1分
+- text: 2分
 - img
-- text: "15"
+- text: "14"
 - img
 - text: "4"
 - img
-- text: 不错的开始，可以添加更多细节
+- text: 内容充实，适合短文分享
 - code:
-  - textbox "Editor content"
+  - textbox "Editor content": "Scroll test line 25 Scroll test line 26 Scroll test line 27 Scroll test line 28 Scroll test line 29 Scroll test line 30 Scroll test li 行内代码示例：`console.log('Hello')` ```javascript"
+  - listbox "Suggest":
+    - option "line":  line
 - text: 备忘录
 - heading "📚一级标题" [level=1]
 - paragraph: 这是一个很长很长的段落，用于测试分页系统对普通文本的智能分割能力。这段话会被自动拆分到多个页面中，确保页面不会出现内容溢出问题。
@@ -101,10 +103,9 @@
   - img "占位图"
 - heading "🚀引用和代码" [level=3]
 - blockquote:
-  - paragraph: 这是一段引用内容，用于测试分页逻辑。
-- paragraph:
-  - text: 行内代码示例：
-  - code: console.log('Hello')
+  - paragraph:
+    - text: 这是一段引用内容，用于测试分页逻辑。 Scroll test line 1 Scroll test line 2 Scroll test line 3 Scroll test line 4 Scroll test line 5 Scroll test line 6 Scroll test line 7 Scroll test line 8 Scroll test line 9 Scroll test line 10 Scroll test line 11 Scroll test line 12 Scroll test line 13 Scroll test line 14 Scroll test line 15 Scroll test line 16 Scroll test line 17 Scroll test line 18 Scroll test line 19 Scroll test line 20 Scroll test line 21 Scroll test line 22 Scroll test line 23 Scroll test line 24 Scroll test line 25 Scroll test line 26 Scroll test line 27 Scroll test line 28 Scroll test line 29 Scroll test line 30 Scroll test li 行内代码示例：
+    - code: console.log('Hello')
 - code: "function greet(name) { console.log(\"Hello \" + name); } greet(\"World\");"
 - paragraph: 分页测试结束。
 - button "⬇"

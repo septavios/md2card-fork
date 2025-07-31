@@ -37,17 +37,17 @@
 - img
 - text: 创作统计
 - img
-- text: "180"
+- text: "280"
 - img
-- text: 1分
+- text: 2分
 - img
-- text: "15"
+- text: "14"
 - img
 - text: "4"
 - img
-- text: 不错的开始，可以添加更多细节
+- text: 内容充实，适合短文分享
 - code:
-  - textbox "Editor content"
+  - textbox "Editor content": Content line 43 Content line 44 Content line 45 Content line 46 Content line 47 Content line 48 Content line 49 Content line 50 | 姓名 | 分数 | 等级 | |------|------|------|
 - text: 备忘录
 - heading "📚一级标题" [level=1]
 - paragraph: 这是一个很长很长的段落，用于测试分页系统对普通文本的智能分割能力。这段话会被自动拆分到多个页面中，确保页面不会出现内容溢出问题。
@@ -61,6 +61,7 @@
   - listitem: • 有序项二
   - listitem: • 有序项三
 - heading "🚀表格示例" [level=3]
+- paragraph: Content line 1 Content line 2 Content line 3 Content line 4 Content line 5 Content line 6 Content line 7 Content line 8 Content line 9 Content line 10 Content line 11 Content line 12 Content line 13 Content line 14 Content line 15 Content line 16 Content line 17 Content line 18 Content line 19 Content line 20 Content line 21 Content line 22 Content line 23 Content line 24 Content line 25 Content line 26 Content line 27 Content line 28 Content line 29 Content line 30 Content line 31 Content line 32 Content line 33 Content line 34 Content line 35 Content line 36 Content line 37 Content line 38 Content line 39 Content line 40 Content line 41 Content line 42 Content line 43 Content line 44 Content line 45 Content line 46 Content line 47 Content line 48 Content line 49 Content line 50
 - table:
   - rowgroup:
     - row "姓名 分数 等级":

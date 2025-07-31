@@ -37,17 +37,17 @@
 - img
 - text: 创作统计
 - img
-- text: "180"
+- text: "312"
 - img
-- text: 1分
+- text: 2分
 - img
 - text: "15"
 - img
 - text: "4"
 - img
-- text: 不错的开始，可以添加更多细节
+- text: 内容充实，适合短文分享
 - code:
-  - textbox "Editor content"
+  - textbox "Editor content": scrollable content in the Monaco Editor. 7 This is a long line of text that will create scrollable content in the Monaco Editor. 8 This is a l | 姓名 | 分数 | 等级 | |------|------|------| | Alice | 95 | A | | Bob | 88 | B | | Charlie | 92 | A |
 - text: 备忘录
 - heading "📚一级标题" [level=1]
 - paragraph: 这是一个很长很长的段落，用于测试分页系统对普通文本的智能分割能力。这段话会被自动拆分到多个页面中，确保页面不会出现内容溢出问题。
@@ -60,7 +60,8 @@
   - listitem: • 有序项一
   - listitem: • 有序项二
   - listitem: • 有序项三
-- heading "🚀表格示例" [level=3]
+- heading "🚀表格示例This is a long line of text that will create scrollable content in the Monaco Editor. 1" [level=3]
+- paragraph: This is a long line of text that will create scrollable content in the Monaco Editor. 2 This is a long line of text that will create scrollable content in the Monaco Editor. 3 This is a long line of text that will create scrollable content in the Monaco Editor. 4 This is a long line of text that will create scrollable content in the Monaco Editor. 5 This is a long line of text that will create scrollable content in the Monaco Editor. 6 This is a long line of text that will create scrollable content in the Monaco Editor. 7 This is a long line of text that will create scrollable content in the Monaco Editor. 8 This is a l
 - table:
   - rowgroup:
     - row "姓名 分数 等级":

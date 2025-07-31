@@ -21,10 +21,7 @@ const Layout: React.FC<LayoutProps> = ({ children, onExport }) => {
         className="flex flex-1"
         style={{ backgroundColor: 'var(--bg-secondary)' }}
       >
-        <div 
-          className="flex-1"
-          style={{ marginRight: isSettingsPanelVisible ? '320px' : '0px' }} // Conditional margin
-        >
+        <div className="flex-1">
           {children}
         </div>
         {isSettingsPanelVisible && <SettingsPanel />}

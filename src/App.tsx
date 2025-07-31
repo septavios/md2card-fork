@@ -109,36 +109,28 @@ function App() {
   return (
     <ErrorBoundary>
       <Layout onExport={handleExport}>
-        <Split
-          className="split flex-1"
-          style={{ width: "calc(100% - 300px)", height: "100%" }}
-          gutterAlign="start"
-          gutterSize={10}
+        <div
+          className="app-container"
+          style={{
+            gridTemplateColumns: isSettingsPanelVisible ? "1fr 1fr 320px" : "1fr 1fr"
+          }}
         >
-          <div style={{ 
-            height: "100%", 
-            display: "flex", 
-            flexDirection: "column",
-            position: "relative"
-          }}>
+          <div className="editor-container">
             <ErrorBoundary>
               <MarkdownEditor />
             </ErrorBoundary>
           </div>
-          <div style={{ 
-            height: "100%",
-            position: "relative"
-          }}>
+          <div className="preview-container">
             <ErrorBoundary>
               <CardPreview ref={previewRef} />
             </ErrorBoundary>
           </div>
-        </Split>
+          {isSettingsPanelVisible && <SettingsPanel />}
+        </div>
         <ErrorBoundary>
           <SideButtonPanel previewRef={previewRef} />
         </ErrorBoundary>
       </Layout>
-      
       {/* Sticker Picker Modal - Render at root level to avoid z-index issues */}
       {isPickerOpen && (
         <StickerPicker onClose={() => setPickerOpen(false)} />

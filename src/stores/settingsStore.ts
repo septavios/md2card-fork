@@ -83,12 +83,12 @@ const useSettingsStore = create<SettingsState>()(
       // Existing settings
       cardWidth: 440,
       cardHeight: 586,
-      viewMode: "长卡片",
+      viewMode: "短卡片",
       hideOverflow: false,
       selectedTheme: "AppleNotesDark",
       
       // New settings
-      showPageNumbers: false,
+      showPageNumbers: true,
       layoutMode: "自动拆分",
       aspectRatio: "16:9",
       scale: 100,

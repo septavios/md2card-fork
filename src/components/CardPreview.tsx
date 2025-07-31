@@ -4,7 +4,7 @@ import useEditorStore from "../stores/editorStore";
 import { useImageStore } from "../stores/imageStore";
 
 import "../styles/themes.css";
-import { useEffect, useState, forwardRef, useMemo, useRef } from "react";
+import React, { useEffect, useState, forwardRef, useMemo, useRef } from "react";
 import { themeManager, UserConfig } from "../config/themeManager";
 import { migrateFromOldSettings, configToCSSVariables } from "../config/configMerger";
 import PaginatedMarkdownViewer from "../utils/PaginatedMarkdownViewer";
@@ -14,6 +14,7 @@ import StickerOverlay from "./StickerOverlay";
 import { FinalConfig } from '../config/themeConfig';
 import { devLog } from '../utils/logger';
 import { LayoutMode } from '../stores/settingsStore';
+import useStickerStore from '../stores/stickerStore';
 
 // Component to handle individual card sections
 const CardSection = ({ 
@@ -24,7 +25,9 @@ const CardSection = ({
   height, 
   showPageNumbers, 
   layoutMode, 
-  finalConfig 
+  finalConfig,
+  sectionIndex,
+  totalSections
 }: {
   section: string;
   renderer: any;
@@ -34,6 +37,8 @@ const CardSection = ({
   showPageNumbers: boolean;
   layoutMode: LayoutMode;
   finalConfig: FinalConfig;
+  sectionIndex: number;
+  totalSections: number;
 }) => {
   const [sectionHtml, setSectionHtml] = useState('');
   
@@ -45,10 +50,11 @@ const CardSection = ({
       } else {
         result = await marked.parse(section, { renderer });
       }
+      // 不需要为横线拆分模式添加特殊包装，因为每个CardSection都是独立处理的
       setSectionHtml(result);
     };
     processSectionHtml();
-  }, [section, renderer]);
+  }, [section, renderer, layoutMode, sectionIndex, totalSections]);
   
   return (
     <>
@@ -100,8 +106,8 @@ const CardSections = ({
   finalConfig: FinalConfig;
   html: string;
 }) => {
-  // 只有在横线拆分模式下且包含卡片分隔符 ---- 时才进行拆分
-  if (layoutMode === "横线拆分" && markdown.includes('----')) {
+  // 只有在横线拆分模式下且不是长卡片模式且包含卡片分隔符 ---- 时才进行拆分
+  if (layoutMode === "横线拆分" && viewMode !== "长卡片" && markdown.includes('----')) {
     // 按照 ---- 分割内容
     const sections = markdown.split(/^----$/gm).map(section => section.trim()).filter(section => section.length > 0);
     devLog.log('Found card separator in 横线拆分 mode, splitting into sections:', sections.length);
@@ -109,7 +115,7 @@ const CardSections = ({
     return (
       <div className="card-sections-container">
         {sections.map((section, index) => (
-          <div key={index} className="card-section-wrapper" style={{ marginBottom: '2rem' }}>
+          <div key={index} className="card-section card-section-wrapper" style={{ marginBottom: '2rem' }}>
             <CardSection
               section={section}
               renderer={renderer}
@@ -119,6 +125,8 @@ const CardSections = ({
               showPageNumbers={showPageNumbers}
               layoutMode={layoutMode}
               finalConfig={finalConfig}
+              sectionIndex={index}
+              totalSections={sections.length}
             />
           </div>
         ))}
@@ -347,30 +355,97 @@ const CardSections = ({
     );
   }
 
+  // 卡片预览操作按钮区
+  const CardPreviewActions: React.FC<{ previewRef: React.RefObject<HTMLDivElement> }> = ({ previewRef }) => {
+    const { stickers, clearAllStickers, setPickerOpen } = useStickerStore();
+    const [showStickerMenu, setShowStickerMenu] = useState(false);
+
+    // 下载PNG
+    const handleDownloadPNG = async () => {
+      try {
+        if (previewRef.current) {
+          const htmlToImage = await import('html-to-image');
+          const dataUrl = await htmlToImage.toPng(previewRef.current, {
+            backgroundColor: 'transparent',
+            pixelRatio: 3,
+            skipAutoScale: true
+          });
+          const link = document.createElement('a');
+          link.download = 'md2card.png';
+          link.href = dataUrl;
+          link.click();
+        }
+      } catch (e) { /* 错误处理略 */ }
+    };
+
+    // 复制PNG
+    const handleCopyPNG = async () => {
+      try {
+        if (previewRef.current) {
+          const htmlToImage = await import('html-to-image');
+          const blob = await htmlToImage.toBlob(previewRef.current, {
+            backgroundColor: 'transparent',
+            pixelRatio: 3,
+            skipAutoScale: true
+          });
+          if (blob) {
+            await navigator.clipboard.write([
+              new window.ClipboardItem({ 'image/png': blob })
+            ]);
+          }
+        }
+      } catch (e) { /* 错误处理略 */ }
+    };
+
+    // 小红书超清导出
+    const handleXiaohongshuExport = async () => {
+      // 可复用 SideButtonPanel 的逻辑
+      setPickerOpen(true); // 示例：弹出贴纸选择器
+    };
+
+    // 添加贴纸
+    const handleAddSticker = () => setPickerOpen(true);
+
+    return (
+      <div className="flex gap-2 p-2 rounded-lg shadow bg-white/90 dark:bg-gray-900/80 backdrop-blur sticky top-0 z-10 mb-2 items-center">
+        <button className="flex items-center gap-1 px-3 py-1 rounded border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 shadow-sm hover:bg-gray-100 dark:hover:bg-gray-700 font-medium transition" onClick={handleDownloadPNG} title="下载PNG">
+          <span role="img" aria-label="下载">⬇️</span> 下载PNG
+        </button>
+        <button className="flex items-center gap-1 px-3 py-1 rounded border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 shadow-sm hover:bg-gray-100 dark:hover:bg-gray-700 font-medium transition" onClick={handleCopyPNG} title="复制为PNG">
+          <span role="img" aria-label="复制">📋</span> 复制PNG
+        </button>
+        <button className="flex items-center gap-1 px-3 py-1 rounded border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-red-600 dark:text-red-400 shadow-sm hover:bg-red-100 dark:hover:bg-gray-700 font-medium transition" onClick={handleXiaohongshuExport} title="小红书超清导出">
+          <span role="img" aria-label="小红书">📱</span> 小红书导出
+        </button>
+        <button className="flex items-center gap-1 px-3 py-1 rounded border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-pink-600 dark:text-pink-400 shadow-sm hover:bg-pink-100 dark:hover:bg-gray-700 font-medium transition relative" onClick={handleAddSticker} title="添加贴纸">
+          <span role="img" aria-label="贴纸">🏷️</span> 添加贴纸
+          {stickers.length > 0 && (
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">{stickers.length}</span>
+          )}
+        </button>
+      </div>
+    );
+  };
+
   return (
     <div
-      className="rounded-lg shadow-sm p-8 h-full flex items-start justify-center"
+      className="rounded-lg shadow-sm pt-2 pb-8 px-8 flex flex-col items-start justify-center"
       style={{
         minWidth: '100%',
-        minHeight: '100%',
+        minHeight: 0,
         fontFamily: cssVariables['--card-font-family'] || 'var(--font-family)',
-        backgroundColor: cssVariables['--card-color-background'] || 'var(--bg-tertiary)',
         color: cssVariables['--card-color-text'] || 'var(--text-primary)',
-        overflow: 'auto',
-        overflowX: 'hidden',
-        overflowY: 'auto',
+        overflow: 'visible',
         scrollBehavior: 'smooth',
         isolation: 'isolate',
-        ...cssVariables, // Apply all CSS variables to this container
-      }}
-      onWheel={(e) => {
-        // Completely prevent wheel events from bubbling up to parent elements
-        e.stopPropagation();
-        e.preventDefault();
+        ...cssVariables,
+        background: 'none',
+        backgroundColor: 'transparent',
       }}
     >
-      <div ref={ref} className="export-content" style={{ width: '100%', maxWidth: `${width}px`, position: 'relative' }}>
-        <div ref={stickerContainerRef} style={{ position: 'relative', width: '100%', height: '100%' }}>
+      <CardPreviewActions previewRef={ref as React.RefObject<HTMLDivElement>} />
+      <div ref={ref} className="export-content" style={{ width: '100%', maxWidth: `${width}px` }}>
+        <div ref={stickerContainerRef} style={{ position: 'relative', width: '100%' }}>
           <CardSections 
             markdown={markdown}
             renderer={renderer}
@@ -382,8 +457,6 @@ const CardSections = ({
             finalConfig={finalConfig}
             html={html}
           />
-          
-          {/* Sticker Overlay */}
           <StickerOverlay containerRef={stickerContainerRef} />
         </div>
       </div>

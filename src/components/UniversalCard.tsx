@@ -142,20 +142,27 @@ const UniversalCard: React.FC<CardProps> = React.memo(({
   }, [page, handleTaskListStyling, handleAppleNotesBoldStyling, themeChecks.isAppleNotesTheme]);
   
   // Memoize style variables
-  const styleVars = useMemo((): React.CSSProperties & Record<string, string> => ({
-    '--card-width': `${width}px`,
-    '--card-height': `${height}px`,
-    '--card-border-radius': 'var(--card-border-radius)',
-    '--card-background': 'var(--card-background)',
-    '--card-color': 'var(--card-color-text)',
-    '--card-box-shadow': 'var(--card-shadow)',
-    '--card-border': 'var(--card-border)',
-    '--card-font-family': 'var(--card-font-family)',
-    '--card-overflow': hideOverflow ? 'hidden' : 'visible',
-    width: `${width}px`,
-    height: `${height}px`,
-    overflow: hideOverflow ? 'hidden' : 'visible',
-  }), [width, height, hideOverflow]);
+  const styleVars = useMemo((): React.CSSProperties & Record<string, string> => {
+    const vars: React.CSSProperties & Record<string, string> = {
+      '--card-width': `${width}px`,
+      '--card-border-radius': 'var(--card-border-radius)',
+      '--card-background': 'var(--card-background)',
+      '--card-color': 'var(--card-color-text)',
+      '--card-box-shadow': 'var(--card-shadow)',
+      '--card-border': 'var(--card-border)',
+      '--card-font-family': 'var(--card-font-family)',
+      '--card-overflow': hideOverflow ? 'hidden' : 'visible',
+      width: `${width}px`,
+    };
+    if (height > 0) {
+      vars.height = `${height}px`;
+      vars.overflow = hideOverflow ? 'hidden' : 'visible';
+    } else {
+      // 长卡片模式不设置 height，让内容自适应
+      vars.overflow = 'visible';
+    }
+    return vars;
+  }, [width, height, hideOverflow]);
 
   // Memoize custom styles CSS generation
   const customStylesCSS = useMemo(() => {

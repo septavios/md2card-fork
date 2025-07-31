@@ -956,7 +956,7 @@ const SettingsPanel: React.FC = () => {
           <ToggleSwitch id="hide-overflow" label="" checked={hideOverflow} onChange={setHideOverflow} />
         </div>
 
-        {/* 6. 显示页码 toggle */}
+        {/* 6. 显示页码 toggle - 在自动拆分和横线拆分模式下显示 */}
         {viewMode === '短卡片' && (
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>显示页码</span>

@@ -25,6 +25,9 @@ const LongMarkdownViewer: React.FC<LongMarkdownViewerProps> = ({
       width={pageWidth ?? 440} 
       height={-1}  // 长卡片模式下使用-1，让卡片自动调整高度
       config={config}
+      showPageNumbers={showPageNumbers}
+      pageNumber={showPageNumbers ? 1 : undefined}
+      totalPages={showPageNumbers ? 1 : undefined}
     />
   );
 };

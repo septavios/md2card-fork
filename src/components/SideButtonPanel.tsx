@@ -308,10 +308,8 @@ const SideButtonPanel: React.FC<SideButtonPanelProps> = ({ previewRef, onEditMod
 
   return (
     <div 
-      className="fixed right-4 top-1/2 transform -translate-y-1/2 z-50"
-      style={{ 
-        marginRight: '340px' // Account for settings panel width + some spacing
-      }}
+      className="absolute right-4 top-4 z-50"
+      style={{}}
     >
       <div className="flex flex-col space-y-2">
         {/* Download PNG */}

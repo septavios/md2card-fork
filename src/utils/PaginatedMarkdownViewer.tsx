@@ -82,9 +82,10 @@ const PaginatedMarkdownViewer: React.FC<PaginatedMarkdownViewerProps> = ({
         }
 
         document.body.removeChild(tempWrapper);
-        const totalPages = tempPageCount;
+        const sectionTotalPages = tempPageCount;
 
-        // 实际分页处理
+        // 实际分页处理 - 每个分段独立计算页码
+        let sectionPageNumber = 1;
         while (i < nodes.length) {
           const node = nodes[i];
           const clone = node.cloneNode(true) as HTMLElement;
@@ -94,46 +95,52 @@ const PaginatedMarkdownViewer: React.FC<PaginatedMarkdownViewerProps> = ({
             currentPage.removeChild(clone);
 
             if (isTextNodeLike(node)) {
-              const { newPage, nodeToAdd } = handleTextNode(node, currentPage, wrapper, pageElements, CardComponent, pageHeight, pageWidth, config, showPageNumbers, totalPages, config.layout.hideOverflow);
+              // 为分段页面传递正确的页码信息
+              const { newPage, nodeToAdd } = handleTextNode(node, currentPage, wrapper, pageElements, CardComponent, pageHeight, pageWidth, config, showPageNumbers, sectionTotalPages, config.layout.hideOverflow, sectionPageNumber);
               currentPage = newPage;
               currentPage.appendChild(nodeToAdd);
+              sectionPageNumber++;
               i++;
               continue;
             }
 
             if (isList(node)) {
-              const { newPage, nodeToAdd } = handleListNode(node, currentPage, wrapper, pageElements, CardComponent, pageHeight, pageWidth, config, showPageNumbers, totalPages, config.layout.hideOverflow);
+              const { newPage, nodeToAdd } = handleListNode(node, currentPage, wrapper, pageElements, CardComponent, pageHeight, pageWidth, config, showPageNumbers, sectionTotalPages, config.layout.hideOverflow, sectionPageNumber);
               currentPage = newPage;
               currentPage.appendChild(nodeToAdd);
+              sectionPageNumber++;
               i++;
               continue;
             }
 
             if (isTable(node)) {
-              const { newPage, nodeToAdd } = handleTableNode(node, currentPage, wrapper, pageElements, CardComponent, pageHeight, pageWidth, config, showPageNumbers, totalPages, config.layout.hideOverflow);
+              const { newPage, nodeToAdd } = handleTableNode(node, currentPage, wrapper, pageElements, CardComponent, pageHeight, pageWidth, config, showPageNumbers, sectionTotalPages, config.layout.hideOverflow, sectionPageNumber);
               currentPage = newPage;
               currentPage.appendChild(nodeToAdd);
+              sectionPageNumber++;
               i++;
               continue;
             }
 
             if (isImage(node)) {
-              const { newPage, nodeToAdd } = handleImageNode(node, currentPage, wrapper, pageElements, CardComponent, pageHeight, pageWidth, config, showPageNumbers, totalPages, config.layout.hideOverflow);
+              const { newPage, nodeToAdd } = handleImageNode(node, currentPage, wrapper, pageElements, CardComponent, pageHeight, pageWidth, config, showPageNumbers, sectionTotalPages, config.layout.hideOverflow, sectionPageNumber);
               currentPage = newPage;
               currentPage.appendChild(nodeToAdd);
+              sectionPageNumber++;
               i++;
               continue;
             }
 
-            const { newPage, nodeToAdd } = handleGenericNode(node, currentPage, wrapper, pageElements, CardComponent, pageHeight, pageWidth, config, showPageNumbers, totalPages, config.layout.hideOverflow);
+            const { newPage, nodeToAdd } = handleGenericNode(node, currentPage, wrapper, pageElements, CardComponent, pageHeight, pageWidth, config, showPageNumbers, sectionTotalPages, config.layout.hideOverflow, sectionPageNumber);
             currentPage = newPage;
             currentPage.appendChild(nodeToAdd);
+            sectionPageNumber++;
           }
           i++;
         }
 
         if (currentPage.childNodes.length > 0) {
-          addPageElement(currentPage, pageElements, CardComponent, pageHeight, pageWidth, config, showPageNumbers, totalPages, config.layout.hideOverflow);
+          addPageElement(currentPage, pageElements, CardComponent, pageHeight, pageWidth, config, showPageNumbers, sectionTotalPages, config.layout.hideOverflow, sectionPageNumber);
         }
       });
     } else {
@@ -171,6 +178,7 @@ const PaginatedMarkdownViewer: React.FC<PaginatedMarkdownViewerProps> = ({
       const totalPages = tempPageCount;
 
       // 第二次遍历：实际分页并传递页码信息
+      let pageNumber = 1;
       while (i < nodes.length) {
         const node = nodes[i];
         const clone = node.cloneNode(true) as HTMLElement;
@@ -180,46 +188,51 @@ const PaginatedMarkdownViewer: React.FC<PaginatedMarkdownViewerProps> = ({
           currentPage.removeChild(clone);
 
           if (isTextNodeLike(node)) {
-            const { newPage, nodeToAdd } = handleTextNode(node, currentPage, wrapper, pageElements, CardComponent, pageHeight, pageWidth, config, showPageNumbers, totalPages, config.layout.hideOverflow);
+            const { newPage, nodeToAdd } = handleTextNode(node, currentPage, wrapper, pageElements, CardComponent, pageHeight, pageWidth, config, showPageNumbers, totalPages, config.layout.hideOverflow, pageNumber);
             currentPage = newPage;
             currentPage.appendChild(nodeToAdd);
+            pageNumber++;
             i++;
             continue;
           }
 
           if (isList(node)) {
-            const { newPage, nodeToAdd } = handleListNode(node, currentPage, wrapper, pageElements, CardComponent, pageHeight, pageWidth, config, showPageNumbers, totalPages, config.layout.hideOverflow);
+            const { newPage, nodeToAdd } = handleListNode(node, currentPage, wrapper, pageElements, CardComponent, pageHeight, pageWidth, config, showPageNumbers, totalPages, config.layout.hideOverflow, pageNumber);
             currentPage = newPage;
             currentPage.appendChild(nodeToAdd);
+            pageNumber++;
             i++;
             continue;
           }
 
           if (isTable(node)) {
-            const { newPage, nodeToAdd } = handleTableNode(node, currentPage, wrapper, pageElements, CardComponent, pageHeight, pageWidth, config, showPageNumbers, totalPages, config.layout.hideOverflow);
+            const { newPage, nodeToAdd } = handleTableNode(node, currentPage, wrapper, pageElements, CardComponent, pageHeight, pageWidth, config, showPageNumbers, totalPages, config.layout.hideOverflow, pageNumber);
             currentPage = newPage;
             currentPage.appendChild(nodeToAdd);
+            pageNumber++;
             i++;
             continue;
           }
 
           if (isImage(node)) {
-            const { newPage, nodeToAdd } = handleImageNode(node, currentPage, wrapper, pageElements, CardComponent, pageHeight, pageWidth, config, showPageNumbers, totalPages, config.layout.hideOverflow);
+            const { newPage, nodeToAdd } = handleImageNode(node, currentPage, wrapper, pageElements, CardComponent, pageHeight, pageWidth, config, showPageNumbers, totalPages, config.layout.hideOverflow, pageNumber);
             currentPage = newPage;
             currentPage.appendChild(nodeToAdd);
+            pageNumber++;
             i++;
             continue;
           }
 
-          const { newPage, nodeToAdd } = handleGenericNode(node, currentPage, wrapper, pageElements, CardComponent, pageHeight, pageWidth, config, showPageNumbers, totalPages, config.layout.hideOverflow);
+          const { newPage, nodeToAdd } = handleGenericNode(node, currentPage, wrapper, pageElements, CardComponent, pageHeight, pageWidth, config, showPageNumbers, totalPages, config.layout.hideOverflow, pageNumber);
           currentPage = newPage;
           currentPage.appendChild(nodeToAdd);
+          pageNumber++;
         }
         i++;
       }
 
       if (currentPage.childNodes.length > 0) {
-        addPageElement(currentPage, pageElements, CardComponent, pageHeight, pageWidth, config, showPageNumbers, totalPages, config.layout.hideOverflow);
+        addPageElement(currentPage, pageElements, CardComponent, pageHeight, pageWidth, config, showPageNumbers, totalPages, config.layout.hideOverflow, pageNumber);
       }
     }
 
